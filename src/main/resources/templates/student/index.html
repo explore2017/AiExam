@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>我报名的考试</h1>
+    <div th:each="exam:${exams}">
+        <a th:href="@{'/exam/'+${exam.id}}" th:text="${exam.name}"></a>
+        <hr/>
+    </div>
+</body>
+</html>

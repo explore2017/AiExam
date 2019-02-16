@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.explore.dao.QuestionPaperMapper">
+  <resultMap id="BaseResultMap" type="com.explore.pojo.QuestionPaper">
+    <id column="paper_id" jdbcType="INTEGER" property="paperId" />
+    <id column="question_id" jdbcType="INTEGER" property="questionId" />
+    <result column="sequence" jdbcType="INTEGER" property="sequence" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    paper_id, question_id, sequence
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.explore.pojo.QuestionPaperKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from question_paper
+    where paper_id = #{paperId,jdbcType=INTEGER}
+      and question_id = #{questionId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.explore.pojo.QuestionPaperKey">
+    delete from question_paper
+    where paper_id = #{paperId,jdbcType=INTEGER}
+      and question_id = #{questionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.explore.pojo.QuestionPaper">
+    insert into question_paper (paper_id, question_id, sequence
+      )
+    values (#{paperId,jdbcType=INTEGER}, #{questionId,jdbcType=INTEGER}, #{sequence,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.explore.pojo.QuestionPaper">
+    insert into question_paper
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="paperId != null">
+        paper_id,
+      </if>
+      <if test="questionId != null">
+        question_id,
+      </if>
+      <if test="sequence != null">
+        sequence,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="paperId != null">
+        #{paperId,jdbcType=INTEGER},
+      </if>
+      <if test="questionId != null">
+        #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="sequence != null">
+        #{sequence,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.explore.pojo.QuestionPaper">
+    update question_paper
+    <set>
+      <if test="sequence != null">
+        sequence = #{sequence,jdbcType=INTEGER},
+      </if>
+    </set>
+    where paper_id = #{paperId,jdbcType=INTEGER}
+      and question_id = #{questionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.explore.pojo.QuestionPaper">
+    update question_paper
+    set sequence = #{sequence,jdbcType=INTEGER}
+    where paper_id = #{paperId,jdbcType=INTEGER}
+      and question_id = #{questionId,jdbcType=INTEGER}
+  </update>
+</mapper>
