@@ -21,7 +21,10 @@
     where exam_id = #{examId,jdbcType=INTEGER}
       and student_id = #{studentId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.explore.pojo.ExamStudentKey">
+    <select id="checkHasEnroll" resultType="java.lang.Integer">
+      select count(*) from exam_student where exam_id = #{exam_id} and  student_id = #{student_id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.explore.pojo.ExamStudentKey">
     delete from exam_student
     where exam_id = #{examId,jdbcType=INTEGER}
       and student_id = #{studentId,jdbcType=INTEGER}

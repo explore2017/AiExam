@@ -13,9 +13,10 @@
         考试描述:<span th:text="${exam.subscribe}"></span><br>
         批次名称:<span th:text="${exam.batchName}"></span><br>
         批次描述:<span th:text="${exam.batchDescribe}"></span><br>
-        批次开始时间:<span th:text="${exam.batchStartTime}"></span><br>
-        批次结束时间:<span th:text="${exam.batchEndTime}"></span><br>
+        批次开始时间:<span th:text="${#dates.format(exam.batchStartTime,'yyyy-MM-dd HH:mm')}"></span><br>
+        批次结束时间:<span th:text="${#dates.format(exam.batchEndTime,'yyyy-MM-dd HH:mm')}"></span><br>
         确认状态:<span th:text="${exam.batchStudentStatus}"></span><br>
+        <a th:href="@{'/exam/batch/cancel/'+${exam.id}}" >取消考试</a>
         <hr/>
     </div>
 </body>

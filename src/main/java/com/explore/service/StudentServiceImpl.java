@@ -18,6 +18,7 @@ public class StudentServiceImpl implements IStudentService {
         if (student==null){
             return ServerResponse.createByErrorMessage("学号或密码错误,请重新尝试");
         }
+        student.setPassword("");
         return ServerResponse.createBySuccessMessage("登录成功",student);
     }
 }

@@ -24,13 +24,16 @@
       from batch
       where exam_id = #{exam_id}
     </select>
+    <select id="selectExamIdByBatchId" resultType="java.lang.Integer">
+      select exam_id from batch where id = #{batch_id}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from batch
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.explore.pojo.Batch">
-    insert into batch (id, exam_id, name, 
-      describe, start_time, end_time
+    insert into batch (id, exam_id, `name`,
+      `describe`, start_time, end_time
       )
     values (#{id,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{describe,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}
@@ -46,10 +49,10 @@
         exam_id,
       </if>
       <if test="name != null">
-        name,
+        `name`,
       </if>
       <if test="describe != null">
-        describe,
+        `describe`,
       </if>
       <if test="startTime != null">
         start_time,
@@ -86,10 +89,10 @@
         exam_id = #{examId,jdbcType=INTEGER},
       </if>
       <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
       <if test="describe != null">
-        describe = #{describe,jdbcType=VARCHAR},
+        `describe` = #{describe,jdbcType=VARCHAR},
       </if>
       <if test="startTime != null">
         start_time = #{startTime,jdbcType=TIMESTAMP},
@@ -103,8 +106,8 @@
   <update id="updateByPrimaryKey" parameterType="com.explore.pojo.Batch">
     update batch
     set exam_id = #{examId,jdbcType=INTEGER},
-      name = #{name,jdbcType=VARCHAR},
-      describe = #{describe,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      `describe` = #{describe,jdbcType=VARCHAR},
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

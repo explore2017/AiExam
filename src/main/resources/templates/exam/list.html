@@ -9,10 +9,9 @@
         <h3 th:text="${exam.name}"></h3>
         科目:<span th:text="${exam.subjectId}"></span><br>
         考试类型:<span th:text="${exam.examTypeId}"></span><br>
-        开始时间:<span th:text="${exam.startTime}"></span><br>
-        结束时间:<span th:text="${exam.endTime}"></span><br>
+        开始时间:<span th:text="${#dates.format(exam.startTime,'yyyy-MM-dd HH:mm')}"></span><br>
+        结束时间:<span th:text="${#dates.format(exam.endTime,'yyyy-MM-dd HH:mm')}"></span><br>
         <a th:href="@{'/exam/batch/'+${exam.id}}">查看批次</a>
-        <!--<a th:href="@{'/exam/'+${exam.id}}" th:text="${exam.name}"></a>-->
         <hr/>
     </div>
 </body>

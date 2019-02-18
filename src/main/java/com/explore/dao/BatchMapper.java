@@ -18,4 +18,6 @@ public interface BatchMapper {
     int updateByPrimaryKey(Batch record);
 
     List<Batch> selectBatchesByExamId(Integer exam_id);
+
+    int selectExamIdByBatchId(Integer batch_id);
 }

@@ -8,13 +8,11 @@ import com.explore.pojo.Exam;
 import com.explore.pojo.Student;
 import com.explore.service.IBatchService;
 import com.explore.service.IExamService;
+import com.explore.service.IExamStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -27,10 +25,11 @@ public class ExamController {
     IExamService examService;
     @Autowired
     IBatchService batchService;
+    @Autowired
+    IExamStudentService examStudentService;
 
     /**
      * 获取所有考试
-     * @return
      */
     @RequestMapping(method = RequestMethod.GET)
     public String list(Model model){
@@ -41,8 +40,6 @@ public class ExamController {
 
     /**
      * 通过考试id列出所有批次
-     * @param exam_id
-     * @return
      */
     @RequestMapping("/batch/{exam_id}")
     public String batch(@PathVariable("exam_id") Integer exam_id,Model model){
@@ -53,7 +50,6 @@ public class ExamController {
 
     /**
      * 考试批次报名
-     * @return
      */
     @RequestMapping("/batch/enroll/{batch_id}")
     @ResponseBody
@@ -63,5 +59,18 @@ public class ExamController {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"请登录后尝试");
         }
         return batchService.enroll(batch_id,student.getId());
+    }
+
+    /**
+     * 取消考试
+     */
+    @RequestMapping("/batch/cancel/{exam_id}")
+    @ResponseBody
+    public ServerResponse cancel(@PathVariable("exam_id")Integer exam_id,HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if(student==null){
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"请登录后尝试");
+        }
+        return examStudentService.cancel(exam_id,student.getId());
     }
 }
