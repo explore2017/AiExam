@@ -1,16 +1,16 @@
 package com.explore.pojo;
 
-public class BatchStudentKey {
-    private Integer batchId;
+public class ExamStudentKey {
+    private Integer examId;
 
     private Integer studentId;
 
-    public Integer getBatchId() {
-        return batchId;
+    public Integer getExamId() {
+        return examId;
     }
 
-    public void setBatchId(Integer batchId) {
-        this.batchId = batchId;
+    public void setExamId(Integer examId) {
+        this.examId = examId;
     }
 
     public Integer getStudentId() {

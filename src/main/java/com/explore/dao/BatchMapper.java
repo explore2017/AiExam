@@ -2,6 +2,8 @@ package com.explore.dao;
 
 import com.explore.pojo.Batch;
 
+import java.util.List;
+
 public interface BatchMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface BatchMapper {
     int updateByPrimaryKeySelective(Batch record);
 
     int updateByPrimaryKey(Batch record);
+
+    List<Batch> selectBatchesByExamId(Integer exam_id);
 }

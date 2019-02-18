@@ -6,9 +6,8 @@
 </head>
 <body>
     <h1>我报名的考试</h1>
-    <div th:each="exam:${exams}">
-        <a th:href="@{'/exam/'+${exam.id}}" th:text="${exam.name}"></a>
-        <hr/>
-    </div>
+    <ul>
+        <li><a th:href="'/student/exam/batch'">查看已报名的考试</a></li>
+    </ul>
 </body>
 </html>

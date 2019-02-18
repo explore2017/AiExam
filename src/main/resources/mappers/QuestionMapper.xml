@@ -25,7 +25,14 @@
     from question
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="selectQuestionsByPaperId" resultMap="BaseResultMap">
+      SELECT
+      question.*
+      FROM question_paper
+      INNER JOIN question on question.id = question_id
+      where paper_id=#{paper_id}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from question
     where id = #{id,jdbcType=INTEGER}
   </delete>

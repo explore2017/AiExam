@@ -11,7 +11,7 @@
     <result column="creator" jdbcType="VARCHAR" property="creator" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, subject_no, subject_code, create_time, update_time, creator
+    id, `name`, subject_no, subject_code, create_time, update_time, creator
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 

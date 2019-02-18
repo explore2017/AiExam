@@ -19,7 +19,7 @@
     <result column="answer" jdbcType="VARCHAR" property="answer" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, exam_id, name, describe, status, paper_type, is_subjective, difficulty, create_time, 
+    id, exam_id, `name`, `describe`, status, paper_type, is_subjective, difficulty, create_time,
     update_time, part_num, pass_score, total_score, need_time, answer
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -33,8 +33,8 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.explore.pojo.Paper">
-    insert into paper (id, exam_id, name, 
-      describe, status, paper_type, 
+    insert into paper (id, exam_id, `name`,
+      `describe`, status, paper_type,
       is_subjective, difficulty, create_time, 
       update_time, part_num, pass_score, 
       total_score, need_time, answer
@@ -56,10 +56,10 @@
         exam_id,
       </if>
       <if test="name != null">
-        name,
+        `name`,
       </if>
       <if test="describe != null">
-        describe,
+        `describe`,
       </if>
       <if test="status != null">
         status,
@@ -150,10 +150,10 @@
         exam_id = #{examId,jdbcType=INTEGER},
       </if>
       <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
       <if test="describe != null">
-        describe = #{describe,jdbcType=VARCHAR},
+        `describe` = #{describe,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=VARCHAR},
@@ -194,8 +194,8 @@
   <update id="updateByPrimaryKey" parameterType="com.explore.pojo.Paper">
     update paper
     set exam_id = #{examId,jdbcType=INTEGER},
-      name = #{name,jdbcType=VARCHAR},
-      describe = #{describe,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      `describe` = #{describe,jdbcType=VARCHAR},
       status = #{status,jdbcType=VARCHAR},
       paper_type = #{paperType,jdbcType=INTEGER},
       is_subjective = #{isSubjective,jdbcType=INTEGER},

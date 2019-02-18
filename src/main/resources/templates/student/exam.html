@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>我报名的考试</h1>
+    <div th:each="exam:${exams}">
+        考试名称:<a th:href="@{'#'}" th:text="${exam.name}"></a><br>
+        考试科目:<span th:text="${exam.subjectId}"></span><br>
+        考试类型:<span th:text="${exam.examTypeId}"></span><br>
+        考试描述:<span th:text="${exam.subscribe}"></span><br>
+        批次名称:<span th:text="${exam.batchName}"></span><br>
+        批次描述:<span th:text="${exam.batchDescribe}"></span><br>
+        批次开始时间:<span th:text="${exam.batchStartTime}"></span><br>
+        批次结束时间:<span th:text="${exam.batchEndTime}"></span><br>
+        确认状态:<span th:text="${exam.batchStudentStatus}"></span><br>
+        <hr/>
+    </div>
+</body>
+</html>

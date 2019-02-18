@@ -13,8 +13,26 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+  <resultMap id="ExamBatchVo" type="com.explore.vo.ExamBatchVo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="subject_id" jdbcType="INTEGER" property="subjectId" />
+    <result column="exam_type_id" jdbcType="INTEGER" property="examTypeId" />
+    <result column="subscribe" jdbcType="VARCHAR" property="subscribe" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="batchId" jdbcType="INTEGER" property="batchId" />
+    <result column="batchName" jdbcType="VARCHAR" property="batchName" />
+    <result column="batchDescribe" jdbcType="VARCHAR" property="batchDescribe" />
+    <result column="batchStartTime" jdbcType="TIMESTAMP" property="batchStartTime" />
+    <result column="batchEndTime" jdbcType="TIMESTAMP" property="batchEndTime" />
+    <result column="batchStudentStatus" jdbcType="INTEGER" property="batchStudentStatus" />
+  </resultMap>
   <sql id="Base_Column_List">
-    id, name, subject_id, exam_type_id, subscribe, start_time, end_time, creator_id, 
+    id, `name`, subject_id, exam_type_id, subscribe, start_time, end_time, creator_id,
     create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -22,6 +40,19 @@
     <include refid="Base_Column_List" />
     from exam
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectExams" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from exam
+  </select>
+  <select id="selectExamBatchVoByStudentId" resultMap="ExamBatchVo">
+    SELECT exam.*,batch.id as batchId,batch.name as batchName,batch.describe as batchDescribe,batch.start_time as batchStartTime,
+    batch.end_time as batchEndTime,status as batchStudentStatus
+    FROM exam_student
+    INNER JOIN exam on exam_id = exam.id
+    INNER JOIN batch on batch_id = batch.id
+    where student_id = #{student_id}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from exam

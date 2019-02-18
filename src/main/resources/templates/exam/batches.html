@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:each="batch:${batches}">
+        <h3 th:text="${batch.name}"></h3>
+        考试id:<span th:text="${batch.examId}"></span><br>
+        描述:<span th:text="${batch.describe}"></span><br>
+        开始时间:<span th:text="${batch.startTime}"></span><br>
+        结束时间:<span th:text="${batch.endTime}"></span><br>
+        <a th:href="@{'/exam/batch/enroll/'+${batch.id}}">报名</a>
+        <!--<a th:href="@{'/exam/'+${exam.id}}" th:text="${exam.name}"></a>-->
+        <hr/>
+    </div>
+</body>
+</html>

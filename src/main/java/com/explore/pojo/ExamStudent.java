@@ -2,7 +2,9 @@ package com.explore.pojo;
 
 import java.util.Date;
 
-public class BatchStudent extends BatchStudentKey {
+public class ExamStudent extends ExamStudentKey {
+    private Integer batchId;
+
     private Integer status;
 
     private Date startTime;
@@ -12,6 +14,14 @@ public class BatchStudent extends BatchStudentKey {
     private Date createTime;
 
     private Double score;
+
+    public Integer getBatchId() {
+        return batchId;
+    }
+
+    public void setBatchId(Integer batchId) {
+        this.batchId = batchId;
+    }
 
     public Integer getStatus() {
         return status;

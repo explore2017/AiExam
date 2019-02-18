@@ -1,26 +1,24 @@
 package com.explore.controller;
 
 import com.explore.common.ServerResponse;
-import com.explore.pojo.Question;
-import com.explore.service.IQuestionService;
+import com.explore.pojo.Batch;
+import com.explore.service.IBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 @Controller
-@RequestMapping("/question")
-public class QuestionController {
+public class BatchController {
 
     @Autowired
-    IQuestionService questionService;
+    IBatchService batchService;
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/batch",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse save(Question question){
-        return questionService.saveQuestion(question);
+    public ServerResponse save(Batch batch){
+        return batchService.save(batch);
     }
 
 }

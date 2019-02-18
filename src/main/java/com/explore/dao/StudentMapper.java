@@ -1,6 +1,7 @@
 package com.explore.dao;
 
 import com.explore.pojo.Student;
+import org.apache.ibatis.annotations.Param;
 
 public interface StudentMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +15,6 @@ public interface StudentMapper {
     int updateByPrimaryKeySelective(Student record);
 
     int updateByPrimaryKey(Student record);
+
+    Student login(@Param("sno") String sno,@Param("password") String password);
 }
