@@ -44,8 +44,7 @@ public class PaperController {
     @RequestMapping(value = "/detail/{paper_id}",method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<List<Question>> detail(@PathVariable("paper_id")Integer paper_id){
-        List<Question> questions = questionService.getQuestionsByPaperId(paper_id);
-        return ServerResponse.createBySuccess(questions);
+       return null;
     }
 
 }

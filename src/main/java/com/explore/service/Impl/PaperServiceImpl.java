@@ -1,8 +1,9 @@
-package com.explore.service;
+package com.explore.service.Impl;
 
 import com.explore.common.ServerResponse;
 import com.explore.dao.PaperMapper;
 import com.explore.pojo.Paper;
+import com.explore.service.IPaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

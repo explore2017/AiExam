@@ -1,7 +1,8 @@
-package com.explore.service;
+package com.explore.service.Impl;
 
 import com.explore.dao.ExamMapper;
 import com.explore.pojo.Exam;
+import com.explore.service.IExamService;
 import com.explore.vo.ExamBatchVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

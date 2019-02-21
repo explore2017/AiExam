@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface IQuestionService {
     ServerResponse saveQuestion(Question question);
-
-    List<Question> getQuestionsByPaperId(Integer paper_id);
+    ServerResponse editQuestionByQuestionId(Question newQuestion);
+    ServerResponse delectQuestionByQuestionId(Integer questionId);
+    ServerResponse<Question> getQuestionsByQuestionId(Integer questionId);
+    ServerResponse<List<Question>> getAllQuestions();
 }

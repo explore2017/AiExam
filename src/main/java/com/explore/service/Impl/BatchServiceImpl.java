@@ -1,10 +1,11 @@
-package com.explore.service;
+package com.explore.service.Impl;
 
 import com.explore.common.ServerResponse;
 import com.explore.dao.BatchMapper;
 import com.explore.dao.ExamStudentMapper;
 import com.explore.pojo.Batch;
 import com.explore.pojo.ExamStudent;
+import com.explore.service.IBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
