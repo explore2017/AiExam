@@ -27,8 +27,8 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public ServerResponse editQuestionByQuestionId(Question newQuestion) {
-      Question question= questionMapper.selectQuestionByQuestionId(newQuestion.getId());
+    public ServerResponse editQuestionByQuestionId(Integer questionId,Question newQuestion) {
+      Question question= questionMapper.selectQuestionByQuestionId(questionId);
       if(question==null){return ServerResponse.createByErrorMessage("找不到这个题目");}
       Date date = new Date();
       newQuestion.setUpdateTime(date);

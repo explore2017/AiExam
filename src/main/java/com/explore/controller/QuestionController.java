@@ -16,17 +16,17 @@ public class QuestionController {
 
     @Autowired
     IQuestionService questionService;
-    @PostMapping(value = "/")
+    @PostMapping
     public ServerResponse save(Question question){
         return questionService.saveQuestion(question);
     }
-    @PutMapping(value ="/")
-    public  ServerResponse edit(Question question){return  questionService.editQuestionByQuestionId(question);}
+    @PutMapping(value ="/{id}")
+    public  ServerResponse edit(@PathVariable("id")Integer questionId,Question question){return  questionService.editQuestionByQuestionId(questionId,question);}
     @DeleteMapping(value ="/{id}")
     public ServerResponse delect(@PathVariable("id")Integer questionId){return  questionService.delectQuestionByQuestionId(questionId);}
     @GetMapping(value ="/{id}")
     public  ServerResponse<Question> get(@PathVariable("id")Integer questionId){return  questionService.getQuestionsByQuestionId(questionId);}
-    @GetMapping(value ="/")
+    @GetMapping
     public  ServerResponse<List<Question>> get(){return  questionService.getAllQuestions();}
 
 

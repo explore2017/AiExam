@@ -23,4 +23,19 @@ public class PaperServiceImpl implements IPaperService {
         paperMapper.insert(paper);
         return ServerResponse.createBySuccessMessage("添加成功 ");
     }
+
+    @Override
+    public ServerResponse editPaperByPaperId(Integer paperId, Paper paper) {
+        return null;
+    }
+
+    @Override
+    public ServerResponse deceltPaperByPaperId(Integer paperId) {
+        return null;
+    }
+
+    @Override
+    public ServerResponse<Paper> getPaperByPaperId(Integer paperId) {
+        return null;
+    }
 }
