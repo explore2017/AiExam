@@ -10,11 +10,7 @@ public interface QuestionMapper {
 
     int insert(Question record);
 
-    int insertSelective(Question record);
-
     Question selectByPrimaryKey(Integer id);
-
-    int updateByPrimaryKeySelective(Question record);
 
     int updateByPrimaryKey(Question record);
 
