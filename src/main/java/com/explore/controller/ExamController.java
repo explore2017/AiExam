@@ -6,6 +6,7 @@ import com.explore.common.ServerResponse;
 import com.explore.pojo.Batch;
 import com.explore.pojo.Exam;
 import com.explore.pojo.Student;
+import com.explore.pojo.Teacher;
 import com.explore.service.IBatchService;
 import com.explore.service.IExamService;
 import com.explore.service.IExamStudentService;
@@ -58,6 +59,7 @@ public class ExamController {
         if(student==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"请登录后尝试");
         }
+
         return batchService.enroll(batch_id,student.getId());
     }
 
@@ -72,5 +74,36 @@ public class ExamController {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"请登录后尝试");
         }
         return examStudentService.cancel(exam_id,student.getId());
+    }
+
+    /**
+     * 添加考试
+     */
+    @PostMapping
+    @ResponseBody
+    public ServerResponse add(Exam exam){
+        ServerResponse serverResponse = examService.save(exam);
+        return serverResponse;
+    }
+
+
+    /**
+     * 添加考试批次
+     */
+    @PostMapping("batch")
+    @ResponseBody
+    public ServerResponse addBatch(Batch batch){
+        ServerResponse serverResponse = batchService.addBacth(batch);
+        return serverResponse;
+    }
+
+    /**
+     * 考试信息发布
+     */
+    @PostMapping("/push")
+    public String push(Model model) {
+        List<Exam> exams = examService.getExams();
+        model.addAttribute("exams",exams);
+        return "exam/list";
     }
 }

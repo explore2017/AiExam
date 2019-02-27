@@ -11,4 +11,6 @@ public interface IBatchService {
     ServerResponse enroll(Integer batch_id,Integer student_id);
 
     ServerResponse save(Batch batch);
+
+    ServerResponse addBacth(Batch batch);
 }
