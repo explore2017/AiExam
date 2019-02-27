@@ -11,10 +11,10 @@
  Target Server Version : 80013
  File Encoding         : 65001
 
- Date: 20/02/2019 14:53:19
+ Date: 26/02/2019 19:33:55
 */
 
-
+SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
@@ -28,7 +28,7 @@ CREATE TABLE `answer_record`  (
   `answer` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '答案',
   `score` double(255, 0) NULL DEFAULT NULL COMMENT '得分',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for batch
@@ -42,7 +42,7 @@ CREATE TABLE `batch`  (
   `start_time` datetime(0) NULL DEFAULT NULL COMMENT '开始时间',
   `end_time` datetime(0) NULL DEFAULT NULL COMMENT '结束时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of batch
@@ -68,7 +68,7 @@ CREATE TABLE `exam`  (
   `create_time` datetime(0) NULL DEFAULT NULL,
   `update_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of exam
@@ -110,7 +110,7 @@ CREATE TABLE `manager`  (
   `nick` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '别称',
   `role` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of manager
@@ -126,7 +126,7 @@ CREATE TABLE `paper`  (
   `exam_id` int(11) NULL DEFAULT NULL COMMENT '考试id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '试卷名称',
   `describe` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '试卷描述',
-  `status` int(11) UNSIGNED NULL DEFAULT 0 COMMENT '试卷状态',
+  `status` int(11) NULL DEFAULT 0 COMMENT '试卷状态',
   `paper_type` int(11) NULL DEFAULT NULL COMMENT '试卷类型 ',
   `is_subjective` int(11) NULL DEFAULT NULL COMMENT '0-客观题,1-主观题',
   `difficulty` int(11) NULL DEFAULT NULL COMMENT '试卷难度',
@@ -138,7 +138,7 @@ CREATE TABLE `paper`  (
   `need_time` int(11) NULL DEFAULT NULL COMMENT '考试时长（分钟）',
   `answer` varchar(3000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '试卷答案',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of paper
@@ -155,12 +155,13 @@ DROP TABLE IF EXISTS `paper_compose`;
 CREATE TABLE `paper_compose`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `paper_id` int(11) NULL DEFAULT NULL COMMENT '试卷id',
-  `question_type_id` int(11) NULL DEFAULT NULL COMMENT '大题id',
+  `question_id` int(11) NULL DEFAULT NULL,
+  `question_type_id` int(11) NULL DEFAULT NULL COMMENT '大题idx',
   `question_num` int(11) NULL DEFAULT NULL COMMENT '该大题下对应小题数',
   `sequence` int(255) NULL DEFAULT NULL COMMENT '排序',
   `single_score` double(255, 0) NULL DEFAULT NULL COMMENT '每小题分数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for question
@@ -179,18 +180,19 @@ CREATE TABLE `question`  (
   `subject_id` int(11) NULL DEFAULT NULL COMMENT '题目对应的科目',
   `status` int(255) NULL DEFAULT 1 COMMENT '题目状态1-默认开启  0-关闭',
   `key_point` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '知识点',
+  `default_score` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '默认分数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of question
 -- ----------------------------
-INSERT INTO `question` VALUES (1, 'java八种数据结构', 'A int B double C char D hello', 1, 'D', '2019-02-14 22:18:09', '2019-02-14 22:18:11', 0, 1, 1, 1, '');
-INSERT INTO `question` VALUES (2, 'java八种数据结构', 'A int B double C char D hello', 1, 'A', '2019-02-14 22:18:30', '2019-02-14 22:18:32', 0, 1, 1, 1, NULL);
-INSERT INTO `question` VALUES (3, '公共题目', 'A int B double C char D hello', 1, 'A', '2019-02-15 12:40:24', '2019-02-15 12:40:26', 1, 1, 1, 1, NULL);
-INSERT INTO `question` VALUES (4, 'Linux题目', 'A ls B cd C ping D dir', 1, 'D', '2019-02-15 12:54:40', '2019-02-15 12:54:42', 0, 1, 1, 1, NULL);
-INSERT INTO `question` VALUES (5, '试题名称', '试题内容', 1, 'A', '2019-02-16 17:40:56', '2019-02-16 17:40:56', 0, 1, 1, 1, NULL);
-INSERT INTO `question` VALUES (6, '试题名称', '试题内容', 1, 'A', '2019-02-16 17:41:44', '2019-02-16 17:41:44', 0, 1, 1, 1, '知识点');
+INSERT INTO `question` VALUES (1, 'java八种数据结构', 'A int B double C char D hello', 1, 'D', '2019-02-14 22:18:09', '2019-02-14 22:18:11', 0, 1, 1, 1, '', NULL);
+INSERT INTO `question` VALUES (2, 'java八种数据结构', 'A int B double C char D hello', 1, 'A', '2019-02-14 22:18:30', '2019-02-14 22:18:32', 0, 1, 1, 1, NULL, NULL);
+INSERT INTO `question` VALUES (3, '公共题目', 'A int B double C char D hello', 1, 'A', '2019-02-15 12:40:24', '2019-02-15 12:40:26', 1, 1, 1, 1, NULL, NULL);
+INSERT INTO `question` VALUES (4, 'Linux题目', 'A ls B cd C ping D dir', 1, 'D', '2019-02-15 12:54:40', '2019-02-15 12:54:42', 0, 1, 1, 1, NULL, NULL);
+INSERT INTO `question` VALUES (5, '试题名称', '试题内容', 1, 'A', '2019-02-16 17:40:56', '2019-02-16 17:40:56', 0, 1, 1, 1, NULL, NULL);
+INSERT INTO `question` VALUES (6, '试题名称', '试题内容', 1, 'A', '2019-02-16 17:41:44', '2019-02-16 17:41:44', 0, 1, 1, 1, '知识点', NULL);
 
 -- ----------------------------
 -- Table structure for question_paper
@@ -223,7 +225,7 @@ CREATE TABLE `question_type`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '试题类型',
   `is_subjective` int(255) NULL DEFAULT NULL COMMENT '0-非主观题 1-主观题',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of question_type
@@ -249,7 +251,7 @@ CREATE TABLE `student`  (
   `create_time` datetime(0) NULL DEFAULT NULL,
   `update_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of student
@@ -269,7 +271,7 @@ CREATE TABLE `subject`  (
   `update_time` datetime(0) NULL DEFAULT NULL,
   `creator` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of subject
@@ -290,7 +292,7 @@ CREATE TABLE `teacher`  (
   `create_time` datetime(0) NULL DEFAULT NULL,
   `update_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of teacher

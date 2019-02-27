@@ -7,6 +7,8 @@ public class PaperCompose {
 
     private Integer questionTypeId;
 
+    private Integer questionId;
+
     private Integer questionNum;
 
     private Integer sequence;
@@ -32,9 +34,15 @@ public class PaperCompose {
     public Integer getQuestionTypeId() {
         return questionTypeId;
     }
+    public Integer getQuestionId() {
+        return questionId;
+    }
 
     public void setQuestionTypeId(Integer questionTypeId) {
         this.questionTypeId = questionTypeId;
+    }
+    public void setQuestionId(Integer questionId) {
+        this.questionId = questionId;
     }
 
     public Integer getQuestionNum() {

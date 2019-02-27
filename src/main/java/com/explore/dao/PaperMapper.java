@@ -1,7 +1,12 @@
 package com.explore.dao;
 
 import com.explore.pojo.Paper;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
+
+
+@Component
 public interface PaperMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +19,6 @@ public interface PaperMapper {
     int updateByPrimaryKeySelective(Paper record);
 
     int updateByPrimaryKey(Paper record);
+
+    List<Paper> selectAllPaper();
 }

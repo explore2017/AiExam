@@ -28,6 +28,12 @@
     from paper
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectAllPaper" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM paper
+
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from paper
     where id = #{id,jdbcType=INTEGER}
