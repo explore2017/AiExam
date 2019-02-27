@@ -55,8 +55,8 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
-    public ServerResponse addBacth(Batch batch) {
-        batchMapper.insert(batch);
-        return ServerResponse.createBySuccessMessage("添加批次成功");
+    public ServerResponse delBacth(Batch batch) {
+        batchMapper.deleteByPrimaryKey(batch.getId());
+        return ServerResponse.createBySuccessMessage("删除批次成功");
     }
 }

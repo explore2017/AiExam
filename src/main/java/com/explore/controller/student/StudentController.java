@@ -50,14 +50,14 @@ public class StudentController {
      * 获取已参加考试
      */
     @RequestMapping("/exam/batch")
-    public String examBatch(HttpSession session, Model model){
+    @ResponseBody
+    public ServerResponse examBatch(HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student==null){
-            return "403";
+            return ServerResponse.createByErrorCodeMessage(404,"404");
         }
         List<ExamBatchVo> examBatchVoList = examService.getExamBatchVoByStudentId(student.getId());
-        model.addAttribute("exams",examBatchVoList);
-        return "student/exam";
+        return ServerResponse.createBySuccess(examBatchVoList);
     }
 
     /**

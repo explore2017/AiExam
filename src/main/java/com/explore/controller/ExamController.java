@@ -94,17 +94,17 @@ public class ExamController {
     @PostMapping("batch")
     @ResponseBody
     public ServerResponse addBatch(Batch batch){
-        ServerResponse serverResponse = batchService.addBacth(batch);
+        ServerResponse serverResponse = batchService.save(batch);
         return serverResponse;
     }
 
     /**
-     * 考试信息发布
+     * 删除考试批次
      */
-    @PostMapping("/push")
+    @GetMapping("batch")
     @ResponseBody
-    public ServerResponse push(){
-        List<Exam> exams = examService.getExams();
-        return ServerResponse.createBySuccess(exams);
+    public ServerResponse delBatch(Batch batch){
+        ServerResponse serverResponse = batchService.delBacth(batch);
+        return serverResponse;
     }
 }

@@ -12,5 +12,5 @@ public interface IBatchService {
 
     ServerResponse save(Batch batch);
 
-    ServerResponse addBacth(Batch batch);
+    ServerResponse delBacth(Batch batch);
 }
