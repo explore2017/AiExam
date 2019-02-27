@@ -32,21 +32,22 @@ public class ExamController {
     /**
      * 获取所有考试
      */
+    @ResponseBody
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Model model){
+    public ServerResponse list(){
         List<Exam> exams = examService.getExams();
-        model.addAttribute("exams",exams);
-        return "exam/list";
+        return ServerResponse.createBySuccess(exams);
     }
 
     /**
      * 通过考试id列出所有批次
      */
+    @ResponseBody
     @RequestMapping("/batch/{exam_id}")
-    public String batch(@PathVariable("exam_id") Integer exam_id,Model model){
+    public ServerResponse batch(@PathVariable("exam_id") Integer exam_id){
         List<Batch> batches = batchService.getBatchesByExamId(exam_id);
-        model.addAttribute("batches",batches);
-        return "exam/batches";
+
+        return ServerResponse.createBySuccess(batches);
     }
 
     /**
@@ -101,9 +102,9 @@ public class ExamController {
      * 考试信息发布
      */
     @PostMapping("/push")
-    public String push(Model model) {
+    @ResponseBody
+    public ServerResponse push(){
         List<Exam> exams = examService.getExams();
-        model.addAttribute("exams",exams);
-        return "exam/list";
+        return ServerResponse.createBySuccess(exams);
     }
 }
