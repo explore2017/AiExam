@@ -1,6 +1,7 @@
 package com.explore.dao;
 
 import com.explore.pojo.Paper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface PaperMapper {
     int updateByPrimaryKey(Paper record);
 
     List<Paper> selectAllPaper();
+
+    int updatePaperStatus(@Param("paperId") Integer paperId, @Param("status") Integer status);
 }

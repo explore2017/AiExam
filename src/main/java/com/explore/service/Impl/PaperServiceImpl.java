@@ -140,11 +140,28 @@ public class PaperServiceImpl implements IPaperService {
             paperCompose.setQuestionTypeId(question.getQuestionTypeId());
             paperCompose.setSequence(sequence++);
             paperCompose.setSingleScore(singeScore);
-            ServerResponse addServerResponse= this.addPaperComposeByPaperId(paperId,paperCompose);
+            ServerResponse addServerResponse= this.addPaperComposeByPaperId(paperId,paperCompose); //考题的添加
             if(!addServerResponse.isSuccess()) {return  addServerResponse;}
             questionList.remove(rand);
         }
         return ServerResponse.createBySuccessMessage("生成成功");
+    }
+
+    @Override
+    public ServerResponse checkPaper(Integer paperId, Double totalScore) {
+        Paper paper=paperMapper.selectByPrimaryKey(paperId);
+        if(paper==null){return ServerResponse.createByErrorMessage("找不到该试卷");}
+        Double paperScore=0.0;
+        List<PaperCompose> paperComposeList= paperComposeMapper.selectQuestionByPaperIdOrderBySequence(paperId);
+        for(PaperCompose paperCompose:paperComposeList){
+         paperScore+=paperCompose.getSingleScore();
+       }
+       if(paperScore.equals(totalScore)){
+           paperMapper.updatePaperStatus(paperId,1);
+           return  ServerResponse.createBySuccessMessage("试卷合格");
+       }
+        paperMapper.updatePaperStatus(paperId,0);
+        return ServerResponse.createByErrorMessage("试卷不合格");
     }
 
 

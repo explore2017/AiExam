@@ -215,4 +215,10 @@
       answer = #{answer,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <update id="updatePaperStatus">
+    update paper
+    set
+        status=#{status,jdbcType=INTEGER}
+    where id = #{paperId,jdbcType=INTEGER}
+  </update>
 </mapper>
