@@ -11,6 +11,12 @@
   <sql id="Base_Column_List">
     id, username, password, nick, role
   </sql>
+  <select id="login" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from student
+    where sno = #{sno} and password = #{password}
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

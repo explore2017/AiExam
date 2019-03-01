@@ -1,6 +1,9 @@
 package com.explore.dao;
 
 import com.explore.pojo.Teacher;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TeacherMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +17,12 @@ public interface TeacherMapper {
     int updateByPrimaryKeySelective(Teacher record);
 
     int updateByPrimaryKey(Teacher record);
+
+    Teacher login(@Param("username") String username, @Param("password") String password);
+
+    Teacher selectUsername(String username);
+
+    int deleteStudent(String username);
+
+    List<Teacher> getAllTeacher();
 }

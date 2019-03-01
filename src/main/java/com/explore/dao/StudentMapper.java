@@ -3,6 +3,8 @@ package com.explore.dao;
 import com.explore.pojo.Student;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface StudentMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -17,4 +19,10 @@ public interface StudentMapper {
     int updateByPrimaryKey(Student record);
 
     Student login(@Param("sno") String sno,@Param("password") String password);
+
+    Student selectSno(String sno);
+
+    int deleteStudent(String sno);
+
+    List<Student> getAllStudent();
 }
