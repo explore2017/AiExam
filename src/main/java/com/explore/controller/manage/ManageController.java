@@ -1,5 +1,6 @@
 package com.explore.controller.manage;
 
+import com.explore.common.Const;
 import com.explore.common.ServerResponse;
 import com.explore.pojo.Manager;
 import com.explore.pojo.Student;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -24,10 +26,11 @@ public class ManageController {
      * 管理员登录
      */
     @GetMapping("/login")
-    public ServerResponse login(String username, String password) {
+    public ServerResponse login(String username, String password, HttpSession session) {
         ServerResponse<Manager> serverResponse = manageService.login(username, password);
         if (serverResponse.isSuccess()) {
             Manager manager = serverResponse.getData();
+            session.setAttribute(Const.CURRENT_USER,manager);
         }
         return serverResponse;
     }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ExamStudentServiceImpl implements IExamStudentService {
@@ -44,9 +45,11 @@ public class ExamStudentServiceImpl implements IExamStudentService {
         if(count==1){return  ServerResponse.createBySuccessMessage("修改成绩成功");}
         return ServerResponse.createByErrorMessage("修改成绩失败");
     }
-
+ /*
+   获得学生考试
+ */
     @Override
-    public ServerResponse getStudentExam(Integer student_id) {
-        return ServerResponse.createBySuccess(examStudentMapper.selectByStudentId(student_id));
+    public ServerResponse<List<ExamStudent>> getStudentExam(Integer student_id) {
+        return ServerResponse.createBySuccessMessage("查询成功",examStudentMapper.selectByStudentId(student_id));
     }
 }

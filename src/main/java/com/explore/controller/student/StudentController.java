@@ -3,8 +3,10 @@ package com.explore.controller.student;
 import com.explore.common.Const;
 import com.explore.common.ResponseCode;
 import com.explore.common.ServerResponse;
+import com.explore.pojo.ExamStudent;
 import com.explore.pojo.Student;
 import com.explore.service.IExamService;
+import com.explore.service.IExamStudentService;
 import com.explore.service.IStudentService;
 import com.explore.service.Impl.StudentServiceImpl;
 import com.explore.vo.ExamBatchVo;
@@ -26,15 +28,18 @@ public class StudentController {
     IStudentService studentService;
     @Autowired
     IExamService examService;
+    @Autowired
+    IExamStudentService examStudentService;
 
     /**
      * 学生登录
      */
     @GetMapping("/login")
-    public ServerResponse login(String sno, String password) {
+    public ServerResponse login(String sno, String password,HttpSession session) {
         ServerResponse<Student> serverResponse = studentService.login(sno, password);
         if (serverResponse.isSuccess()) {
             Student student = serverResponse.getData();
+            session.setAttribute(Const.CURRENT_USER,student);
         }
         return serverResponse;
     }
@@ -76,14 +81,13 @@ public class StudentController {
      * 获取已参加考试
      */
     @GetMapping("/exam/batch")
-    public ServerResponse examBatch(HttpSession session, Model model) {
+    public ServerResponse<List<ExamStudent>>  examBatch(HttpSession session) {
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
             return ServerResponse.createByErrorMessage("信息错误");
         }
-        List<ExamBatchVo> examBatchVoList = examService.getExamBatchVoByStudentId(student.getId());
-        model.addAttribute("exams", examBatchVoList);
-        return ServerResponse.createBySuccessMessage("查询成功");
+//        List<ExamBatchVo> examBatchVoList = examService.getExamBatchVoByStudentId(student.getId());
+        return examStudentService.getStudentExam(student.getId());
     }
 
     /**
