@@ -21,9 +21,12 @@ public interface PaperComposeMapper {
 
     List<PaperCompose> selectQuestionByPaperIdOrderBySequence(Integer paperId);
 
-    PaperCompose  selectPaperComposeBySequenceAndPaperId(@Param("paperId") Integer paperId, @Param("sequence")Integer sequence);
+    PaperCompose  selectPaperComposeByPaperIdAndSequence(@Param("paperId") Integer paperId, @Param("sequence")Integer sequence);
 
     int deleteByPaperId(Integer paperId);
 
     int updateTosequenceByPaperId(@Param("paperId") Integer paperId, @Param("sequence")Integer sequence);
+
+    PaperCompose  selectPaperComposeByPaperIdAndQuestionId(@Param("paperId") Integer paperId, @Param("questionId")Integer questionId);
+
 }

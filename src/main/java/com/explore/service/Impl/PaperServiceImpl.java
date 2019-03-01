@@ -11,6 +11,7 @@ import com.explore.service.IPaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,7 +77,9 @@ public class PaperServiceImpl implements IPaperService {
         List<PaperCompose> paperComposes=paperComposeMapper.selectQuestionByPaperIdOrderBySequence(paperId);
         List<Question> questionList=new ArrayList<Question>();
         for(PaperCompose paperCompose:paperComposes){
-            questionList.add(questionMapper.selectQuestionByQuestionId(paperCompose.getQuestionId()));
+            Question question=questionMapper.selectQuestionByQuestionId(paperCompose.getQuestionId());
+            question.setAnswer(StringUtils.EMPTY);
+            questionList.add(question);
         }
        return ServerResponse.createBySuccessMessage("返回试卷详情成功",questionList);
     }
@@ -106,13 +109,42 @@ public class PaperServiceImpl implements IPaperService {
     public ServerResponse deletePaperComposeBySequenceAndPaperId(Integer paperId, Integer sequence)  {
         Paper paper=paperMapper.selectByPrimaryKey(paperId);
         if(paper==null){return ServerResponse.createByErrorMessage("找不到该试卷");}
-        PaperCompose paperCompose=paperComposeMapper.selectPaperComposeBySequenceAndPaperId(paperId,sequence);
+        PaperCompose paperCompose=paperComposeMapper.selectPaperComposeByPaperIdAndSequence(paperId,sequence);
         if(paperCompose==null){return ServerResponse.createByErrorMessage("删除失败");}
         int count= paperComposeMapper.updateTosequenceByPaperId(paperId,sequence);
         if(count==0){return ServerResponse.createByErrorMessage("删除失败");}
         count=paperComposeMapper.deleteByPrimaryKey(paperCompose.getId());
         if(count==0){return ServerResponse.createByErrorMessage("删除失败");}
         return ServerResponse.createBySuccessMessage("删除成功");
+    }
+
+    @Override
+    public ServerResponse autoQuestion(Integer paperId, Integer questionTypeId, Integer quantity, Double singeScore, Integer subjectId, String keyPoint) {
+        List<Question> questionList=questionMapper.selectQuestionsByQuestionTypeIdAndSubjectId(questionTypeId,subjectId);
+        if(questionList.size()!=quantity){return  ServerResponse.createByErrorMessage("找不到足够数量的题目");}
+        int sequence=0;
+        List<PaperCompose> paperComposeList=paperComposeMapper.selectQuestionByPaperIdOrderBySequence(paperId);
+        if(paperComposeList!=null){sequence=paperComposeList.get(paperComposeList.size()-1).getSequence()+1;} //获得自动添加的序号
+        for(int i=quantity;i>0;i--){
+           if(questionList.size()==0){return  ServerResponse.createByErrorMessage("找不到足够数量的题目");}
+            int rand=(int)(Math.random()*(questionList.size()-1));
+            PaperCompose paperCompose=new PaperCompose();
+            Question question=questionList.get(rand);
+            if(paperComposeMapper.selectPaperComposeByPaperIdAndQuestionId(paperId,question.getId())!=null){
+                questionList.remove(rand);
+                i++;
+                continue;
+            }
+            paperCompose.setPaperId(paperId);
+            paperCompose.setQuestionId(question.getId());
+            paperCompose.setQuestionTypeId(question.getQuestionTypeId());
+            paperCompose.setSequence(sequence++);
+            paperCompose.setSingleScore(singeScore);
+            ServerResponse addServerResponse= this.addPaperComposeByPaperId(paperId,paperCompose);
+            if(!addServerResponse.isSuccess()) {return  addServerResponse;}
+            questionList.remove(rand);
+        }
+        return ServerResponse.createBySuccessMessage("生成成功");
     }
 
 

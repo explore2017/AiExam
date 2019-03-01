@@ -17,5 +17,6 @@ public interface IPaperService {
     ServerResponse addPaperComposeByPaperId(Integer paperId,PaperCompose paperCompose );
     ServerResponse editPaperComposeByPaperId(Integer paperId,PaperCompose paperCompose );
     ServerResponse deletePaperComposeBySequenceAndPaperId(Integer paperId,Integer sequence);
+    ServerResponse autoQuestion(Integer paperId,Integer questionTypeId,Integer quantity,Double singeScore,Integer subjectId,String keyPoint);
 
 }

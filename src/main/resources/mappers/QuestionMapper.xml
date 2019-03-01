@@ -32,6 +32,13 @@
       FROM question
 
     </select>
+  <select id="selectQuestionsByQuestionTypeIdAndSubjectId" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM question
+    where  question_type_id = #{questionTypeId,jdbcType=INTEGER} AND  subject_id = #{subjectId,jdbcType=INTEGER}
+
+  </select>
   <select id="selectQuestionByQuestionId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
       *

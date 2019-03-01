@@ -19,11 +19,18 @@
     from paper_compose
     where paper_id = #{paperId,jdbcType=INTEGER} order by sequence
   </select>
-  <select id="selectPaperComposeBySequenceAndPaperId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+
+  <select id="selectPaperComposeByPaperIdAndSequence" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
       *
     from paper_compose
     where paper_id = #{paperId,jdbcType=INTEGER} and sequence= #{sequence,jdbcType=INTEGER}
+  </select>
+  <select id="selectPaperComposeByPaperIdAndQuestionId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+      *
+    from paper_compose
+    where paper_id = #{paperId,jdbcType=INTEGER} and question_id= #{questionId,jdbcType=INTEGER}
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 

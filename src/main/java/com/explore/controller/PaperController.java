@@ -104,4 +104,13 @@ public class PaperController {
         return paperService.deletePaperComposeBySequenceAndPaperId(paperId,sequence);
     }
 
+    /**
+     * 自动生成试卷题目
+     * @param paperId,questionTypeId,quantity,singeScore,subjectId,keyPoint
+     */
+    @PostMapping(value = "/auto/{paperId}")
+    public ServerResponse<List<Question>> autoQuestion(@PathVariable("paperId")Integer paperId,  Integer questionTypeId, Integer quantity, Double singeScore, Integer subjectId, String keyPoint){
+        return paperService.autoQuestion(paperId,questionTypeId,quantity,singeScore,subjectId,keyPoint);
+    }
+
 }
