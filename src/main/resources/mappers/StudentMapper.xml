@@ -26,9 +26,24 @@
       from student
       where sno = #{sno} and password = #{password}
     </select>
+  <select id="getAllStudent" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from student
+  </select>
+  <select id="selectSno" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from student
+    where sno = #{sno}
+  </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from student
     where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteStudent">
+    delete from student
+    where sno = #{sno,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.explore.pojo.Student">
     insert into student (id, sno, password, 

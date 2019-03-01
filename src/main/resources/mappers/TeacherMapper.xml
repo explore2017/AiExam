@@ -20,9 +20,30 @@
     from teacher
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="login" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from teacher
+    where username = #{username} and password = #{password}
+  </select>
+  <select id="selectUsername" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from teacher
+    where username = #{username}
+  </select>
+  <select id="getAllTeacher" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from teacher
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from teacher
     where id = #{id,jdbcType=INTEGER}
+  </delete>
+<delete id="deleteTeacher">
+    delete from teacher
+    where username = #{username,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.explore.pojo.Teacher">
     insert into teacher (id, username, password, 
