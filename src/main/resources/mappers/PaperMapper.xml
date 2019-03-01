@@ -28,6 +28,12 @@
     from paper
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectAllPaper" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM paper
+
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from paper
     where id = #{id,jdbcType=INTEGER}
@@ -208,5 +214,11 @@
       need_time = #{needTime,jdbcType=INTEGER},
       answer = #{answer,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updatePaperStatus">
+    update paper
+    set
+        status=#{status,jdbcType=INTEGER}
+    where id = #{paperId,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.explore.pojo.PaperCompose">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="paper_id" jdbcType="INTEGER" property="paperId" />
+    <result column="question_id" jdbcType="INTEGER" property="questionId" />
     <result column="question_type_id" jdbcType="INTEGER" property="questionTypeId" />
     <result column="question_num" jdbcType="INTEGER" property="questionNum" />
     <result column="sequence" jdbcType="INTEGER" property="sequence" />
@@ -12,6 +13,25 @@
   <sql id="Base_Column_List">
     id, paper_id, question_type_id, question_num, sequence, single_score
   </sql>
+  <select id="selectQuestionByPaperIdOrderBySequence" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+      *
+    from paper_compose
+    where paper_id = #{paperId,jdbcType=INTEGER} order by sequence
+  </select>
+
+  <select id="selectPaperComposeByPaperIdAndSequence" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+      *
+    from paper_compose
+    where paper_id = #{paperId,jdbcType=INTEGER} and sequence= #{sequence,jdbcType=INTEGER}
+  </select>
+  <select id="selectPaperComposeByPaperIdAndQuestionId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+      *
+    from paper_compose
+    where paper_id = #{paperId,jdbcType=INTEGER} and question_id= #{questionId,jdbcType=INTEGER}
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -22,11 +42,15 @@
     delete from paper_compose
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="deleteByPaperId" parameterType="java.lang.Integer">
+    delete from paper_compose
+    where paper_id = #{paperId,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.explore.pojo.PaperCompose">
-    insert into paper_compose (id, paper_id, question_type_id, 
+    insert into paper_compose (id, paper_id, question_type_id, question_id,
       question_num, sequence, single_score
       )
-    values (#{id,jdbcType=INTEGER}, #{paperId,jdbcType=INTEGER}, #{questionTypeId,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{paperId,jdbcType=INTEGER}, #{questionTypeId,jdbcType=INTEGER}, #{questionId,jdbcType=INTEGER},
       #{questionNum,jdbcType=INTEGER}, #{sequence,jdbcType=INTEGER}, #{singleScore,jdbcType=DOUBLE}
       )
   </insert>
@@ -41,6 +65,9 @@
       </if>
       <if test="questionTypeId != null">
         question_type_id,
+      </if>
+      <if test="questionId != null">
+        question_id,
       </if>
       <if test="questionNum != null">
         question_num,
@@ -79,6 +106,9 @@
       <if test="paperId != null">
         paper_id = #{paperId,jdbcType=INTEGER},
       </if>
+      <if test="questionId != null">
+        question_id = #{questionId,jdbcType=INTEGER},
+      </if>
       <if test="questionTypeId != null">
         question_type_id = #{questionTypeId,jdbcType=INTEGER},
       </if>
@@ -97,10 +127,16 @@
   <update id="updateByPrimaryKey" parameterType="com.explore.pojo.PaperCompose">
     update paper_compose
     set paper_id = #{paperId,jdbcType=INTEGER},
-      question_type_id = #{questionTypeId,jdbcType=INTEGER},
+      question_type_id = #{questionTypeId,jdbcType=INTEGER},question_id = #{questionId,jdbcType=INTEGER},
       question_num = #{questionNum,jdbcType=INTEGER},
       sequence = #{sequence,jdbcType=INTEGER},
       single_score = #{singleScore,jdbcType=DOUBLE}
     where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateTosequenceByPaperId">
+    update paper_compose
+    set
+        sequence =sequence-1
+    where paper_id = #{paperId,jdbcType=INTEGER} and sequence>=#{sequence,jdbcType=INTEGER}
   </update>
 </mapper>

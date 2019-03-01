@@ -6,6 +6,7 @@ import com.explore.common.ServerResponse;
 import com.explore.pojo.Batch;
 import com.explore.pojo.Exam;
 import com.explore.pojo.Student;
+import com.explore.pojo.Teacher;
 import com.explore.service.IBatchService;
 import com.explore.service.IExamService;
 import com.explore.service.IExamStudentService;
@@ -31,21 +32,22 @@ public class ExamController {
     /**
      * 获取所有考试
      */
+    @ResponseBody
     @RequestMapping(method = RequestMethod.GET)
-    public String list(Model model){
+    public ServerResponse list(){
         List<Exam> exams = examService.getExams();
-        model.addAttribute("exams",exams);
-        return "exam/list";
+        return ServerResponse.createBySuccess(exams);
     }
 
     /**
      * 通过考试id列出所有批次
      */
+    @ResponseBody
     @RequestMapping("/batch/{exam_id}")
-    public String batch(@PathVariable("exam_id") Integer exam_id,Model model){
+    public ServerResponse batch(@PathVariable("exam_id") Integer exam_id){
         List<Batch> batches = batchService.getBatchesByExamId(exam_id);
-        model.addAttribute("batches",batches);
-        return "exam/batches";
+
+        return ServerResponse.createBySuccess(batches);
     }
 
     /**
@@ -58,6 +60,7 @@ public class ExamController {
         if(student==null){
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"请登录后尝试");
         }
+
         return batchService.enroll(batch_id,student.getId());
     }
 
@@ -72,5 +75,36 @@ public class ExamController {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"请登录后尝试");
         }
         return examStudentService.cancel(exam_id,student.getId());
+    }
+
+    /**
+     * 添加考试
+     */
+    @PostMapping
+    @ResponseBody
+    public ServerResponse add(Exam exam){
+        ServerResponse serverResponse = examService.save(exam);
+        return serverResponse;
+    }
+
+
+    /**
+     * 添加考试批次
+     */
+    @PostMapping("batch")
+    @ResponseBody
+    public ServerResponse addBatch(Batch batch){
+        ServerResponse serverResponse = batchService.save(batch);
+        return serverResponse;
+    }
+
+    /**
+     * 删除考试批次
+     */
+    @GetMapping("batch")
+    @ResponseBody
+    public ServerResponse delBatch(Batch batch){
+        ServerResponse serverResponse = batchService.delBacth(batch);
+        return serverResponse;
     }
 }

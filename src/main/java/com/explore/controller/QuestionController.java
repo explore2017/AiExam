@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/question")
+@RequestMapping(value = "/question")
 public class QuestionController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class QuestionController {
     @PutMapping(value ="/{id}")
     public  ServerResponse edit(@PathVariable("id")Integer questionId,Question question){return  questionService.editQuestionByQuestionId(questionId,question);}
     @DeleteMapping(value ="/{id}")
-    public ServerResponse delect(@PathVariable("id")Integer questionId){return  questionService.delectQuestionByQuestionId(questionId);}
+    public ServerResponse delete(@PathVariable("id")Integer questionId){return  questionService.deleteQuestionByQuestionId(questionId);}
     @GetMapping(value ="/{id}")
     public  ServerResponse<Question> get(@PathVariable("id")Integer questionId){return  questionService.getQuestionsByQuestionId(questionId);}
     @GetMapping

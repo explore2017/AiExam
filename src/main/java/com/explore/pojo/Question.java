@@ -27,6 +27,8 @@ public class Question {
 
     private String keyPoint;
 
+    private String defaultScore;
+
     public Integer getId() {
         return id;
     }
@@ -38,9 +40,15 @@ public class Question {
     public String getTitle() {
         return title;
     }
+    public String getDefaultScore() {
+        return defaultScore;
+    }
 
     public void setTitle(String title) {
         this.title = title == null ? null : title.trim();
+    }
+    public void setDefaultScore(String defaultScore) {
+        this.defaultScore = defaultScore == null ? null : defaultScore.trim();
     }
 
     public String getContent() {

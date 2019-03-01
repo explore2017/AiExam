@@ -38,7 +38,7 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public ServerResponse delectQuestionByQuestionId(Integer questionId) {
+    public ServerResponse deleteQuestionByQuestionId(Integer questionId) {
         Question question= questionMapper.selectQuestionByQuestionId(questionId);
         if(question==null){return ServerResponse.createByErrorMessage("找不到这个题目");}
         int count=questionMapper.deleteByPrimaryKey(questionId);

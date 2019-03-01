@@ -14,6 +14,7 @@
     <result column="subject_id" jdbcType="INTEGER" property="subjectId" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="key_point" jdbcType="VARCHAR" property="keyPoint" />
+    <result column="default_score" jdbcType="VARCHAR" property="defaultScore" />
   </resultMap>
   <sql id="Base_Column_List">
     id, title, content, question_type_id, answer, create_time, update_time, is_subjective, 
@@ -31,6 +32,13 @@
       FROM question
 
     </select>
+  <select id="selectQuestionsByQuestionTypeIdAndSubjectId" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM question
+    where  question_type_id = #{questionTypeId,jdbcType=INTEGER} AND  subject_id = #{subjectId,jdbcType=INTEGER}
+
+  </select>
   <select id="selectQuestionByQuestionId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
       *
@@ -46,132 +54,14 @@
     insert into question (id, title, content, 
       question_type_id, answer, create_time, 
       update_time, is_subjective, difficulty, 
-      subject_id, status, key_point
+      subject_id, status, key_point,default_score
       )
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
       #{questionTypeId,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{isSubjective,jdbcType=INTEGER}, #{difficulty,jdbcType=INTEGER}, 
-      #{subjectId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{keyPoint,jdbcType=VARCHAR}
+      #{subjectId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{keyPoint,jdbcType=VARCHAR}, #{defaultScore,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.explore.pojo.Question">
-    insert into question
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="title != null">
-        title,
-      </if>
-      <if test="content != null">
-        content,
-      </if>
-      <if test="questionTypeId != null">
-        question_type_id,
-      </if>
-      <if test="answer != null">
-        answer,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="isSubjective != null">
-        is_subjective,
-      </if>
-      <if test="difficulty != null">
-        difficulty,
-      </if>
-      <if test="subjectId != null">
-        subject_id,
-      </if>
-      <if test="status != null">
-        status,
-      </if>
-      <if test="keyPoint != null">
-        key_point,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="content != null">
-        #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="questionTypeId != null">
-        #{questionTypeId,jdbcType=INTEGER},
-      </if>
-      <if test="answer != null">
-        #{answer,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isSubjective != null">
-        #{isSubjective,jdbcType=INTEGER},
-      </if>
-      <if test="difficulty != null">
-        #{difficulty,jdbcType=INTEGER},
-      </if>
-      <if test="subjectId != null">
-        #{subjectId,jdbcType=INTEGER},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=INTEGER},
-      </if>
-      <if test="keyPoint != null">
-        #{keyPoint,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.explore.pojo.Question">
-    update question
-    <set>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="content != null">
-        content = #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="questionTypeId != null">
-        question_type_id = #{questionTypeId,jdbcType=INTEGER},
-      </if>
-      <if test="answer != null">
-        answer = #{answer,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isSubjective != null">
-        is_subjective = #{isSubjective,jdbcType=INTEGER},
-      </if>
-      <if test="difficulty != null">
-        difficulty = #{difficulty,jdbcType=INTEGER},
-      </if>
-      <if test="subjectId != null">
-        subject_id = #{subjectId,jdbcType=INTEGER},
-      </if>
-      <if test="status != null">
-        status = #{status,jdbcType=INTEGER},
-      </if>
-      <if test="keyPoint != null">
-        key_point = #{keyPoint,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
   <update id="updateByPrimaryKey" parameterType="com.explore.pojo.Question">
     update question
     set title = #{title,jdbcType=VARCHAR},
@@ -184,7 +74,7 @@
       difficulty = #{difficulty,jdbcType=INTEGER},
       subject_id = #{subjectId,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
-      key_point = #{keyPoint,jdbcType=VARCHAR}
+      key_point = #{keyPoint,jdbcType=VARCHAR},default_score= #{defaultScore,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

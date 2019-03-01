@@ -21,10 +21,17 @@
     where exam_id = #{examId,jdbcType=INTEGER}
       and student_id = #{studentId,jdbcType=INTEGER}
   </select>
-    <select id="checkHasEnroll" resultType="java.lang.Integer">
+  <select id="checkHasEnroll" resultType="java.lang.Integer">
       select count(*) from exam_student where exam_id = #{exam_id} and  student_id = #{student_id}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="com.explore.pojo.ExamStudentKey">
+  <select id="selectByStudentId"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from exam_student
+    where
+   student_id = #{studentId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.explore.pojo.ExamStudentKey">
     delete from exam_student
     where exam_id = #{examId,jdbcType=INTEGER}
       and student_id = #{studentId,jdbcType=INTEGER}
@@ -125,6 +132,12 @@
       end_time = #{endTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       score = #{score,jdbcType=DOUBLE}
+    where exam_id = #{examId,jdbcType=INTEGER}
+      and student_id = #{studentId,jdbcType=INTEGER}
+  </update>
+  <update id="updateScore" >
+    update exam_student
+    set score=#{score,jdbcType=DOUBLE}
     where exam_id = #{examId,jdbcType=INTEGER}
       and student_id = #{studentId,jdbcType=INTEGER}
   </update>
