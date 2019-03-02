@@ -47,9 +47,9 @@ public class ManageController {
     /**
      * 查看所有学生数据
      */
-    @GetMapping("/getAllStudent")
+    @GetMapping("/Students")
     public ServerResponse<List<Student>> getAllStudent(Student student){
-        ServerResponse<List<Student>> serverResponse=manageService.getAllStudent();
+        ServerResponse<List<Student>> serverResponse=manageService.Students();
         return serverResponse;
     }
 
@@ -83,9 +83,9 @@ public class ManageController {
     /**
      * 查看所有老师数据
      */
-    @GetMapping("/getAllTeacher")
+    @GetMapping("/Teachers")
     public ServerResponse<List<Teacher>> getAllStudent(Teacher teacher){
-        ServerResponse<List<Teacher>> serverResponse=manageService.getAllTeacher();
+        ServerResponse<List<Teacher>> serverResponse=manageService.Teachers();
         return serverResponse;
     }
 

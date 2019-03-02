@@ -49,7 +49,7 @@ public class ManageServicempl implements IManageService {
     }
 
     @Override
-    public ServerResponse<List<Student>> getAllStudent() {
+    public ServerResponse<List<Student>> Students() {
         return ServerResponse.createBySuccess(studentMapper.getAllStudent());
     }
 
@@ -87,7 +87,7 @@ public class ManageServicempl implements IManageService {
     }
 
     @Override
-    public ServerResponse<List<Teacher>> getAllTeacher() {
+    public ServerResponse<List<Teacher>> Teachers() {
         return ServerResponse.createBySuccess(teacherMapper.getAllTeacher());
     }
 
