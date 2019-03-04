@@ -3,10 +3,7 @@ package com.explore.controller;
 import com.explore.common.Const;
 import com.explore.common.ResponseCode;
 import com.explore.common.ServerResponse;
-import com.explore.pojo.Batch;
-import com.explore.pojo.Exam;
-import com.explore.pojo.Student;
-import com.explore.pojo.Teacher;
+import com.explore.pojo.*;
 import com.explore.service.IBatchService;
 import com.explore.service.IExamService;
 import com.explore.service.IExamStudentService;
@@ -101,10 +98,20 @@ public class ExamController {
     /**
      * 删除考试批次
      */
-    @GetMapping("batch")
+    @DeleteMapping("batch")
     @ResponseBody
     public ServerResponse delBatch(Batch batch){
         ServerResponse serverResponse = batchService.delBacth(batch);
+        return serverResponse;
+    }
+
+    /**
+     * 自动批改
+     */
+    @GetMapping("batch")
+    @ResponseBody
+    public ServerResponse autoCheck(ExamStudent examStudent, Paper paper, List<Question> questions){
+        ServerResponse serverResponse = examService.autoCheck(examStudent, paper, questions);
         return serverResponse;
     }
 }
