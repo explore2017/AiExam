@@ -92,7 +92,7 @@ public class PaperController {
      * @param paperId,paperCompose
      */
     @PutMapping(value = "/details/{paperId}")
-    public ServerResponse editPaperComposeByPaperId(@PathVariable("paperId")Integer paperId, PaperCompose paperCompose){
+        public ServerResponse editPaperComposeByPaperId(@PathVariable("paperId")Integer paperId, PaperCompose paperCompose){
         return paperService.editPaperComposeByPaperId(paperId,paperCompose);
     }
     /**

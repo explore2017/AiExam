@@ -15,6 +15,7 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="key_point" jdbcType="VARCHAR" property="keyPoint" />
     <result column="default_score" jdbcType="VARCHAR" property="defaultScore" />
+    <result column="selects" jdbcType="VARCHAR" property="selects" />
   </resultMap>
   <sql id="Base_Column_List">
     id, title, content, question_type_id, answer, create_time, update_time, is_subjective, 
@@ -54,12 +55,12 @@
     insert into question (id, title, content, 
       question_type_id, answer, create_time, 
       update_time, is_subjective, difficulty, 
-      subject_id, status, key_point,default_score
+      subject_id, status, key_point,default_score,selects
       )
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
       #{questionTypeId,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{isSubjective,jdbcType=INTEGER}, #{difficulty,jdbcType=INTEGER}, 
-      #{subjectId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{keyPoint,jdbcType=VARCHAR}, #{defaultScore,jdbcType=VARCHAR}
+      #{subjectId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{keyPoint,jdbcType=VARCHAR}, #{defaultScore,jdbcType=VARCHAR}, #{selects,jdbcType=VARCHAR}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.explore.pojo.Question">
@@ -74,7 +75,7 @@
       difficulty = #{difficulty,jdbcType=INTEGER},
       subject_id = #{subjectId,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
-      key_point = #{keyPoint,jdbcType=VARCHAR},default_score= #{defaultScore,jdbcType=VARCHAR}
+      key_point = #{keyPoint,jdbcType=VARCHAR},default_score= #{defaultScore,jdbcType=VARCHAR},selects= #{selects,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -29,6 +29,8 @@ public class Question {
 
     private String defaultScore;
 
+    private String selects;
+
     public Integer getId() {
         return id;
     }
@@ -40,13 +42,19 @@ public class Question {
     public String getTitle() {
         return title;
     }
+
     public String getDefaultScore() {
         return defaultScore;
+    }
+
+    public void setSelects(String selects) {
+        this.selects = selects == null ? null : selects.trim();
     }
 
     public void setTitle(String title) {
         this.title = title == null ? null : title.trim();
     }
+
     public void setDefaultScore(String defaultScore) {
         this.defaultScore = defaultScore == null ? null : defaultScore.trim();
     }
@@ -69,6 +77,10 @@ public class Question {
 
     public String getAnswer() {
         return answer;
+    }
+
+    public String getSelects() {
+        return selects;
     }
 
     public void setAnswer(String answer) {
