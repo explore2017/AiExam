@@ -35,7 +35,7 @@ public class StudentController {
      * 学生登录
      */
     @GetMapping("/login")
-    public ServerResponse login(String sno, String password,HttpSession session) {
+    public ServerResponse<Student> login(String sno, String password,HttpSession session) {
         ServerResponse<Student> serverResponse = studentService.login(sno, password);
         if (serverResponse.isSuccess()) {
             Student student = serverResponse.getData();
