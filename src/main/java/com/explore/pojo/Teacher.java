@@ -15,6 +15,8 @@ public class Teacher {
 
     private String email;
 
+    private String subjectId;
+
     private Date createTime;
 
     private Date updateTime;
@@ -29,6 +31,10 @@ public class Teacher {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getSubjectId() {
+        return subjectId;
     }
 
     public void setUsername(String username) {
@@ -49,6 +55,10 @@ public class Teacher {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public void setSubjectId(String subjectId) {
+        this.subjectId = subjectId == null ? null : subjectId.trim();
     }
 
     public String getPhone() {

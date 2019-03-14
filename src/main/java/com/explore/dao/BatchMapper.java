@@ -1,9 +1,10 @@
 package com.explore.dao;
 
 import com.explore.pojo.Batch;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Component
 public interface BatchMapper {
     int deleteByPrimaryKey(Integer id);
 

@@ -93,7 +93,7 @@ public class ManageServicempl implements IManageService {
 
     @Override
     public ServerResponse addTeacher(Teacher teacher) {
-        teacher.setPassword("123456");
+        teacher.setPassword(teacher.getPassword());
         Date creat_time = new Date();
         teacher.setCreateTime(creat_time);
         Teacher teacher1 = teacherMapper.selectUsername(teacher.getUsername());

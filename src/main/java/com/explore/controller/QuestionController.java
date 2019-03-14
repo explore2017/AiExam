@@ -23,7 +23,7 @@ public class QuestionController {
      */
     @PostMapping
     @ApiOperation(value="向试题库添加试题", notes="参数为一个Question对象")
-    public ServerResponse save(Question question){
+    public ServerResponse save(Question question,String[] choice){
         return questionService.saveQuestion(question);
     }
     /**

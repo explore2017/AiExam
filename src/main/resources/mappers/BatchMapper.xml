@@ -13,7 +13,7 @@
     id, exam_id, `name`, `describe`, start_time, end_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from batch
     where id = #{id,jdbcType=INTEGER}
@@ -35,7 +35,7 @@
     insert into batch (id, exam_id, `name`,
       `describe`, start_time, end_time
       )
-    values (#{id,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
       #{describe,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}
       )
   </insert>

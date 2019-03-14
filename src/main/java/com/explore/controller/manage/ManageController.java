@@ -2,12 +2,13 @@ package com.explore.controller.manage;
 
 import com.explore.common.Const;
 import com.explore.common.ServerResponse;
+//import com.explore.dao.TeacherSubjectMapper;
+import com.explore.dao.TeacherSubjectMapper;
 import com.explore.pojo.Manager;
 import com.explore.pojo.Student;
 import com.explore.pojo.Teacher;
 import com.explore.service.IManageService;
-import com.explore.service.IStudentService;
-import com.explore.service.ITeacherService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,8 @@ public class ManageController {
 
     @Autowired
     IManageService manageService;
+    @Autowired
+    TeacherSubjectMapper teacherSubjectMapper;
 
     /**
      * 管理员登录
@@ -93,7 +96,7 @@ public class ManageController {
      * 老师添加
      */
     @PostMapping("/insertTeacher")
-    public ServerResponse addTeacher(Teacher teacher) {
+    public ServerResponse addTeacher(Teacher teacher,int[] subject) {
         ServerResponse serverResponse = manageService.addTeacher(teacher);
         return serverResponse;
     }
