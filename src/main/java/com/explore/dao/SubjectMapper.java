@@ -2,6 +2,8 @@ package com.explore.dao;
 
 import com.explore.pojo.Subject;
 
+import java.util.List;
+
 public interface SubjectMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface SubjectMapper {
     int updateByPrimaryKeySelective(Subject record);
 
     int updateByPrimaryKey(Subject record);
+
+    List<Subject> getAllSubject();
 }
