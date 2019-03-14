@@ -13,6 +13,11 @@
   <sql id="Base_Column_List">
     id, `name`, subject_no, subject_code, create_time, update_time, creator
   </sql>
+  <select id="getAllSubject" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from subject
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
