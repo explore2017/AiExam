@@ -9,6 +9,7 @@ import com.explore.pojo.Student;
 import com.explore.pojo.Teacher;
 import com.explore.service.IManageService;
 
+import com.explore.service.ISubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +23,6 @@ public class ManageController {
 
     @Autowired
     IManageService manageService;
-    @Autowired
-    TeacherSubjectMapper teacherSubjectMapper;
 
     /**
      * 管理员登录
@@ -97,7 +96,7 @@ public class ManageController {
      */
     @PostMapping("/insertTeacher")
     public ServerResponse addTeacher(Teacher teacher,int[] subject) {
-        ServerResponse serverResponse = manageService.addTeacher(teacher);
+        ServerResponse serverResponse = manageService.addTeacher(teacher,subject);
         return serverResponse;
     }
 
@@ -114,7 +113,7 @@ public class ManageController {
      * 修改老师信息
      */
     @PutMapping("/reviseTeacher")
-    public ServerResponse reviseTeacher(Teacher teacher) {
+    public ServerResponse reviseTeacher(Teacher teacher,int[] subject) {
         ServerResponse serverResponse = manageService.reviseTeacher(teacher);
         return serverResponse;
     }

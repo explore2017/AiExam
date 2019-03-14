@@ -1,10 +1,7 @@
 package com.explore.dao;
 
 import com.explore.pojo.TeacherSubject;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 @Mapper
@@ -16,4 +13,6 @@ public interface  TeacherSubjectMapper {
      TeacherSubject selectByteacherId(Integer teacherId);
      @Select("select * from teacher_subject where teacher_id=#{teacherId} and subject_id=#{subjectId}")
      TeacherSubject check(@Param("teacherId")Integer teacherId, @Param("subjectId")Integer subjectId);
+     @Delete("delete from teacher_subject where teacher_id=#{teacherId}")
+     int deleteSubject (Integer teacherId);
 }
