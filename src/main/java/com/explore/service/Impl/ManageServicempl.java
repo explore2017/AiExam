@@ -72,8 +72,8 @@ public class ManageServicempl implements IManageService {
     }
 
     @Override
-    public ServerResponse outStudent(Student student) {
-        int count = studentMapper.deleteByPrimaryKey(student.getId());
+    public ServerResponse outStudent(int id) {
+        int count = studentMapper.deleteByPrimaryKey(id);
         if (count == 1)
             return ServerResponse.createBySuccessMessage("学生删除成功");
         return ServerResponse.createByErrorMessage("学生删除失败");
@@ -112,14 +112,10 @@ public class ManageServicempl implements IManageService {
     }
 
     @Override
-    public ServerResponse outTeacher(Teacher teacher) {
-        int count = teacherMapper.deleteByPrimaryKey(teacher.getId());
+    public ServerResponse outTeacher(int id) {
+        int count = teacherMapper.deleteByPrimaryKey(id);
         if (count == 1) {
-            while (true) {
-                int judge = teacherSubjectMapper.deleteSubject(teacher.getId());
-                if (judge == 0)
-                    return ServerResponse.createBySuccessMessage("该老师删除成功");
-            }
+            return ServerResponse.createBySuccessMessage("该老师删除成功");
         }
         return ServerResponse.createByErrorMessage("该老师删除失败");
     }
@@ -130,11 +126,7 @@ public class ManageServicempl implements IManageService {
         teacher.setUpdateTime(update_time);
         int count = teacherMapper.updateByPrimaryKeySelective(teacher);
         if (count == 1) {
-            while (true) {
                 int judge = teacherSubjectMapper.deleteSubject(teacher.getId());
-                if (judge == 0)
-                    break;
-            }
             add_all_subject(teacher,subject);
             return ServerResponse.createBySuccessMessage("老师信息修改成功");
         }
@@ -144,8 +136,6 @@ public class ManageServicempl implements IManageService {
     public void add_all_subject(Teacher teacher, int[] subject){
         String allSubject = "";
         for (int i = 0; i < subject.length; i++) {
-            String oneSubject = subjectMapper.selectByPrimaryKey(subject[i]).getName();
-            allSubject = allSubject + "," + oneSubject;
             teacherSubjectMapper.insertTeacherSubject(teacher.getId(), subject[i]);
         }
         teacher.setSubjectId(allSubject);
