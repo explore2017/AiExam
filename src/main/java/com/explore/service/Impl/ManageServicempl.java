@@ -74,7 +74,8 @@ public class ManageServicempl implements IManageService {
     @Override
     public ServerResponse outStudent(int id) {
         int count = studentMapper.deleteByPrimaryKey(id);
-        if (count == 1)
+        int count1=teacherSubjectMapper.deleteSubject(id);
+        if (count == 1&&count1==1)
             return ServerResponse.createBySuccessMessage("学生删除成功");
         return ServerResponse.createByErrorMessage("学生删除失败");
     }
