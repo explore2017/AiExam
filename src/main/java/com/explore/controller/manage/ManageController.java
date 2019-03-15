@@ -67,9 +67,9 @@ public class ManageController {
     /**
      * 学生删除
      */
-    @DeleteMapping("/deleteStudent")
-    public ServerResponse outStudent(Student student) {
-        ServerResponse serverResponse = manageService.outStudent(student);
+    @DeleteMapping("/deleteStudent/{id}")
+    public ServerResponse outStudent(@PathVariable("id") Integer id) {
+        ServerResponse serverResponse = manageService.outStudent(id);
         return serverResponse;
     }
 
@@ -103,9 +103,9 @@ public class ManageController {
     /**
      * 老师删除
      */
-    @DeleteMapping("/deleteTeacher")
-    public ServerResponse outTeacher(Teacher teacher) {
-        ServerResponse serverResponse = manageService.outTeacher(teacher);
+    @DeleteMapping("/deleteTeacher/{id}")
+    public ServerResponse outTeacher(@PathVariable("id") Integer id) {
+        ServerResponse serverResponse = manageService.outTeacher(id);
         return serverResponse;
     }
 
@@ -114,7 +114,7 @@ public class ManageController {
      */
     @PutMapping("/reviseTeacher")
     public ServerResponse reviseTeacher(Teacher teacher,int[] subject) {
-        ServerResponse serverResponse = manageService.reviseTeacher(teacher);
+        ServerResponse serverResponse = manageService.reviseTeacher(teacher,subject);
         return serverResponse;
     }
 

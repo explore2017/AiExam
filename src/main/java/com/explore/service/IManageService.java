@@ -16,7 +16,7 @@ public interface IManageService {
 
     ServerResponse addStudent(Student student);
 
-    ServerResponse outStudent(Student student);
+    ServerResponse outStudent(int id);
 
     ServerResponse reviseStudent(Student student);
 
@@ -24,7 +24,7 @@ public interface IManageService {
 
     ServerResponse addTeacher(Teacher teacher,int[] subject);
 
-    ServerResponse outTeacher(Teacher teacher);
+    ServerResponse outTeacher(int id);
 
     ServerResponse reviseTeacher(Teacher teacher,int[] subject);
 
