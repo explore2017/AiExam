@@ -22,10 +22,10 @@ public interface IManageService {
 
     ServerResponse<List<Teacher>> Teachers();
 
-    ServerResponse addTeacher(Teacher teacher);
+    ServerResponse addTeacher(Teacher teacher,int[] subject);
 
     ServerResponse outTeacher(Teacher teacher);
 
-    ServerResponse reviseTeacher(Teacher teacher);
+    ServerResponse reviseTeacher(Teacher teacher,int[] subject);
 
 }

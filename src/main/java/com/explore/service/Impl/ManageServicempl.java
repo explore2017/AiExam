@@ -1,15 +1,14 @@
 package com.explore.service.Impl;
 
 import com.explore.common.ServerResponse;
-import com.explore.dao.StudentMapper;
-import com.explore.dao.TeacherMapper;
+import com.explore.dao.*;
 import com.explore.pojo.Manager;
-import com.explore.dao.ManagerMapper;
 import com.explore.pojo.Student;
 import com.explore.pojo.Teacher;
 import com.explore.service.IManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.explore.pojo.TeacherSubject;
 
 import java.util.Date;
 import java.util.List;
@@ -23,6 +22,10 @@ public class ManageServicempl implements IManageService {
     StudentMapper studentMapper;
     @Autowired
     TeacherMapper teacherMapper;
+    @Autowired
+    SubjectMapper subjectMapper;
+    @Autowired
+    TeacherSubjectMapper teacherSubjectMapper;
 
     @Override
     public ServerResponse<Manager> login(String username, String password) {
@@ -92,7 +95,7 @@ public class ManageServicempl implements IManageService {
     }
 
     @Override
-    public ServerResponse addTeacher(Teacher teacher) {
+    public ServerResponse addTeacher(Teacher teacher, int[] subject) {
         teacher.setPassword(teacher.getPassword());
         Date creat_time = new Date();
         teacher.setCreateTime(creat_time);
@@ -100,27 +103,53 @@ public class ManageServicempl implements IManageService {
         if (teacher1 != null)
             return ServerResponse.createByErrorMessage("已有用户名");
         int count = teacherMapper.insert(teacher);
-        if (count == 1)
+        teacher1=teacherMapper.selectUsername(teacher.getUsername());
+        if (count == 1) {
+            add_all_subject(teacher1,subject);
             return ServerResponse.createBySuccessMessage("老师增加成功");
+        }
         return ServerResponse.createByErrorMessage("老师增加失败");
     }
 
     @Override
     public ServerResponse outTeacher(Teacher teacher) {
         int count = teacherMapper.deleteByPrimaryKey(teacher.getId());
-        if (count == 1)
-            return ServerResponse.createBySuccessMessage("该老师删除成功");
+        if (count == 1) {
+            while (true) {
+                int judge = teacherSubjectMapper.deleteSubject(teacher.getId());
+                if (judge == 0)
+                    return ServerResponse.createBySuccessMessage("该老师删除成功");
+            }
+        }
         return ServerResponse.createByErrorMessage("该老师删除失败");
     }
 
     @Override
-    public ServerResponse reviseTeacher(Teacher teacher) {
+    public ServerResponse reviseTeacher(Teacher teacher, int[] subject) {
         Date update_time = new Date();
         teacher.setUpdateTime(update_time);
         int count = teacherMapper.updateByPrimaryKeySelective(teacher);
-        if (count == 1)
+        if (count == 1) {
+            while (true) {
+                int judge = teacherSubjectMapper.deleteSubject(teacher.getId());
+                if (judge == 0)
+                    break;
+            }
+            add_all_subject(teacher,subject);
             return ServerResponse.createBySuccessMessage("老师信息修改成功");
+        }
         return ServerResponse.createByErrorMessage("老师信息修改失败");
+    }
+
+    public void add_all_subject(Teacher teacher, int[] subject){
+        String allSubject = "";
+        for (int i = 0; i < subject.length; i++) {
+            String oneSubject = subjectMapper.selectByPrimaryKey(subject[i]).getName();
+            allSubject = allSubject + "," + oneSubject;
+            teacherSubjectMapper.insertTeacherSubject(teacher.getId(), subject[i]);
+        }
+        teacher.setSubjectId(allSubject);
+        teacherMapper.updateByPrimaryKeySelective(teacher);
     }
 
 }
