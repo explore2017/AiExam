@@ -29,7 +29,7 @@ public class SubjectController {
      * 增加课程
      */
     @PostMapping("/addSubject")
-    public ServerResponse addSubject(Subject subject){
+    public ServerResponse addSubject(@RequestBody Subject subject){
         ServerResponse serverResponse=subjectService.addSubject(subject);
         return serverResponse;
     }
@@ -44,7 +44,7 @@ public class SubjectController {
     }
 
     /**
-     * 增加课程
+     * 修改课程
      */
     @PutMapping("/reviseSubject")
     public ServerResponse reviseSuject(Subject subject){
