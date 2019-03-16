@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Mapper
 @Component
 public interface  TeacherSubjectMapper {
-     @Insert("insert into teacher_subject(teacher_id,subject_id) values(#{teacherId},#{subject_id})")
-     int insertTeacherSubject(@Param("teacherId")Integer teacherId, @Param("subjectId")Integer subjcetId);
+     @Insert("insert into teacher_subject(teacher_id,subject_id) values(#{teacherId},#{subjectId})")
+     int insertTeacherSubject(@Param("teacherId")Integer teacherId, @Param("subjectId")Integer subjectId);
 
      @Select("select * from teacher_subject where teacher_id=#{teacherId}")
      TeacherSubject selectByteacherId(Integer teacherId);

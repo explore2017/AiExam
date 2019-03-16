@@ -9,10 +9,11 @@ import com.explore.service.IManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.explore.pojo.TeacherSubject;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-
+@Transactional
 @Service
 public class ManageServicempl implements IManageService {
 
@@ -136,8 +137,10 @@ public class ManageServicempl implements IManageService {
 
     public void add_all_subject(Teacher teacher, int[] subject){
         String allSubject = "";
-        for (int i = 0; i < subject.length; i++) {
-            teacherSubjectMapper.insertTeacherSubject(teacher.getId(), subject[i]);
+        if (subject.length != 0) {
+            for (int i = 0; i < subject.length; i++) {
+                teacherSubjectMapper.insertTeacherSubject(teacher.getId(), subject[i]);
+            }
         }
         teacher.setSubjectId(allSubject);
         teacherMapper.updateByPrimaryKeySelective(teacher);
