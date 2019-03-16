@@ -5,6 +5,7 @@ import com.explore.common.ResponseCode;
 import com.explore.common.ServerResponse;
 import com.explore.pojo.ExamStudent;
 import com.explore.pojo.Student;
+import com.explore.pojo.User;
 import com.explore.service.IExamService;
 import com.explore.service.IExamStudentService;
 import com.explore.service.IStudentService;
@@ -35,8 +36,8 @@ public class StudentController {
      * 学生登录
      */
     @PostMapping("/login")
-    public ServerResponse<Student> login(@RequestBody String sno, String password,HttpSession session) {
-        ServerResponse<Student> serverResponse = studentService.login(sno, password);
+    public ServerResponse<Student> login(@RequestBody User user, HttpSession session) {
+        ServerResponse<Student> serverResponse = studentService.login(user.getUsername(), user.getPassword());
         if (serverResponse.isSuccess()) {
             Student student = serverResponse.getData();
             session.setAttribute(Const.CURRENT_USER,student);
