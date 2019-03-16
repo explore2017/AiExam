@@ -32,7 +32,7 @@ public class PaperController {
      */
     @PostMapping
     @ApiOperation(value="向试卷库新增试卷基本信息", notes="参数为一个Paper对象")
-    public ServerResponse save(Paper paper){
+    public ServerResponse save(@RequestBody Paper paper){
         return paperService.savePaper(paper);
     }
     /**
@@ -93,7 +93,7 @@ public class PaperController {
      */
     @PostMapping(value = "/details/{paperId}")
     @ApiOperation(value="向指定试卷添加题目", notes="指定试卷的id和一个PaperCompose对象")
-    public ServerResponse addPaperComposeByPaperId(@PathVariable("paperId")Integer paperId, PaperCompose paperCompose){
+    public ServerResponse addPaperComposeByPaperId(@RequestBody @PathVariable("paperId")Integer paperId, PaperCompose paperCompose){
         return paperService.addPaperComposeByPaperId(paperId,paperCompose);
     }
 
@@ -122,7 +122,7 @@ public class PaperController {
      */
     @PostMapping(value = "/auto/{paperId}")
     @ApiOperation(value="自动生成试卷的题目", notes="通过试卷id，问题类型id，生成的数量，每一个题目的成绩，科目id，知识点")
-    public ServerResponse<List<Question>> autoQuestion(@PathVariable("paperId")Integer paperId,  Integer questionTypeId, Integer quantity, Double singeScore, Integer subjectId, String keyPoint){
+    public ServerResponse<List<Question>> autoQuestion(@RequestBody @PathVariable("paperId")Integer paperId,  Integer questionTypeId, Integer quantity, Double singeScore, Integer subjectId, String keyPoint){
         return paperService.autoQuestion(paperId,questionTypeId,quantity,singeScore,subjectId,keyPoint);
     }
 

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/exam")
@@ -79,9 +80,10 @@ public class ExamController {
      */
     @PostMapping
     @ResponseBody
-    public ServerResponse add(Exam exam){
+    public ServerResponse add(@RequestBody Exam exam){
         ServerResponse serverResponse = examService.save(exam);
         return serverResponse;
+//        return  null;
     }
 
 

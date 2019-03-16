@@ -18,4 +18,6 @@ public interface SubjectMapper {
     int updateByPrimaryKey(Subject record);
 
     List<Subject> getAllSubject();
+
+    int getOneSuject(String SubjectNo);
 }

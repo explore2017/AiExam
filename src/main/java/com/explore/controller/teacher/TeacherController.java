@@ -6,10 +6,7 @@ import com.explore.pojo.Teacher;
 import com.explore.service.ITeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -24,8 +21,8 @@ public class TeacherController {
     /**
      * 老师登录
      */
-    @GetMapping("/Login")
-    public ServerResponse login(String username, String password,HttpSession session) {
+    @PostMapping("/Login")
+    public ServerResponse login(@RequestBody String username, String password, HttpSession session) {
         ServerResponse<Teacher> serverResponse = teacherService.login(username, password);
         if (serverResponse.isSuccess()) {
             Teacher teacher = serverResponse.getData();

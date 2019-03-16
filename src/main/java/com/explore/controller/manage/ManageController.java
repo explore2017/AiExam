@@ -27,8 +27,8 @@ public class ManageController {
     /**
      * 管理员登录
      */
-    @GetMapping("/login")
-    public ServerResponse login(String username, String password, HttpSession session) {
+    @PostMapping("/login")
+    public ServerResponse login(@RequestBody String username, String password, HttpSession session) {
         ServerResponse<Manager> serverResponse = manageService.login(username, password);
         if (serverResponse.isSuccess()) {
             Manager manager = serverResponse.getData();
@@ -59,7 +59,7 @@ public class ManageController {
      * 学生添加
      */
     @PostMapping("/insertStudent")
-    public ServerResponse addStudent(Student student) {
+    public ServerResponse addStudent(@RequestBody Student student) {
         ServerResponse serverResponse = manageService.addStudent(student);
         return serverResponse;
     }
@@ -95,7 +95,7 @@ public class ManageController {
      * 老师添加
      */
     @PostMapping("/insertTeacher")
-    public ServerResponse addTeacher(Teacher teacher,int[] subject) {
+    public ServerResponse addTeacher(@RequestBody Teacher teacher,int[] subject) {
         ServerResponse serverResponse = manageService.addTeacher(teacher,subject);
         return serverResponse;
     }
