@@ -19,5 +19,5 @@ public interface SubjectMapper {
 
     List<Subject> getAllSubject();
 
-    int getOneSuject(String SubjectNo);
+    Subject getOneSuject(String SubjectNo);
 }

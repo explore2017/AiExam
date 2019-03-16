@@ -7,6 +7,7 @@ import com.explore.dao.TeacherSubjectMapper;
 import com.explore.pojo.Manager;
 import com.explore.pojo.Student;
 import com.explore.pojo.Teacher;
+import com.explore.pojo.User;
 import com.explore.service.IManageService;
 
 import com.explore.service.ISubjectService;
@@ -28,8 +29,8 @@ public class ManageController {
      * 管理员登录
      */
     @PostMapping("/login")
-    public ServerResponse login(@RequestBody String username, String password, HttpSession session) {
-        ServerResponse<Manager> serverResponse = manageService.login(username, password);
+    public ServerResponse login(@RequestBody User user, HttpSession session) {
+        ServerResponse<Manager> serverResponse = manageService.login(user.getUsername(), user.getPassword());
         if (serverResponse.isSuccess()) {
             Manager manager = serverResponse.getData();
             session.setAttribute(Const.CURRENT_USER,manager);
