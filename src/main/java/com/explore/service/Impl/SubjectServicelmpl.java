@@ -28,8 +28,8 @@ public class SubjectServicelmpl implements ISubjectService {
         if(subject==null){
             return ServerResponse.createByErrorMessage("不能为空");
         }
-        int count1=subjectMapper.getOneSuject(subject.getSubjectNo());
-        if(count1==1){
+        Subject suject1=subjectMapper.getOneSuject(subject.getSubjectNo());
+        if(suject1!=null){
             return  ServerResponse.createByErrorMessage("课程号相同");
         }
         int count =subjectMapper.insert(subject);
