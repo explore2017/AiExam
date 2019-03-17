@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/manage")
@@ -95,8 +96,9 @@ public class ManageController {
      * 老师添加
      */
     @PostMapping("/insertTeacher")
-    public ServerResponse addTeacher(@RequestBody Teacher teacher,@RequestParam int[] subject) {
-        ServerResponse serverResponse = manageService.addTeacher(teacher,subject);
+    public ServerResponse addTeacher(@RequestBody Teacher teacher) {
+        String[] subjectId=teacher.getSubjectId().split(",");
+        ServerResponse serverResponse = manageService.addTeacher(teacher,subjectId);
         return serverResponse;
     }
 
@@ -113,8 +115,9 @@ public class ManageController {
      * 修改老师信息
      */
     @PutMapping("/reviseTeacher")
-    public ServerResponse reviseTeacher(Teacher teacher, int[] subject) {
-        ServerResponse serverResponse = manageService.reviseTeacher(teacher,subject);
+    public ServerResponse reviseTeacher(@RequestBody Teacher teacher) {
+        String[] subjectId=teacher.getSubjectId().split(",");
+        ServerResponse serverResponse = manageService.reviseTeacher(teacher,subjectId);
         return serverResponse;
     }
 

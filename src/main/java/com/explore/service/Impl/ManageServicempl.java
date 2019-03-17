@@ -2,13 +2,10 @@ package com.explore.service.Impl;
 
 import com.explore.common.ServerResponse;
 import com.explore.dao.*;
-import com.explore.pojo.Manager;
-import com.explore.pojo.Student;
-import com.explore.pojo.Teacher;
+import com.explore.pojo.*;
 import com.explore.service.IManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.explore.pojo.TeacherSubject;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -97,18 +94,23 @@ public class ManageServicempl implements IManageService {
     }
 
     @Override
-    public ServerResponse addTeacher(Teacher teacher, int[] subject) {
+    public ServerResponse addTeacher(Teacher teacher, String[] subject) {
         teacher.setPassword(teacher.getPassword());
         Date creat_time = new Date();
         teacher.setCreateTime(creat_time);
         Teacher teacher1 = teacherMapper.selectUsername(teacher.getUsername());
-        if (teacher1 != null)
+        if (teacher1 != null) {
             return ServerResponse.createByErrorMessage("已有用户名");
+        }
         int count = teacherMapper.insert(teacher);
         teacher1=teacherMapper.selectUsername(teacher.getUsername());
         if (count == 1) {
-            add_all_subject(teacher1,subject);
-            return ServerResponse.createBySuccessMessage("老师增加成功");
+            ServerResponse serverResponse= add_all_subject(teacher1,subject);
+            if(serverResponse.isSuccess()){
+                return ServerResponse.createBySuccessMessage("老师增加成功");
+            }
+            return serverResponse;
+
         }
         return ServerResponse.createByErrorMessage("老师增加失败");
     }
@@ -123,7 +125,7 @@ public class ManageServicempl implements IManageService {
     }
 
     @Override
-    public ServerResponse reviseTeacher(Teacher teacher, int[] subject) {
+    public ServerResponse reviseTeacher(Teacher teacher, String[] subject) {
         Date update_time = new Date();
         teacher.setUpdateTime(update_time);
         int count = teacherMapper.updateByPrimaryKeySelective(teacher);
@@ -135,15 +137,23 @@ public class ManageServicempl implements IManageService {
         return ServerResponse.createByErrorMessage("老师信息修改失败");
     }
 
-    public void add_all_subject(Teacher teacher, int[] subject){
+    public ServerResponse add_all_subject(Teacher teacher, String[] subjectId){
         String allSubject = "";
-        if (subject.length != 0) {
-            for (int i = 0; i < subject.length; i++) {
-                teacherSubjectMapper.insertTeacherSubject(teacher.getId(), subject[i]);
+        if (subjectId!=null) {
+            for (int i = 0; i < subjectId.length; i++) {
+                Subject subject= subjectMapper.selectByPrimaryKey(Integer.parseInt(subjectId[i]));
+                if(subject==null) {return ServerResponse.createByErrorMessage("没有此科目");}
+                if(i==0){
+                    allSubject+=subject.getName();
+                }else{
+                    allSubject+=","+subject.getName();
+                }
+                teacherSubjectMapper.insertTeacherSubject(teacher.getId(), Integer.parseInt(subjectId[i]));
             }
         }
         teacher.setSubjectId(allSubject);
         teacherMapper.updateByPrimaryKeySelective(teacher);
+        return ServerResponse.createBySuccess();
     }
 
 }
