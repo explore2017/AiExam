@@ -61,6 +61,7 @@ public class ManageController {
      */
     @PostMapping("/insertStudent")
     public ServerResponse addStudent(@RequestBody Student student) {
+
         ServerResponse serverResponse = manageService.addStudent(student);
         return serverResponse;
     }

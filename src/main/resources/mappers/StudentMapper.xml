@@ -5,14 +5,15 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="sno" jdbcType="VARCHAR" property="sno" />
     <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="grade" jdbcType="VARCHAR" property="grade" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="emial" jdbcType="VARCHAR" property="emial" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="subject_id" jdbcType="VARCHAR" property="subjectId" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, sno, password, grade, phone, emial, create_time, update_time
+    id, sno, password, name, phone, email, create_time, update_time,subject_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -35,7 +36,7 @@
     select
     <include refid="Base_Column_List" />
     from student
-    where sno = #{sno}
+    where sno = #{sno,jdbcType=VARCHAR}
   </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from student
@@ -47,11 +48,11 @@
   </delete>
   <insert id="insert" parameterType="com.explore.pojo.Student">
     insert into student (id, sno, password, 
-      grade, phone, emial, 
-      create_time, update_time)
+      name, phone, email, 
+      create_time, update_time,subject_id)
     values (#{id,jdbcType=INTEGER}, #{sno,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{grade,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{emial,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},#{subjectId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.explore.pojo.Student">
     insert into student
@@ -65,20 +66,23 @@
       <if test="password != null">
         password,
       </if>
-      <if test="grade != null">
-        grade,
+      <if test="name != null">
+        name,
       </if>
       <if test="phone != null">
         phone,
       </if>
-      <if test="emial != null">
-        emial,
+      <if test="email != null">
+        email,
       </if>
       <if test="createTime != null">
         create_time,
       </if>
       <if test="updateTime != null">
         update_time,
+      </if>
+      <if test="subjectId != null">
+        subject_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -91,20 +95,23 @@
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
       </if>
-      <if test="grade != null">
-        #{grade,jdbcType=VARCHAR},
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
       </if>
       <if test="phone != null">
         #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="emial != null">
-        #{emial,jdbcType=VARCHAR},
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="subjectId != null">
+        #{subjectId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -117,20 +124,23 @@
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
       </if>
-      <if test="grade != null">
-        grade = #{grade,jdbcType=VARCHAR},
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="phone != null">
         phone = #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="emial != null">
-        emial = #{emial,jdbcType=VARCHAR},
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="subjectId != null">
+        subject_id = #{subjectId,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -139,11 +149,11 @@
     update student
     set sno = #{sno,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
-      grade = #{grade,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
-      emial = #{emial,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP}, subject_id = #{subjectId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

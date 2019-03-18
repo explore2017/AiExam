@@ -9,15 +9,17 @@ public class Student {
 
     private String password;
 
-    private String grade;
+    private String name;
 
     private String phone;
 
-    private String emial;
+    private String email;
 
     private Date createTime;
 
     private Date updateTime;
+
+    private String subjectId;
 
     public Integer getId() {
         return id;
@@ -43,12 +45,12 @@ public class Student {
         this.password = password == null ? null : password.trim();
     }
 
-    public String getGrade() {
-        return grade;
+    public String getName() {
+        return name;
     }
 
-    public void setGrade(String grade) {
-        this.grade = grade == null ? null : grade.trim();
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
     }
 
     public String getPhone() {
@@ -59,12 +61,12 @@ public class Student {
         this.phone = phone == null ? null : phone.trim();
     }
 
-    public String getEmial() {
-        return emial;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmial(String emial) {
-        this.emial = emial == null ? null : emial.trim();
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
     }
 
     public Date getCreateTime() {
@@ -82,4 +84,15 @@ public class Student {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    public String getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(String subjectId) {
+        this.subjectId = subjectId;
+    }
+
+
+
 }

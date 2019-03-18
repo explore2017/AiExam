@@ -45,7 +45,7 @@ public class StudentServiceImpl implements IStudentService {
     public ServerResponse reviseMessage(int id, String newPhone, String newEmail) {
         Student student = studentMapper.selectByPrimaryKey(id);
         student.setPhone(newPhone);
-        student.setEmial(newEmail);
+        student.setEmail(newEmail);
         Date update_time = new Date();
         student.setUpdateTime(update_time);
         int count = studentMapper.updateByPrimaryKeySelective(student);
