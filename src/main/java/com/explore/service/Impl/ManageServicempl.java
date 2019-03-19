@@ -3,6 +3,7 @@ package com.explore.service.Impl;
 import com.explore.common.ServerResponse;
 import com.explore.dao.*;
 import com.explore.pojo.*;
+import com.explore.pojo.Class;
 import com.explore.service.IManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,9 @@ public class ManageServicempl implements IManageService {
     @Autowired
     TeacherSubjectMapper teacherSubjectMapper;
     @Autowired
-    StudentSubjectMapper studentSubjectMapper;
+    StudentClassMapper studentClassMapper;
+    @Autowired
+    ClassMapper classMapper;
 
 
     @Override
@@ -55,25 +58,38 @@ public class ManageServicempl implements IManageService {
 
     @Override
     public ServerResponse<List<Student>> Students() {
-        return ServerResponse.createBySuccess(studentMapper.getAllStudent());
+        List<Student> students=studentMapper.getAllStudent();
+        for(Student student:students){                         //给科目赋值
+            String str="";
+            List<StudentClass> studentClasses=studentClassMapper.selectByStudentId(student.getId());
+            if(studentClasses!=null){
+                for(int i=0;i<studentClasses.size();i++){
+                    if(studentClasses.get(i).getClassName()!=null){
+                        if(str.equals("")){
+                            str=studentClasses.get(i).getClassName();
+                        }else{
+                            str=str+","+studentClasses.get(i).getClassName();
+                        }
+                    }
+                }
+            }
+            student.setClasses(str);
+        }
+        return ServerResponse.createBySuccess(students);
     }
 
     @Override
     public ServerResponse addStudent(Student student) {
-        String[] subjectId=student.getSubjectId().split(",");
+        String[] ClassId=student.getClasses().split(",");
         Date creat_time = new Date();
         student.setCreateTime(creat_time);
         Student student1 = studentMapper.selectSno(student.getSno());
         if (student1 != null) {
             return ServerResponse.createByErrorMessage("已有该学号");
         }
-        int count = studentMapper.insert(student);
-        if (count == 1){
-            student1=studentMapper.selectSno(student.getSno());
-            ServerResponse serverResponse= add_all_subject(student1.getId(),subjectId,STUDENT_TYPE);
-            if(serverResponse.isSuccess()){
-                return ServerResponse.createBySuccessMessage("学生增加成功");
-            }
+        if (studentMapper.insert(student) == 1){
+            student=studentMapper.selectSno(student.getSno());
+            addRelation(student.getId(),ClassId,STUDENT_TYPE);    //添加班级
         }
 
         return ServerResponse.createByErrorMessage("学生增加失败");
@@ -82,7 +98,7 @@ public class ManageServicempl implements IManageService {
     @Override
     public ServerResponse outStudent(int id) {
         int count = studentMapper.deleteByPrimaryKey(id);
-        int count1=studentSubjectMapper.deleteSubject(id);
+        int count1= studentClassMapper.deleteClassByStudentId(id);
         if (count == 1&&count1==1){
             return ServerResponse.createBySuccessMessage("学生删除成功");
         }
@@ -91,24 +107,40 @@ public class ManageServicempl implements IManageService {
 
     @Override
     public ServerResponse reviseStudent(Student student) {
-        String[] subjectId=student.getSubjectId().split(",");
-        Date update_time = new Date();
-        student.setUpdateTime(update_time);
-        studentMapper.updateByPrimaryKeySelective(student);
-        ServerResponse serverResponse= add_all_subject(student.getId(),subjectId,STUDENT_TYPE);
-        if(serverResponse.isSuccess()){
-            return ServerResponse.createBySuccessMessage("学生信息修改成功");
+        String[] ClassId=student.getClasses().split(",");
+        student.setUpdateTime(new Date());
+        if(studentClassMapper.deleteClassByStudentId(student.getId())==1){
+            addRelation(student.getId(),ClassId,STUDENT_TYPE);
+            if(studentMapper.updateByPrimaryKeySelective(student)==1){
+                return ServerResponse.createBySuccessMessage("学生信息修改成功");
+            }
         }
         return ServerResponse.createByErrorMessage("学生信息修改失败");
     }
 
     @Override
     public ServerResponse<List<Teacher>> Teachers() {
-        return ServerResponse.createBySuccess(teacherMapper.getAllTeacher());
+        List<Teacher> teachers=teacherMapper.getAllTeacher();
+        for(Teacher teacher:teachers){                         //给科目赋值
+            String str="";
+            List<TeacherSubject> teacherSubjects=teacherSubjectMapper.selectByTeacherId(teacher.getId());
+            if(teacherSubjects!=null){
+                for(int i=0;i<teacherSubjects.size();i++){
+                    if(teacherSubjects.get(i).getSubjectName()!=null)
+                    if(str.equals("")){
+                        str=teacherSubjects.get(i).getSubjectName();
+                    }else{
+                        str=str+","+teacherSubjects.get(i).getSubjectName();
+                    }
+                }
+            }
+            teacher.setSubjectId(str);
+        }
+        return ServerResponse.createBySuccess(teachers);
     }
 
     @Override
-    public ServerResponse addTeacher(Teacher teacher, String[] subject) {
+    public ServerResponse addTeacher(Teacher teacher, String[] subjectId) {
         teacher.setPassword(teacher.getPassword());
         Date creat_time = new Date();
         teacher.setCreateTime(creat_time);
@@ -116,13 +148,11 @@ public class ManageServicempl implements IManageService {
         if (teacher1 != null) {
             return ServerResponse.createByErrorMessage("已有用户名");
         }
-        int count = teacherMapper.insert(teacher);
-        teacher1=teacherMapper.selectUsername(teacher.getUsername());
-        if (count == 1) {
-            ServerResponse serverResponse= add_all_subject(teacher1.getId(),subject,TEACHER_TYPE);
-            if(serverResponse.isSuccess()){
+
+        if (teacherMapper.insert(teacher) == 1) {
+            teacher1=teacherMapper.selectUsername(teacher.getUsername());
+            addRelation(teacher1.getId(),subjectId,TEACHER_TYPE);
                 return ServerResponse.createBySuccessMessage("老师增加成功");
-            }
         }
         return ServerResponse.createByErrorMessage("老师增加失败");
     }
@@ -130,64 +160,43 @@ public class ManageServicempl implements IManageService {
     @Override
     public ServerResponse outTeacher(int id) {
         int count = teacherMapper.deleteByPrimaryKey(id);
-        if (count == 1) {
+        int count1=teacherSubjectMapper.deleteSubjectByTeacherId(id);
+        if (count == 1&&count1==1) {
             return ServerResponse.createBySuccessMessage("该老师删除成功");
         }
         return ServerResponse.createByErrorMessage("该老师删除失败");
     }
 
     @Override
-    public ServerResponse reviseTeacher(Teacher teacher, String[] subject) {
-        Date update_time = new Date();
-        teacher.setUpdateTime(update_time);
-        int count = teacherMapper.updateByPrimaryKeySelective(teacher);
-        if (count == 1) {
-            int judge = teacherSubjectMapper.deleteSubject(teacher.getId());
-            ServerResponse serverResponse=  add_all_subject(teacher.getId(),subject,TEACHER_TYPE);
-            if(serverResponse.isSuccess()){
+    public ServerResponse reviseTeacher(Teacher teacher, String[] subjectId) {
+        teacher.setUpdateTime(new Date());
+        if ( teacherSubjectMapper.deleteSubjectByTeacherId(teacher.getId())== 1) {
+            addRelation(teacher.getId(),subjectId,TEACHER_TYPE);
+            if(teacherMapper.updateByPrimaryKeySelective(teacher)==1)
+            {
                 return ServerResponse.createBySuccessMessage("老师信息修改成功");
             }
-
         }
         return ServerResponse.createByErrorMessage("老师信息修改失败");
     }
 
-    public ServerResponse add_all_subject(Integer id, String[] subjectId,String type){
-        String allSubject = "";
-        if (subjectId!=null&&!subjectId[0].equals("")){
-            for (int i = 0; i < subjectId.length; i++) {
-                Subject subject= subjectMapper.selectByPrimaryKey(Integer.parseInt(subjectId[i]));
-                if(subject==null) {return ServerResponse.createByErrorMessage("没有此科目");}
-                if(i==0){
-                    allSubject+=subject.getName();
-                }else{
-                    allSubject+=","+subject.getName();
-                }
+
+    @Transactional
+    public void addRelation(Integer id, String[] relationId,String type){
+
+        if (relationId!=null&&!relationId[0].equals("")){
+            for (int i = 0; i < relationId.length; i++) {   //根据传入值不同循环对关系表添加数据
                 if(type.equals(TEACHER_TYPE)){
-                  teacherSubjectMapper.insertTeacherSubject(id, Integer.parseInt(subjectId[i]));
+                    Subject subject= subjectMapper.selectByPrimaryKey(Integer.parseInt(relationId[i]));
+                    if(subject==null) {continue;}
+                  teacherSubjectMapper.insertTeacherSubject(id, Integer.parseInt(relationId[i]),subject.getName());
                 }else if(type.equals(STUDENT_TYPE)){
-                  studentSubjectMapper.insertStudentSubject(id, Integer.parseInt(subjectId[i]));
-                }
-            }
-            if(type.equals(TEACHER_TYPE)){
-              Teacher teacher =new Teacher();
-              teacher.setSubjectId(allSubject);
-              teacher.setId(id);
-             int count=teacherMapper.updateByPrimaryKeySelective(teacher);
-                if(count==1){
-                    return ServerResponse.createBySuccess();
-                }
-            }else if(type.equals(STUDENT_TYPE)){
-                Student student =new Student();
-                student.setSubjectId(allSubject);
-                student.setId(id);
-               int count=studentMapper.updateByPrimaryKeySelective(student);
-                if(count==1){
-                    return ServerResponse.createBySuccess();
+                    Class classes=classMapper.selectByPrimaryKey(Integer.parseInt(relationId[i]));
+                    if(classes==null) {continue;}
+                  studentClassMapper.insertStudentClass(id, Integer.parseInt(relationId[i]),classes.getName());
                 }
             }
         }
-        return ServerResponse.createByErrorMessage("操作失败");
     }
 
 }

@@ -2,8 +2,12 @@ package com.explore.pojo;
 
 public class TeacherSubject {
     private  int id;
+
     private  int teacherId;
+
     private  int subjectId;
+
+    private  String subjectName;
 
     public int getId() {
         return id;
@@ -29,4 +33,11 @@ public class TeacherSubject {
         this.subjectId = subjectId;
     }
 
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
 }

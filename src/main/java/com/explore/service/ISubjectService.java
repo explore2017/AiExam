@@ -10,7 +10,7 @@ public interface ISubjectService {
 
     ServerResponse addSubject(Subject subject);
 
-    ServerResponse outSubject(Subject subject);
+    ServerResponse outSubject(Integer id);
 
     ServerResponse reviseSuject(Subject subject);
 }

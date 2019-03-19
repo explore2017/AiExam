@@ -19,7 +19,7 @@ public class Student {
 
     private Date updateTime;
 
-    private String subjectId;
+    private String classes;
 
     public Integer getId() {
         return id;
@@ -85,12 +85,12 @@ public class Student {
         this.updateTime = updateTime;
     }
 
-    public String getSubjectId() {
-        return subjectId;
+    public String getClasses() {
+        return classes;
     }
 
-    public void setSubjectId(String subjectId) {
-        this.subjectId = subjectId;
+    public void setClasses(String classes) {
+        this.classes = classes;
     }
 
 

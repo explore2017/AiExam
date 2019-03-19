@@ -2,7 +2,9 @@ package com.explore.dao;
 
 import com.explore.pojo.Manager;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
+@Component
 public interface ManagerMapper {
     int deleteByPrimaryKey(Integer id);
 

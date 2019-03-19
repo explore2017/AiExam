@@ -2,9 +2,10 @@ package com.explore.dao;
 
 import com.explore.pojo.Student;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Component
 public interface StudentMapper {
     int deleteByPrimaryKey(Integer id);
 

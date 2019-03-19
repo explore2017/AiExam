@@ -10,10 +10,10 @@
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="subject_id" jdbcType="VARCHAR" property="subjectId" />
+    <result column="classes" jdbcType="VARCHAR" property="classes" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, sno, password, name, phone, email, create_time, update_time,subject_id
+    id, sno, password, name, phone, email, create_time, update_time,classes
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -49,10 +49,10 @@
   <insert id="insert" parameterType="com.explore.pojo.Student">
     insert into student (id, sno, password, 
       name, phone, email, 
-      create_time, update_time,subject_id)
+      create_time, update_time,classes)
     values (#{id,jdbcType=INTEGER}, #{sno,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},#{subjectId,jdbcType=VARCHAR})
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},#{classes,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.explore.pojo.Student">
     insert into student
@@ -81,8 +81,8 @@
       <if test="updateTime != null">
         update_time,
       </if>
-      <if test="subjectId != null">
-        subject_id,
+      <if test="classes != null">
+        classes,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -110,8 +110,8 @@
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="subjectId != null">
-        #{subjectId,jdbcType=VARCHAR},
+      <if test="classes != null">
+        #{classes,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -139,8 +139,8 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="subjectId != null">
-        subject_id = #{subjectId,jdbcType=VARCHAR},
+      <if test="classes != null">
+        classes = #{classes,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -153,7 +153,7 @@
       phone = #{phone,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}, subject_id = #{subjectId,jdbcType=VARCHAR}
+      update_time = #{updateTime,jdbcType=TIMESTAMP}, classes = #{classes,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

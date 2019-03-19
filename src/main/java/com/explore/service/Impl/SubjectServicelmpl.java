@@ -40,8 +40,8 @@ public class SubjectServicelmpl implements ISubjectService {
     }
 
     @Override
-    public ServerResponse outSubject(Subject subject) {
-        int count=subjectMapper.deleteByPrimaryKey(subject.getId());
+    public ServerResponse outSubject(Integer id) {
+        int count=subjectMapper.deleteByPrimaryKey(id);
         if(count==1){
             return ServerResponse.createBySuccessMessage("删除成功");
         }

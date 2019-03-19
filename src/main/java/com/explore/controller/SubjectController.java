@@ -38,8 +38,8 @@ public class SubjectController {
      * 删除课程
      */
     @DeleteMapping("/deleteSubject")
-    public ServerResponse outSubject(Subject subject){
-        ServerResponse serverResponse=subjectService.outSubject(subject);
+    public ServerResponse outSubject(Integer id){
+        ServerResponse serverResponse=subjectService.outSubject(id);
         return serverResponse;
     }
 
@@ -47,7 +47,7 @@ public class SubjectController {
      * 修改课程
      */
     @PutMapping("/reviseSubject")
-    public ServerResponse reviseSuject(Subject subject){
+    public ServerResponse reviseSubject(Subject subject){
         ServerResponse serverResponse=subjectService.reviseSuject(subject);
         return serverResponse;
     }

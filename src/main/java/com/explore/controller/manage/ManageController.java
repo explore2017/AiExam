@@ -50,7 +50,7 @@ public class ManageController {
     /**
      * 查看所有学生数据
      */
-    @GetMapping("/Students")
+    @GetMapping("/students")
     public ServerResponse<List<Student>> getAllStudent(Student student){
         ServerResponse<List<Student>> serverResponse=manageService.Students();
         return serverResponse;
@@ -61,7 +61,6 @@ public class ManageController {
      */
     @PostMapping("/insertStudent")
     public ServerResponse addStudent(@RequestBody Student student) {
-
         ServerResponse serverResponse = manageService.addStudent(student);
         return serverResponse;
     }

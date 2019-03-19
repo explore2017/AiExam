@@ -1,9 +1,10 @@
 package com.explore.dao;
 
 import com.explore.pojo.Subject;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Component
 public interface SubjectMapper {
     int deleteByPrimaryKey(Integer id);
 
