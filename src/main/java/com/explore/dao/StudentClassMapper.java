@@ -2,6 +2,7 @@ package com.explore.dao;
 import com.explore.pojo.StudentClass;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -25,4 +26,7 @@ public interface StudentClassMapper {
 
     @Delete("delete from student_class where class_id=#{classId}")
     int deleteClassByClassId (Integer classId);
+
+    @Delete("delete from student_class where class_id=#{classId} and student_id=#{studentId}")
+    int deleteStudent(@Param("studentId")Integer studentId,@Param("classId")Integer classId);
 }

@@ -11,7 +11,7 @@
  Target Server Version : 50553
  File Encoding         : 65001
 
- Date: 19/03/2019 23:01:35
+ Date: 22/03/2019 12:42:11
 */
 
 SET NAMES utf8;
@@ -56,7 +56,7 @@ CREATE TABLE `class`  (
   `subject_id` int(11) NULL DEFAULT NULL COMMENT '所属科目号',
   `teacher_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '老师名称',
   `subject_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '科目名称',
-  `max_num` int(11) NULL DEFAULT NULL COMMENT '班级最大人数',
+  `number` int(11) NULL DEFAULT NULL COMMENT '班级人数',
   `create_time` datetime NULL DEFAULT NULL,
   `update_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
@@ -220,7 +220,7 @@ CREATE TABLE `student_class`  (
   `class_id` int(11) NOT NULL,
   `class_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for subject

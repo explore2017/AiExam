@@ -9,12 +9,12 @@
     <result column="subject_id" property="subjectId" jdbcType="INTEGER" />
     <result column="teacher_name" property="teacherName" jdbcType="VARCHAR" />
     <result column="subject_name" property="subjectName" jdbcType="VARCHAR" />
-    <result column="max_num" property="maxNum" jdbcType="INTEGER" />
+    <result column="number" property="number" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, class_no, teacher_id, subject_id, teacher_name, subject_name, max_num, 
+    id, name, class_no, teacher_id, subject_id, teacher_name, subject_name, number, 
     create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -35,11 +35,11 @@
   <insert id="insert" parameterType="com.explore.pojo.Class" >
     insert into class (id, name, class_no, 
       teacher_id, subject_id, teacher_name, 
-      subject_name, max_num, create_time, 
+      subject_name, number, create_time, 
       update_time)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{classNo,jdbcType=VARCHAR}, 
       #{teacherId,jdbcType=INTEGER}, #{subjectId,jdbcType=INTEGER}, #{teacherName,jdbcType=VARCHAR}, 
-      #{subjectName,jdbcType=VARCHAR}, #{maxNum,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{subjectName,jdbcType=VARCHAR}, #{number,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.explore.pojo.Class" >
@@ -66,8 +66,8 @@
       <if test="subjectName != null" >
         subject_name,
       </if>
-      <if test="maxNum != null" >
-        max_num,
+      <if test="number != null" >
+        number,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -98,8 +98,8 @@
       <if test="subjectName != null" >
         #{subjectName,jdbcType=VARCHAR},
       </if>
-      <if test="maxNum != null" >
-        #{maxNum,jdbcType=INTEGER},
+      <if test="number != null" >
+        #{number,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -130,8 +130,8 @@
       <if test="subjectName != null" >
         subject_name = #{subjectName,jdbcType=VARCHAR},
       </if>
-      <if test="maxNum != null" >
-        max_num = #{maxNum,jdbcType=INTEGER},
+      <if test="number != null" >
+        number = #{number,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -150,7 +150,7 @@
       subject_id = #{subjectId,jdbcType=INTEGER},
       teacher_name = #{teacherName,jdbcType=VARCHAR},
       subject_name = #{subjectName,jdbcType=VARCHAR},
-      max_num = #{maxNum,jdbcType=INTEGER},
+      number = #{number,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

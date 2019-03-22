@@ -5,10 +5,12 @@ import com.explore.dao.*;
 import com.explore.pojo.*;
 import com.explore.pojo.Class;
 import com.explore.service.IClassService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +30,24 @@ public class ClassServiceImpl implements IClassService {
     @Override
     public ServerResponse<List<Class>> getClasses() {
         return ServerResponse.createBySuccess(classMapper.selectAllClass());
+    }
+
+    @Override
+    public ServerResponse<List<Student>> getClassDetail(Integer id) {
+        if(classMapper.selectByPrimaryKey(id)==null){
+            studentClassMapper.deleteClassByClassId(id);
+            return ServerResponse.createByErrorMessage("找不到该班级");
+        }
+        List<StudentClass> studentClassList=studentClassMapper.selectByClassId(id);
+        List<Student> studentList=new ArrayList<>();
+        for(StudentClass studentClass:studentClassList){
+            Student student=studentMapper.selectByPrimaryKey(studentClass.getStudentId());
+            if(student!=null){
+                student.setPassword(StringUtils.EMPTY);
+                studentList.add(student);
+            }
+        }
+        return ServerResponse.createBySuccess(studentList);
     }
 
     @Override
@@ -63,5 +83,13 @@ public class ClassServiceImpl implements IClassService {
             return ServerResponse.createBySuccessMessage("修改班级成功");
         }
         return ServerResponse.createByErrorMessage("修改班级失败");
+    }
+
+    @Override
+    public ServerResponse deleteStudent(Integer studentId, Integer classId) {
+        if(studentClassMapper.deleteStudent(studentId,classId)==1){
+            return  ServerResponse.createBySuccessMessage("删除成功");
+        }
+        return ServerResponse.createByErrorMessage("删除失败");
     }
 }

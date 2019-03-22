@@ -17,7 +17,7 @@ public class Class {
 
     private String subjectName;
 
-    private Integer maxNum;
+    private Integer number;
 
     private Date createTime;
 
@@ -79,12 +79,12 @@ public class Class {
         this.subjectName = subjectName == null ? null : subjectName.trim();
     }
 
-    public Integer getMaxNum() {
-        return maxNum;
+    public Integer getNumber() {
+        return number;
     }
 
-    public void setMaxNum(Integer maxNum) {
-        this.maxNum = maxNum;
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public Date getCreateTime() {

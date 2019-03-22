@@ -2,6 +2,7 @@ package com.explore.controller;
 
 import com.explore.common.ServerResponse;
 import com.explore.pojo.Class;
+import com.explore.pojo.Student;
 import com.explore.service.IClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,17 @@ import java.util.List;
 public class ClassController {
     @Autowired
     IClassService classesService;
-    
+
+    /**
+     * 查看班级详情
+     */
+    @GetMapping("/detail")
+    public ServerResponse<List<Student>> getClassDetail(Integer id){
+        ServerResponse<List<Student>>serverResponse=classesService.getClassDetail(id);
+        return serverResponse;
+    }
+
+
     /**
      * 查看所有班级
      */
@@ -42,6 +53,15 @@ public class ClassController {
     }
 
     /**
+     * 删除班级中的学生
+     */
+    @DeleteMapping("/deletestudent/{studentId}")
+    public ServerResponse deleteStudent(@PathVariable("studentId") Integer studentId,Integer classId){
+        ServerResponse serverResponse=classesService.deleteStudent(studentId,classId);
+        return serverResponse;
+    }
+
+    /**
      * 修改班级
      */
     @PutMapping("/reviseclass")
@@ -49,4 +69,5 @@ public class ClassController {
         ServerResponse serverResponse=classesService.reviseClass(classes);
         return serverResponse;
     }
+
 }
