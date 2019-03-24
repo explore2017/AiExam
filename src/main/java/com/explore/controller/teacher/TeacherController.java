@@ -2,6 +2,7 @@ package com.explore.controller.teacher;
 
 import com.explore.common.Const;
 import com.explore.common.ServerResponse;
+import com.explore.pojo.Student;
 import com.explore.pojo.Teacher;
 import com.explore.pojo.User;
 import com.explore.service.ITeacherService;
@@ -41,4 +42,14 @@ public class TeacherController {
         ServerResponse serverResponse = teacherService.revise(username, oldPassword, newPassword);
         return serverResponse;
     }
+
+    /**
+     * 查看一个学生
+     */
+    @GetMapping("/searchstudent")
+    public ServerResponse<Student> getStudent(String sno) {
+        return  teacherService.getStudent(sno);
+
+    }
+
 }

@@ -1,7 +1,9 @@
 package com.explore.service.Impl;
 
 import com.explore.common.ServerResponse;
+import com.explore.dao.StudentMapper;
 import com.explore.dao.TeacherMapper;
+import com.explore.pojo.Student;
 import com.explore.pojo.Teacher;
 import com.explore.service.ITeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import java.util.Date;
 public class TeacherServicempl implements ITeacherService {
     @Autowired
     TeacherMapper teacherMapper;
+    @Autowired
+    StudentMapper studentMapper;
 
     @Override
     public ServerResponse<Teacher> login(String username, String password) {
@@ -37,6 +41,15 @@ public class TeacherServicempl implements ITeacherService {
             return ServerResponse.createBySuccessMessage("修改密码成功");
         } else
             return ServerResponse.createByErrorMessage("修改密码失败");
+    }
+
+    @Override
+    public ServerResponse getStudent(String sno) {
+        Student student=studentMapper.selectSno(sno);
+        if(student!=null){
+            return ServerResponse.createBySuccess(student);
+        }
+        return  ServerResponse.createByErrorMessage("找不到个该学生");
     }
 
 }

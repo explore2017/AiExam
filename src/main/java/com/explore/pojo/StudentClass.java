@@ -40,4 +40,13 @@ public class StudentClass {
     public void setClassName(String className) {
         this.className = className;
     }
+
+    public  StudentClass(){
+
+    }
+    public  StudentClass(Integer studentId,Integer classId,String className){
+        this.studentId=studentId;
+        this.classId=classId;
+        this.className=className;
+    }
 }

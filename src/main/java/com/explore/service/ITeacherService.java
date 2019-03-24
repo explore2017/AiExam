@@ -8,4 +8,5 @@ public interface ITeacherService {
 
     ServerResponse revise(String username, String oldPassword, String newPassword);
 
+    ServerResponse getStudent(String sno);
 }

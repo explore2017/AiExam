@@ -59,6 +59,7 @@ public class ClassServiceImpl implements IClassService {
         classes.setSubjectName(subject.getName());
         classes.setTeacherName(teacher.getName());
         classes.setCreateTime(new Date());
+        classes.setNumber(0);
         if(classMapper.insert(classes)==1){
             return ServerResponse.createBySuccessMessage("创建班级成功");
         }
@@ -87,9 +88,36 @@ public class ClassServiceImpl implements IClassService {
 
     @Override
     public ServerResponse deleteStudent(Integer studentId, Integer classId) {
-        if(studentClassMapper.deleteStudent(studentId,classId)==1){
+        if(studentMapper.selectByPrimaryKey(studentId)==null){
+            return ServerResponse.createByErrorMessage("找不到该学生");
+        }
+        Class class1=classMapper.selectByPrimaryKey(classId);
+        if(class1==null){
+            return ServerResponse.createByErrorMessage("找不到该班级");
+        }
+        class1.setNumber(class1.getNumber()-1);
+        if(studentClassMapper.deleteStudent(studentId,classId)==1&&classMapper.updateByPrimaryKeySelective(class1)==1){
             return  ServerResponse.createBySuccessMessage("删除成功");
         }
         return ServerResponse.createByErrorMessage("删除失败");
+    }
+
+    @Override
+    public ServerResponse addStudent(StudentClass studentClass) {
+        if(studentMapper.selectByPrimaryKey(studentClass.getStudentId())==null){
+            return ServerResponse.createByErrorMessage("找不到该学生");
+        }
+        Class class1=classMapper.selectByPrimaryKey(studentClass.getClassId());
+        if(class1==null){
+            return ServerResponse.createByErrorMessage("找不到该班级");
+        }
+        if(studentClassMapper.check(studentClass.getStudentId(),studentClass.getClassId())!=null){
+            return ServerResponse.createByErrorMessage("该学生已在该班级");
+        }
+        class1.setNumber(class1.getNumber()+1);
+        if(studentClassMapper.insertStudentClass(studentClass)==1&&classMapper.updateByPrimaryKeySelective(class1)==1){
+            return ServerResponse.createBySuccessMessage("添加学生成功");
+        }
+        return ServerResponse.createByErrorMessage("添加学生失败");
     }
 }

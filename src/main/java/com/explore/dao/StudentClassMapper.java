@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public interface StudentClassMapper {
     @Insert("insert into student_class(student_id,class_id,class_name) values(#{studentId},#{classId},#{className})")
-    int insertStudentClass(@Param("studentId")Integer studentId, @Param("classId")Integer classId,@Param("className")String className);
+    int insertStudentClass(StudentClass studentClass);
 
     @Select("select * from student_class where student_id=#{studentId}")
     List<StudentClass> selectByStudentId(Integer studentId);

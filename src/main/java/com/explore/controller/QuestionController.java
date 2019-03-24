@@ -3,6 +3,8 @@ package com.explore.controller;
 import com.explore.common.ServerResponse;
 import com.explore.pojo.Question;
 import com.explore.service.IQuestionService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;;
@@ -23,7 +25,7 @@ public class QuestionController {
      */
     @PostMapping
     @ApiOperation(value="向试题库添加试题", notes="参数为一个Question对象")
-    public ServerResponse save(@RequestBody Question question,String[] choice){
+    public ServerResponse save(@RequestBody Question question){
         return questionService.saveQuestion(question);
     }
     /**
@@ -49,7 +51,9 @@ public class QuestionController {
      */
     @GetMapping
     @ApiOperation(value="从试题库获得所有试题", notes="不需要参数")
-    public  ServerResponse<List<Question>> get(){return  questionService.getAllQuestions();}
+    public  ServerResponse<List<Question>> get(){
+        return questionService.getAllQuestions();
+    }
 
 
 

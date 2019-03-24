@@ -6,6 +6,7 @@ import com.explore.pojo.PaperCompose;
 import com.explore.pojo.Question;
 import com.explore.service.IPaperService;
 import com.explore.service.IQuestionService;
+import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,8 @@ public class PaperController {
     @GetMapping
     @ApiOperation(value="获得所有试卷基本信息", notes="不需要参数")
     public ServerResponse<List<Paper>> getAllPaper(){
-        return paperService.getAllPaper();
+        ServerResponse serverResponse=paperService.getAllPaper();
+        return serverResponse;
     }
 
     /**

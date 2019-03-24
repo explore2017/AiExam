@@ -20,7 +20,7 @@ public class SubjectController {
      * 查看所有课程
      */
     @GetMapping("/allSubject")
-    public ServerResponse<List<Subject>> getAllStudent(Subject subject){
+    public ServerResponse<List<Subject>> getAllStudent(){
         ServerResponse<List<Subject>> serverResponse=subjectService.Subject();
         return serverResponse;
     }

@@ -193,7 +193,7 @@ public class ManageServicempl implements IManageService {
                 }else if(type.equals(STUDENT_TYPE)){
                     Class classes=classMapper.selectByPrimaryKey(Integer.parseInt(relationId[i]));
                     if(classes==null) {continue;}
-                  studentClassMapper.insertStudentClass(id, Integer.parseInt(relationId[i]),classes.getName());
+                  studentClassMapper.insertStudentClass(new StudentClass(id, Integer.parseInt(relationId[i]),classes.getName()));
                 }
             }
         }

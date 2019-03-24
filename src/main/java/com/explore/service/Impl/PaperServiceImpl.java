@@ -32,8 +32,10 @@ public class PaperServiceImpl implements IPaperService {
         Date date = new Date();
         paper.setCreateTime(date);
         paper.setUpdateTime(date);
-        paperMapper.insert(paper);
-        return ServerResponse.createBySuccessMessage("添加成功 ");
+        if(paperMapper.insert(paper)==1){
+            return ServerResponse.createBySuccessMessage("添加试卷成功 ");
+        }
+       return ServerResponse.createByErrorMessage("添加试卷失败 ");
     }
 
     @Override
