@@ -5,25 +5,17 @@ import java.util.Date;
 public class Paper {
     private Integer id;
 
-    private Integer examId;
-
     private String name;
 
     private String describe;
 
-    private String status;
-
-    private Integer paperType;
-
-    private Integer isSubjective;
+    private Integer status;
 
     private Integer difficulty;
 
     private Date createTime;
 
     private Date updateTime;
-
-    private Integer partNum;
 
     private Double passScore;
 
@@ -33,20 +25,20 @@ public class Paper {
 
     private String answer;
 
+    private Integer subjectId;
+
+    private String subjectName;
+
+    private String creator;
+
+    private Integer usufruct;
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Integer getExamId() {
-        return examId;
-    }
-
-    public void setExamId(Integer examId) {
-        this.examId = examId;
     }
 
     public String getName() {
@@ -65,28 +57,12 @@ public class Paper {
         this.describe = describe == null ? null : describe.trim();
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
-    }
-
-    public Integer getPaperType() {
-        return paperType;
-    }
-
-    public void setPaperType(Integer paperType) {
-        this.paperType = paperType;
-    }
-
-    public Integer getIsSubjective() {
-        return isSubjective;
-    }
-
-    public void setIsSubjective(Integer isSubjective) {
-        this.isSubjective = isSubjective;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Integer getDifficulty() {
@@ -111,14 +87,6 @@ public class Paper {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public Integer getPartNum() {
-        return partNum;
-    }
-
-    public void setPartNum(Integer partNum) {
-        this.partNum = partNum;
     }
 
     public Double getPassScore() {
@@ -151,5 +119,37 @@ public class Paper {
 
     public void setAnswer(String answer) {
         this.answer = answer == null ? null : answer.trim();
+    }
+
+    public Integer getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Integer subjectId) {
+        this.subjectId = subjectId;
+    }
+
+    public String getSubjectName() {
+        return subjectName;
+    }
+
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName == null ? null : subjectName.trim();
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator == null ? null : creator.trim();
+    }
+
+    public Integer getUsufruct() {
+        return usufruct;
+    }
+
+    public void setUsufruct(Integer usufruct) {
+        this.usufruct = usufruct;
     }
 }

@@ -32,8 +32,8 @@ public class PaperServiceImpl implements IPaperService {
         Date date = new Date();
         paper.setCreateTime(date);
         paper.setUpdateTime(date);
-        if(paperMapper.insert(paper)==1){
-            return ServerResponse.createBySuccessMessage("添加试卷成功 ");
+        if(paperMapper.insertSelective(paper)==1){
+            return ServerResponse.createBySuccessMessage("添加试卷成功,请继续添加题目");
         }
        return ServerResponse.createByErrorMessage("添加试卷失败 ");
     }
@@ -44,9 +44,9 @@ public class PaperServiceImpl implements IPaperService {
         if(paper==null){return ServerResponse.createByErrorMessage("找不到该试卷");}
         Date date = new Date();
         newPaper.setUpdateTime(date);
-        int count =paperMapper.updateByPrimaryKey(newPaper);
+        int count =paperMapper.updateByPrimaryKeySelective(newPaper);
         if(count==0){return ServerResponse.createByErrorMessage("修改试卷失败");}
-        return ServerResponse.createBySuccess("修改成功");
+        return ServerResponse.createBySuccessMessage("修改成功");
     }
 
     @Override
@@ -80,10 +80,13 @@ public class PaperServiceImpl implements IPaperService {
         List<Question> questionList=new ArrayList<Question>();
         for(PaperCompose paperCompose:paperComposes){
             Question question=questionMapper.selectQuestionByQuestionId(paperCompose.getQuestionId());
-            question.setAnswer(StringUtils.EMPTY);
-            questionList.add(question);
+            if(question!=null){
+                question.setAnswer(StringUtils.EMPTY);
+                questionList.add(question);
+            }
+
         }
-       return ServerResponse.createBySuccessMessage("返回试卷详情成功",questionList);
+       return ServerResponse.createBySuccess(questionList);
     }
 
     @Override

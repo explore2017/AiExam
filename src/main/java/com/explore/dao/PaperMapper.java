@@ -1,12 +1,11 @@
 package com.explore.dao;
 
+
 import com.explore.pojo.Paper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
-
 @Component
 public interface PaperMapper {
     int deleteByPrimaryKey(Integer id);
@@ -24,4 +23,5 @@ public interface PaperMapper {
     List<Paper> selectAllPaper();
 
     int updatePaperStatus(@Param("paperId") Integer paperId, @Param("status") Integer status);
+
 }

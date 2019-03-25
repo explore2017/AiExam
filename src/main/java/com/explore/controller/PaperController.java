@@ -70,12 +70,12 @@ public class PaperController {
 
     /**
      * 修改试卷基本信息
-     * @param id,paper
+     * @param paper
      */
-    @PutMapping(value ="/{id}")
+    @PutMapping
     @ApiOperation(value="修改试卷基本信息", notes="通过id和一个Paper对象")
-    public ServerResponse edit(@PathVariable("id")Integer id,Paper paper){
-        return paperService.editPaperByPaperId(id,paper);
+    public ServerResponse edit(@RequestBody Paper paper){
+        return paperService.editPaperByPaperId(paper.getId(),paper);
     }
 
     /**
@@ -83,37 +83,37 @@ public class PaperController {
      * @param paperId
      * @return
      */
-    @GetMapping(value = "/details/{paperId}")
+    @GetMapping(value = "/details")
     @ApiOperation(value="获得指定试卷的题目信息", notes="通过指定试卷的id")
-    public ServerResponse<List<Question>> get(@PathVariable("paperId")Integer paperId){
+    public ServerResponse<List<Question>> get(Integer paperId){
         return paperService.getDetailsByPaperId(paperId);
     }
 
     /**
      * 向试卷添加题目
-     * @param paperId,paperCompose
+     * @param paperCompose
      */
-    @PostMapping(value = "/details/{paperId}")
+    @PostMapping(value = "/details")
     @ApiOperation(value="向指定试卷添加题目", notes="指定试卷的id和一个PaperCompose对象")
-    public ServerResponse addPaperComposeByPaperId(@RequestBody @PathVariable("paperId")Integer paperId, PaperCompose paperCompose){
-        return paperService.addPaperComposeByPaperId(paperId,paperCompose);
+    public ServerResponse addPaperComposeByPaperId(@RequestBody PaperCompose paperCompose){
+        return paperService.addPaperComposeByPaperId(paperCompose.getPaperId(),paperCompose);
     }
 
     /**
      * 修改试卷题目
-     * @param paperId,paperCompose
+     * @param paperCompose
      */
-    @PutMapping(value = "/details/{paperId}")
+    @PutMapping(value = "/details")
     @ApiOperation(value="向指定试卷修改题目", notes="指定试卷的id和一个PaperCompose对象")
-        public ServerResponse editPaperComposeByPaperId(@PathVariable("paperId")Integer paperId, PaperCompose paperCompose){
-        return paperService.editPaperComposeByPaperId(paperId,paperCompose);
+        public ServerResponse editPaperComposeByPaperId(@RequestBody PaperCompose paperCompose){
+        return paperService.editPaperComposeByPaperId(paperCompose.getPaperId(),paperCompose);
     }
     /**
      * 删除试卷题目
      * @param paperId,paperCompose
      */
     @DeleteMapping(value = "/details/{paperId}")
-    @ApiOperation(value="向指定试卷输出指定题目", notes="指定试卷的id和题目的序列号")
+    @ApiOperation(value="向指定试卷删除指定题目", notes="指定试卷的id和题目的序列号")
     public ServerResponse deletePaperComposeBySequenceAndPaperId(@PathVariable("paperId")Integer paperId, Integer sequence){
         return paperService.deletePaperComposeBySequenceAndPaperId(paperId,sequence);
     }

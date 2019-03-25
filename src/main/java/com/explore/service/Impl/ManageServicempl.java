@@ -97,9 +97,9 @@ public class ManageServicempl implements IManageService {
 
     @Override
     public ServerResponse outStudent(int id) {
+        studentClassMapper.deleteClassByStudentId(id);
         int count = studentMapper.deleteByPrimaryKey(id);
-        int count1= studentClassMapper.deleteClassByStudentId(id);
-        if (count == 1&&count1==1){
+        if (count == 1){
             return ServerResponse.createBySuccessMessage("学生删除成功");
         }
         return ServerResponse.createByErrorMessage("学生删除失败");
@@ -109,12 +109,11 @@ public class ManageServicempl implements IManageService {
     public ServerResponse reviseStudent(Student student) {
         String[] ClassId=student.getClasses().split(",");
         student.setUpdateTime(new Date());
-        if(studentClassMapper.deleteClassByStudentId(student.getId())==1){
-            addRelation(student.getId(),ClassId,STUDENT_TYPE);
+        studentClassMapper.deleteClassByStudentId(student.getId());
+        addRelation(student.getId(),ClassId,STUDENT_TYPE);
             if(studentMapper.updateByPrimaryKeySelective(student)==1){
                 return ServerResponse.createBySuccessMessage("学生信息修改成功");
             }
-        }
         return ServerResponse.createByErrorMessage("学生信息修改失败");
     }
 
@@ -159,9 +158,9 @@ public class ManageServicempl implements IManageService {
 
     @Override
     public ServerResponse outTeacher(int id) {
+        teacherSubjectMapper.deleteSubjectByTeacherId(id);
         int count = teacherMapper.deleteByPrimaryKey(id);
-        int count1=teacherSubjectMapper.deleteSubjectByTeacherId(id);
-        if (count == 1&&count1==1) {
+        if (count == 1) {
             return ServerResponse.createBySuccessMessage("该老师删除成功");
         }
         return ServerResponse.createByErrorMessage("该老师删除失败");

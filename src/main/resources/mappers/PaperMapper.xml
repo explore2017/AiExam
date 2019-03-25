@@ -1,224 +1,224 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.explore.dao.PaperMapper">
-  <resultMap id="BaseResultMap" type="com.explore.pojo.Paper">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="exam_id" jdbcType="INTEGER" property="examId" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="describe" jdbcType="VARCHAR" property="describe" />
-    <result column="status" jdbcType="VARCHAR" property="status" />
-    <result column="paper_type" jdbcType="INTEGER" property="paperType" />
-    <result column="is_subjective" jdbcType="INTEGER" property="isSubjective" />
-    <result column="difficulty" jdbcType="INTEGER" property="difficulty" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="part_num" jdbcType="INTEGER" property="partNum" />
-    <result column="pass_score" jdbcType="DOUBLE" property="passScore" />
-    <result column="total_score" jdbcType="DOUBLE" property="totalScore" />
-    <result column="need_time" jdbcType="INTEGER" property="needTime" />
-    <result column="answer" jdbcType="VARCHAR" property="answer" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.explore.dao.PaperMapper" >
+  <resultMap id="BaseResultMap" type="com.explore.pojo.Paper" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="difficulty" property="difficulty" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="pass_score" property="passScore" jdbcType="DOUBLE" />
+    <result column="total_score" property="totalScore" jdbcType="DOUBLE" />
+    <result column="need_time" property="needTime" jdbcType="INTEGER" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="subject_id" property="subjectId" jdbcType="INTEGER" />
+    <result column="subject_name" property="subjectName" jdbcType="VARCHAR" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="usufruct" property="usufruct" jdbcType="INTEGER" />
   </resultMap>
-  <sql id="Base_Column_List">
-    id, exam_id, `name`, `describe`, status, paper_type, is_subjective, difficulty, create_time,
-    update_time, part_num, pass_score, total_score, need_time, answer
+  <sql id="Base_Column_List" >
+    id, `name`, `describe`, status, difficulty, create_time, update_time, pass_score, total_score,
+    need_time, answer, subject_id, subject_name, creator, usufruct
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from paper
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectAllPaper" resultMap="BaseResultMap">
-    SELECT
-      *
-    FROM paper
-
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from paper
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.explore.pojo.Paper">
-    insert into paper (id, exam_id, `name`,
-      `describe`, status, paper_type,
-      is_subjective, difficulty, create_time, 
-      update_time, part_num, pass_score, 
-      total_score, need_time, answer
+  <insert id="insert" parameterType="com.explore.pojo.Paper" >
+    insert into paper (id, `name`,`describe`,
+      status, difficulty, create_time, 
+      update_time, pass_score, total_score, 
+      need_time, answer, subject_id, 
+      subject_name, creator, usufruct
       )
-    values (#{id,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
-      #{describe,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{paperType,jdbcType=INTEGER}, 
-      #{isSubjective,jdbcType=INTEGER}, #{difficulty,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{partNum,jdbcType=INTEGER}, #{passScore,jdbcType=DOUBLE}, 
-      #{totalScore,jdbcType=DOUBLE}, #{needTime,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{difficulty,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{passScore,jdbcType=DOUBLE}, #{totalScore,jdbcType=DOUBLE}, 
+      #{needTime,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}, #{subjectId,jdbcType=INTEGER}, 
+      #{subjectName,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{usufruct,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.explore.pojo.Paper">
+  <insert id="insertSelective" parameterType="com.explore.pojo.Paper" >
     insert into paper
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="examId != null">
-        exam_id,
-      </if>
-      <if test="name != null">
+      <if test="name != null" >
         `name`,
       </if>
-      <if test="describe != null">
+      <if test="describe != null" >
         `describe`,
       </if>
-      <if test="status != null">
+      <if test="status != null" >
         status,
       </if>
-      <if test="paperType != null">
-        paper_type,
-      </if>
-      <if test="isSubjective != null">
-        is_subjective,
-      </if>
-      <if test="difficulty != null">
+      <if test="difficulty != null" >
         difficulty,
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         create_time,
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         update_time,
       </if>
-      <if test="partNum != null">
-        part_num,
-      </if>
-      <if test="passScore != null">
+      <if test="passScore != null" >
         pass_score,
       </if>
-      <if test="totalScore != null">
+      <if test="totalScore != null" >
         total_score,
       </if>
-      <if test="needTime != null">
+      <if test="needTime != null" >
         need_time,
       </if>
-      <if test="answer != null">
+      <if test="answer != null" >
         answer,
       </if>
+      <if test="subjectId != null" >
+        subject_id,
+      </if>
+      <if test="subjectName != null" >
+        subject_name,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="usufruct != null" >
+        usufruct,
+      </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="examId != null">
-        #{examId,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
+      <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="describe != null">
+      <if test="describe != null" >
         #{describe,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        #{status,jdbcType=VARCHAR},
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
       </if>
-      <if test="paperType != null">
-        #{paperType,jdbcType=INTEGER},
-      </if>
-      <if test="isSubjective != null">
-        #{isSubjective,jdbcType=INTEGER},
-      </if>
-      <if test="difficulty != null">
+      <if test="difficulty != null" >
         #{difficulty,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="partNum != null">
-        #{partNum,jdbcType=INTEGER},
-      </if>
-      <if test="passScore != null">
+      <if test="passScore != null" >
         #{passScore,jdbcType=DOUBLE},
       </if>
-      <if test="totalScore != null">
+      <if test="totalScore != null" >
         #{totalScore,jdbcType=DOUBLE},
       </if>
-      <if test="needTime != null">
+      <if test="needTime != null" >
         #{needTime,jdbcType=INTEGER},
       </if>
-      <if test="answer != null">
+      <if test="answer != null" >
         #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectId != null" >
+        #{subjectId,jdbcType=INTEGER},
+      </if>
+      <if test="subjectName != null" >
+        #{subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="usufruct != null" >
+        #{usufruct,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.explore.pojo.Paper">
+  <update id="updateByPrimaryKeySelective" parameterType="com.explore.pojo.Paper" >
     update paper
-    <set>
-      <if test="examId != null">
-        exam_id = #{examId,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
+    <set >
+      <if test="name != null" >
         `name` = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="describe != null">
+      <if test="describe != null" >
         `describe` = #{describe,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        status = #{status,jdbcType=VARCHAR},
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
       </if>
-      <if test="paperType != null">
-        paper_type = #{paperType,jdbcType=INTEGER},
-      </if>
-      <if test="isSubjective != null">
-        is_subjective = #{isSubjective,jdbcType=INTEGER},
-      </if>
-      <if test="difficulty != null">
+      <if test="difficulty != null" >
         difficulty = #{difficulty,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null">
+      <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="partNum != null">
-        part_num = #{partNum,jdbcType=INTEGER},
-      </if>
-      <if test="passScore != null">
+      <if test="passScore != null" >
         pass_score = #{passScore,jdbcType=DOUBLE},
       </if>
-      <if test="totalScore != null">
+      <if test="totalScore != null" >
         total_score = #{totalScore,jdbcType=DOUBLE},
       </if>
-      <if test="needTime != null">
+      <if test="needTime != null" >
         need_time = #{needTime,jdbcType=INTEGER},
       </if>
-      <if test="answer != null">
+      <if test="answer != null" >
         answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectId != null" >
+        subject_id = #{subjectId,jdbcType=INTEGER},
+      </if>
+      <if test="subjectName != null" >
+        subject_name = #{subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="usufruct != null" >
+        usufruct = #{usufruct,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.explore.pojo.Paper">
+  <update id="updateByPrimaryKey" parameterType="com.explore.pojo.Paper" >
     update paper
-    set exam_id = #{examId,jdbcType=INTEGER},
-      `name` = #{name,jdbcType=VARCHAR},
-      `describe` = #{describe,jdbcType=VARCHAR},
-      status = #{status,jdbcType=VARCHAR},
-      paper_type = #{paperType,jdbcType=INTEGER},
-      is_subjective = #{isSubjective,jdbcType=INTEGER},
+    set `name` = #{name,jdbcType=VARCHAR},
+        `describe` = #{describe,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
       difficulty = #{difficulty,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      part_num = #{partNum,jdbcType=INTEGER},
       pass_score = #{passScore,jdbcType=DOUBLE},
       total_score = #{totalScore,jdbcType=DOUBLE},
       need_time = #{needTime,jdbcType=INTEGER},
-      answer = #{answer,jdbcType=VARCHAR}
+      answer = #{answer,jdbcType=VARCHAR},
+      subject_id = #{subjectId,jdbcType=INTEGER},
+      subject_name = #{subjectName,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=VARCHAR},
+      usufruct = #{usufruct,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectAllPaper" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM paper order By update_time Desc
+
+  </select>
   <update id="updatePaperStatus">
     update paper
     set
-        status=#{status,jdbcType=INTEGER}
+      status=#{status,jdbcType=INTEGER}
     where id = #{paperId,jdbcType=INTEGER}
   </update>
 </mapper>

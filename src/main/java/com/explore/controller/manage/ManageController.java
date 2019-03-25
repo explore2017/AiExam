@@ -79,7 +79,7 @@ public class ManageController {
      * 修改学生信息
      */
     @PutMapping("/reviseStudent")
-    public ServerResponse reviseStudent(Student student) {
+    public ServerResponse reviseStudent(@RequestBody Student student) {
         ServerResponse serverResponse = manageService.reviseStudent(student);
         return serverResponse;
     }

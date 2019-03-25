@@ -65,7 +65,7 @@ public class ClassController {
      * 修改班级
      */
     @PutMapping("/reviseclass")
-    public ServerResponse reviseClass(Class classes){
+    public ServerResponse reviseClass(@RequestBody Class classes){
         ServerResponse serverResponse=classesService.reviseClass(classes);
         return serverResponse;
     }
