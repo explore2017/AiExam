@@ -11,7 +11,7 @@
  Target Server Version : 50553
  File Encoding         : 65001
 
- Date: 22/03/2019 12:42:11
+ Date: 25/03/2019 23:26:38
 */
 
 SET NAMES utf8;
@@ -60,7 +60,7 @@ CREATE TABLE `class`  (
   `create_time` datetime NULL DEFAULT NULL,
   `update_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for exam
@@ -115,24 +115,22 @@ CREATE TABLE `manager`  (
 DROP TABLE IF EXISTS `paper`;
 CREATE TABLE `paper`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `exam_id` int(11) NULL DEFAULT NULL COMMENT '考试id',
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '试卷名称',
   `describe` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '试卷描述',
   `status` int(11) UNSIGNED NULL DEFAULT 0 COMMENT '试卷状态',
-  `paper_type` int(11) NULL DEFAULT NULL COMMENT '试卷类型 ',
-  `is_subjective` int(11) NULL DEFAULT NULL COMMENT '0-客观题,1-主观题',
   `difficulty` int(11) NULL DEFAULT NULL COMMENT '试卷难度',
   `create_time` datetime NULL DEFAULT NULL,
   `update_time` datetime NULL DEFAULT NULL,
-  `part_num` int(11) NULL DEFAULT NULL COMMENT '大题数',
-  `pass_score` double(255, 0) NULL DEFAULT NULL COMMENT '及格分数',
-  `total_score` double(255, 0) NULL DEFAULT NULL COMMENT '总分',
+  `pass_score` double(255, 0) NULL DEFAULT 0 COMMENT '及格分数',
+  `total_score` double(255, 0) NULL DEFAULT 0 COMMENT '总分',
   `need_time` int(11) NULL DEFAULT NULL COMMENT '考试时长（分钟）',
   `answer` varchar(3000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '试卷答案',
   `subject_id` int(11) NULL DEFAULT NULL COMMENT '科目id',
+  `subject_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `creator` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '出题人',
+  `usufruct` int(11) NULL DEFAULT NULL COMMENT '使用权',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for paper_compose
@@ -169,7 +167,7 @@ CREATE TABLE `question`  (
   `key_point` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '知识点',
   `default_score` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '默认分数',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for question_paper
@@ -220,7 +218,7 @@ CREATE TABLE `student_class`  (
   `class_id` int(11) NOT NULL,
   `class_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for subject
