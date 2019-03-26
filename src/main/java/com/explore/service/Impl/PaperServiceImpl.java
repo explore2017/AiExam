@@ -81,7 +81,9 @@ public class PaperServiceImpl implements IPaperService {
         for(PaperCompose paperCompose:paperComposes){
             Question question=questionMapper.selectQuestionByQuestionId(paperCompose.getQuestionId());
             if(question!=null){
-                question.setAnswer(StringUtils.EMPTY);
+                if(false) {
+                    question.setAnswer(StringUtils.EMPTY);
+                }
                 questionList.add(question);
             }
 
@@ -90,24 +92,25 @@ public class PaperServiceImpl implements IPaperService {
     }
 
     @Override
-    public ServerResponse addPaperComposeByPaperId( Integer paperId,PaperCompose paperCompose) {
-        Paper paper=paperMapper.selectByPrimaryKey(paperId);
+    public ServerResponse addPaperComposeByPaperId( PaperCompose paperCompose) {
+        Paper paper=paperMapper.selectByPrimaryKey(paperCompose.getPaperId());
         if(paper==null){return ServerResponse.createByErrorMessage("找不到该试卷");}
-        paperCompose.setPaperId(paperId);
-        int count =paperComposeMapper.insert(paperCompose);
-        if(count==0){return ServerResponse.createByErrorMessage("添加试题失败");}
+        if(paperComposeMapper.selectPaperComposeByPaperIdAndQuestionId(paperCompose.getPaperId(),paperCompose.getQuestionId())!=null){
+            return ServerResponse.createByErrorMessage("试卷中已有试题");
+        }
+        if(paperComposeMapper.insert(paperCompose)==0){return ServerResponse.createByErrorMessage("添加试题失败");}
         return ServerResponse.createBySuccessMessage("添加试题成功");
     }
 
     @Override
     public ServerResponse editPaperComposeByPaperId(Integer paperId, PaperCompose paperCompose) {
         Paper paper=paperMapper.selectByPrimaryKey(paperId);
-        if(paper==null){return ServerResponse.createByErrorMessage("找不到该试卷");}
-        PaperCompose oldpaperCompose=paperComposeMapper.selectByPrimaryKey(paperCompose.getId());
-        if(oldpaperCompose==null) { return ServerResponse.createByErrorMessage("修改试题失败");}
-      int count= paperComposeMapper.updateByPrimaryKeySelective(paperCompose);
-        if(count==0){return ServerResponse.createByErrorMessage("修改试题失败");}
-        return  ServerResponse.createBySuccessMessage("修改试题成功");
+        if(paper==null){return ServerResponse.createByErrorMessage("出错了");}
+        PaperCompose oldPaperCompose=paperComposeMapper.selectPaperComposeByPaperIdAndQuestionId(paperCompose.getPaperId(),paperCompose.getQuestionId());
+        if(oldPaperCompose==null) { return ServerResponse.createByErrorMessage("出错了");}
+        paperCompose.setId(oldPaperCompose.getId());
+        if( paperComposeMapper.updateByPrimaryKeySelective(paperCompose)==0){return ServerResponse.createByErrorMessage("出错了");}
+        return  ServerResponse.createBySuccess();
     }
 
     @Override
@@ -118,8 +121,7 @@ public class PaperServiceImpl implements IPaperService {
         if(paperCompose==null){return ServerResponse.createByErrorMessage("删除失败");}
         int count= paperComposeMapper.updateTosequenceByPaperId(paperId,sequence);
         if(count==0){return ServerResponse.createByErrorMessage("删除失败");}
-        count=paperComposeMapper.deleteByPrimaryKey(paperCompose.getId());
-        if(count==0){return ServerResponse.createByErrorMessage("删除失败");}
+        paperComposeMapper.deleteByPrimaryKey(paperCompose.getId());
         return ServerResponse.createBySuccessMessage("删除成功");
     }
 
@@ -145,7 +147,7 @@ public class PaperServiceImpl implements IPaperService {
             paperCompose.setQuestionTypeId(question.getQuestionTypeId());
             paperCompose.setSequence(sequence++);
             paperCompose.setSingleScore(singeScore);
-            ServerResponse addServerResponse= this.addPaperComposeByPaperId(paperId,paperCompose); //考题的添加
+            ServerResponse addServerResponse= this.addPaperComposeByPaperId(paperCompose); //考题的添加
             if(!addServerResponse.isSuccess()) {return  addServerResponse;}
             questionList.remove(rand);
         }

@@ -96,7 +96,7 @@ public class PaperController {
     @PostMapping(value = "/details")
     @ApiOperation(value="向指定试卷添加题目", notes="指定试卷的id和一个PaperCompose对象")
     public ServerResponse addPaperComposeByPaperId(@RequestBody PaperCompose paperCompose){
-        return paperService.addPaperComposeByPaperId(paperCompose.getPaperId(),paperCompose);
+        return paperService.addPaperComposeByPaperId(paperCompose);
     }
 
     /**
