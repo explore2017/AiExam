@@ -10,6 +10,7 @@
     <result column="sequence" jdbcType="INTEGER" property="sequence" />
     <result column="single_score" jdbcType="DOUBLE" property="singleScore" />
   </resultMap>
+
   <sql id="Base_Column_List">
     id, paper_id, question_type_id, question_num, sequence, single_score
   </sql>
@@ -19,7 +20,6 @@
     from paper_compose
     where paper_id = #{paperId,jdbcType=INTEGER} order by sequence
   </select>
-
   <select id="selectPaperComposeByPaperIdAndSequence" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
       *
@@ -31,6 +31,12 @@
       *
     from paper_compose
     where paper_id = #{paperId,jdbcType=INTEGER} and question_id= #{questionId,jdbcType=INTEGER}
+  </select>
+  <select id="maxSequence" resultType="Integer" >
+    select
+      MAX(sequence)
+    from paper_compose
+    where paper_id = #{paperId,jdbcType=INTEGER}
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 

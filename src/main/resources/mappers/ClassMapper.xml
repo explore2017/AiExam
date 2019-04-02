@@ -14,7 +14,7 @@
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, name, class_no, teacher_id, subject_id, teacher_name, subject_name, number, 
+    id, `name`, class_no, teacher_id, subject_id, teacher_name, subject_name, `number`,
     create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -33,9 +33,9 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.explore.pojo.Class" >
-    insert into class (id, name, class_no, 
+    insert into class (id, `name`, class_no,
       teacher_id, subject_id, teacher_name, 
-      subject_name, number, create_time, 
+      subject_name, `number`, create_time,
       update_time)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{classNo,jdbcType=VARCHAR}, 
       #{teacherId,jdbcType=INTEGER}, #{subjectId,jdbcType=INTEGER}, #{teacherName,jdbcType=VARCHAR}, 
@@ -49,7 +49,7 @@
         id,
       </if>
       <if test="name != null" >
-        name,
+        `name`,
       </if>
       <if test="classNo != null" >
         class_no,
@@ -67,7 +67,7 @@
         subject_name,
       </if>
       <if test="number != null" >
-        number,
+        `number`,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -113,7 +113,7 @@
     update class
     <set >
       <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
       <if test="classNo != null" >
         class_no = #{classNo,jdbcType=VARCHAR},
@@ -144,13 +144,13 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.explore.pojo.Class" >
     update class
-    set name = #{name,jdbcType=VARCHAR},
+    set `name` = #{name,jdbcType=VARCHAR},
       class_no = #{classNo,jdbcType=VARCHAR},
       teacher_id = #{teacherId,jdbcType=INTEGER},
       subject_id = #{subjectId,jdbcType=INTEGER},
       teacher_name = #{teacherName,jdbcType=VARCHAR},
       subject_name = #{subjectName,jdbcType=VARCHAR},
-      number = #{number,jdbcType=INTEGER},
+      `number` = #{number,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

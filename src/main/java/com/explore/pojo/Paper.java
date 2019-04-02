@@ -23,7 +23,7 @@ public class Paper {
 
     private Integer needTime;
 
-    private String answer;
+    private Double score;
 
     private Integer subjectId;
 
@@ -113,12 +113,12 @@ public class Paper {
         this.needTime = needTime;
     }
 
-    public String getAnswer() {
-        return answer;
+    public Double getScore() {
+        return score;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer == null ? null : answer.trim();
+    public void setScore(Double score) {
+        this.score = score;
     }
 
     public Integer getSubjectId() {

@@ -12,7 +12,7 @@
     <result column="pass_score" property="passScore" jdbcType="DOUBLE" />
     <result column="total_score" property="totalScore" jdbcType="DOUBLE" />
     <result column="need_time" property="needTime" jdbcType="INTEGER" />
-    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="DOUBLE" />
     <result column="subject_id" property="subjectId" jdbcType="INTEGER" />
     <result column="subject_name" property="subjectName" jdbcType="VARCHAR" />
     <result column="creator" property="creator" jdbcType="VARCHAR" />
@@ -20,7 +20,7 @@
   </resultMap>
   <sql id="Base_Column_List" >
     id, `name`, `describe`, status, difficulty, create_time, update_time, pass_score, total_score,
-    need_time, answer, subject_id, subject_name, creator, usufruct
+    need_time, score, subject_id, subject_name, creator, usufruct
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -36,13 +36,13 @@
     insert into paper (id, `name`,`describe`,
       status, difficulty, create_time, 
       update_time, pass_score, total_score, 
-      need_time, answer, subject_id, 
+      need_time, score, subject_id, 
       subject_name, creator, usufruct
       )
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, 
       #{status,jdbcType=INTEGER}, #{difficulty,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{passScore,jdbcType=DOUBLE}, #{totalScore,jdbcType=DOUBLE}, 
-      #{needTime,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}, #{subjectId,jdbcType=INTEGER}, 
+      #{needTime,jdbcType=INTEGER}, #{score,jdbcType=DOUBLE}, #{subjectId,jdbcType=INTEGER},
       #{subjectName,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{usufruct,jdbcType=INTEGER}
       )
   </insert>
@@ -79,8 +79,8 @@
       <if test="needTime != null" >
         need_time,
       </if>
-      <if test="answer != null" >
-        answer,
+      <if test="score != null" >
+        score,
       </if>
       <if test="subjectId != null" >
         subject_id,
@@ -126,8 +126,8 @@
       <if test="needTime != null" >
         #{needTime,jdbcType=INTEGER},
       </if>
-      <if test="answer != null" >
-        #{answer,jdbcType=VARCHAR},
+      <if test="score != null" >
+        #{score,jdbcType=DOUBLE},
       </if>
       <if test="subjectId != null" >
         #{subjectId,jdbcType=INTEGER},
@@ -173,8 +173,8 @@
       <if test="needTime != null" >
         need_time = #{needTime,jdbcType=INTEGER},
       </if>
-      <if test="answer != null" >
-        answer = #{answer,jdbcType=VARCHAR},
+      <if test="score != null" >
+        score = #{score,jdbcType=DOUBLE},
       </if>
       <if test="subjectId != null" >
         subject_id = #{subjectId,jdbcType=INTEGER},
@@ -202,7 +202,7 @@
       pass_score = #{passScore,jdbcType=DOUBLE},
       total_score = #{totalScore,jdbcType=DOUBLE},
       need_time = #{needTime,jdbcType=INTEGER},
-      answer = #{answer,jdbcType=VARCHAR},
+      score = #{score,jdbcType=DOUBLE},
       subject_id = #{subjectId,jdbcType=INTEGER},
       subject_name = #{subjectName,jdbcType=VARCHAR},
       creator = #{creator,jdbcType=VARCHAR},
@@ -212,7 +212,7 @@
   <select id="selectAllPaper" resultMap="BaseResultMap">
     SELECT
       *
-    FROM paper order By update_time Desc
+    FROM paper order By create_time Desc
 
   </select>
   <update id="updatePaperStatus">

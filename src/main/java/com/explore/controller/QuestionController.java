@@ -55,6 +55,12 @@ public class QuestionController {
         return questionService.getAllQuestions();
     }
 
+    @GetMapping("/condition")
+    public  ServerResponse<List<Question>> get(Integer subjectId,Integer difficulty,Integer questionTypeId,String keyPoint){
+        return questionService.getQuestionsByCondition(subjectId,difficulty,questionTypeId,keyPoint);
+    }
+
+
 
 
 

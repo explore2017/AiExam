@@ -4,6 +4,7 @@ import com.explore.common.ServerResponse;
 import com.explore.dao.QuestionMapper;
 import com.explore.pojo.Question;
 import com.explore.service.IQuestionService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,6 +57,21 @@ public class QuestionServiceImpl implements IQuestionService {
     @Override
     public ServerResponse<List<Question>> getAllQuestions() {
         return ServerResponse.createBySuccess(questionMapper.selectAllQuestions());
+    }
+
+    @Override
+    public ServerResponse<List<Question>> getQuestionsByCondition(Integer subjectId, Integer difficulty, Integer questionTypeId, String keyPoint){
+        if(difficulty==-1){
+            difficulty=null;
+        }
+        if(questionTypeId==-1){
+            questionTypeId=null;
+        }
+        if(keyPoint!=null&&keyPoint.equals("")){
+            keyPoint=null;
+        }
+        List<Question> questionList=questionMapper.selectQuestionsByCondition(subjectId,difficulty,questionTypeId,keyPoint);
+        return ServerResponse.createBySuccess(questionList);
     }
 
 

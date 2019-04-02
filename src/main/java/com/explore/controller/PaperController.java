@@ -85,7 +85,7 @@ public class PaperController {
      */
     @GetMapping(value = "/details")
     @ApiOperation(value="获得指定试卷的题目信息", notes="通过指定试卷的id")
-    public ServerResponse<List<Question>> get(Integer paperId){
+    public ServerResponse get(Integer paperId){
         return paperService.getDetailsByPaperId(paperId);
     }
 
@@ -124,8 +124,21 @@ public class PaperController {
      */
     @PostMapping(value = "/auto/{paperId}")
     @ApiOperation(value="自动生成试卷的题目", notes="通过试卷id，问题类型id，生成的数量，每一个题目的成绩，科目id，知识点")
-    public ServerResponse<List<Question>> autoQuestion(@RequestBody @PathVariable("paperId")Integer paperId,  Integer questionTypeId, Integer quantity, Double singeScore, Integer subjectId, String keyPoint){
-        return paperService.autoQuestion(paperId,questionTypeId,quantity,singeScore,subjectId,keyPoint);
+    public ServerResponse<List<Question>> autoQuestion(@RequestBody @PathVariable("paperId")Integer paperId,  Integer questionTypeId, Integer quantity, Double singeScore, Integer subjectId, String keyPoint,Integer pageNum){
+        ServerResponse serverResponse= paperService.autoQuestion(paperId,questionTypeId,quantity,singeScore,subjectId,keyPoint);;
+        return serverResponse;
     }
+
+    /**
+     * 修改试卷题目
+     * @param paperCompose
+     */
+    @PutMapping(value = "/change_sequence")
+    @ApiOperation(value="向指定试卷修改题目", notes="指定试卷的id和一个PaperCompose对象")
+    public ServerResponse changeSequence(@RequestBody PaperCompose paperCompose){
+        return paperService.changeSequence(paperCompose);
+    }
+
+
 
 }

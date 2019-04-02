@@ -27,12 +27,29 @@
     from question
     where id = #{id,jdbcType=INTEGER}
   </select>
-    <select id="selectAllQuestions" resultMap="BaseResultMap">
+  <select id="selectAllQuestions" resultMap="BaseResultMap">
       SELECT
         *
       FROM question
 
     </select>
+  <select id="selectQuestionsByCondition" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM question
+    where
+     subject_id = #{subjectId,jdbcType=INTEGER}
+    <if test="difficulty != null" >
+      AND difficulty=#{difficulty,jdbcType=INTEGER}
+    </if>
+    <if test="questionTypeId != null" >
+      AND  question_type_id = #{questionTypeId,jdbcType=INTEGER}
+    </if>
+    <if test="keyPoint != null" >
+      AND key_point LIKE CONCAT(CONCAT('%',#{keyPoint,jdbcType=VARCHAR},'%'))
+    </if>
+
+  </select>
   <select id="selectQuestionsByQuestionTypeIdAndSubjectId" resultMap="BaseResultMap">
     SELECT
       *
@@ -47,7 +64,7 @@
     WHERE id = #{questionId,jdbcType=INTEGER}
 
   </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from question
     where id = #{id,jdbcType=INTEGER}
   </delete>

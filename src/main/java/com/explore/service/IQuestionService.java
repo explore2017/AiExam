@@ -11,4 +11,5 @@ public interface IQuestionService {
     ServerResponse deleteQuestionByQuestionId(Integer questionId);
     ServerResponse<Question> getQuestionsByQuestionId(Integer questionId);
     ServerResponse<List<Question>> getAllQuestions();
+    ServerResponse<List<Question>> getQuestionsByCondition(Integer subjectId,Integer difficulty,Integer questionTypeId,String keyPoint);
 }

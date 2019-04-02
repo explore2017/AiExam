@@ -61,7 +61,6 @@ public class ExamServiceImpl implements IExamService {
     public boolean checkJudge(Question question){
         if(question.getQuestionTypeId() == 3 || question.getQuestionTypeId() == 5 || question.getQuestionTypeId() == 6)
             return false;
-
         return true;
     }
 }

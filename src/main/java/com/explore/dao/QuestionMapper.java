@@ -20,4 +20,6 @@ public interface QuestionMapper {
     Question selectQuestionByQuestionId(Integer questionId);
 
     List<Question> selectQuestionsByQuestionTypeIdAndSubjectId(@Param("questionTypeId") Integer questionTypeId, @Param("subjectId") Integer subjectId);
+
+    List<Question> selectQuestionsByCondition(@Param("subjectId")Integer subjectId, @Param("difficulty")Integer difficulty, @Param("questionTypeId")Integer questionTypeId, @Param("keyPoint")String keyPoint);
 }

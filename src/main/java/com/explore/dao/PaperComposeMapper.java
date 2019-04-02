@@ -25,6 +25,8 @@ public interface PaperComposeMapper {
 
     int deleteByPaperId(Integer paperId);
 
+    Integer maxSequence(Integer paperId);
+
     int updateTosequenceByPaperId(@Param("paperId") Integer paperId, @Param("sequence")Integer sequence);
 
     PaperCompose  selectPaperComposeByPaperIdAndQuestionId(@Param("paperId") Integer paperId, @Param("questionId")Integer questionId);
