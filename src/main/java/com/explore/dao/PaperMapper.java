@@ -24,4 +24,6 @@ public interface PaperMapper {
 
     int updatePaperStatus(@Param("paperId") Integer paperId, @Param("status") Integer status);
 
+    List<Paper> selectPaperBySubject(@Param("subjectId") Integer subjectId, @Param("creator") String creator);
+
 }

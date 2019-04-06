@@ -21,4 +21,5 @@ public interface IPaperService {
     ServerResponse checkPaper(Integer paperId,Double totalScore);
     ServerResponse changeSequence(PaperCompose paperCompose);
     ServerResponse updatePaperScore(Integer paperId);
+    ServerResponse getPaperByClass(Integer classId);
 }

@@ -139,6 +139,9 @@ public class PaperController {
         return paperService.changeSequence(paperCompose);
     }
 
-
+    @GetMapping(value = "/class")
+    public ServerResponse getPaper(Integer classId){
+        return paperService.getPaperByClass(classId);
+    }
 
 }

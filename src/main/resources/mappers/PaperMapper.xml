@@ -221,4 +221,17 @@
       status=#{status,jdbcType=INTEGER}
     where id = #{paperId,jdbcType=INTEGER}
   </update>
+  <select id="selectPaperBySubject" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM paper
+    WHERE
+      subject_id = #{subjectId,jdbcType=INTEGER}
+      AND
+      (
+          usufruct = 0
+          OR
+          creator = #{creator,jdbcType=VARCHAR}
+      )
+  </select>
 </mapper>

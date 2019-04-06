@@ -1,12 +1,9 @@
 package com.explore.service.Impl;
 
 import com.explore.common.ServerResponse;
-import com.explore.dao.PaperComposeMapper;
-import com.explore.dao.PaperMapper;
-import com.explore.dao.QuestionMapper;
-import com.explore.pojo.Paper;
-import com.explore.pojo.PaperCompose;
-import com.explore.pojo.Question;
+import com.explore.dao.*;
+import com.explore.pojo.*;
+import com.explore.pojo.Class;
 import com.explore.service.IPaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +22,12 @@ public class PaperServiceImpl implements IPaperService {
     PaperComposeMapper paperComposeMapper;
     @Autowired
     QuestionMapper questionMapper;
+    @Autowired
+    ClassMapper classMapper;
+    @Autowired
+    TeacherMapper teacherMapper;
+    @Autowired
+    SubjectMapper subjectMapper;
 
     @Override
     public ServerResponse savePaper(Paper paper) {
@@ -234,6 +237,23 @@ public class PaperServiceImpl implements IPaperService {
        paper.setScore(score);
        paperMapper.updateByPrimaryKeySelective(paper);
        return ServerResponse.createBySuccess(score);
+    }
+
+    @Override
+    public ServerResponse getPaperByClass(Integer classId) {
+        Class class1=classMapper.selectByPrimaryKey(classId);
+        if(class1==null){
+            return  ServerResponse.createByErrorMessage("找不到该班级");
+        }
+        Teacher teacher=teacherMapper.selectByPrimaryKey(class1.getTeacherId());
+        if(teacher==null){
+            return  ServerResponse.createByErrorMessage("出错了");
+        }
+        if(subjectMapper.selectByPrimaryKey(class1.getSubjectId())==null){
+            return  ServerResponse.createByErrorMessage("找不到班级科目");
+        }
+        List<Paper> paperList=  paperMapper.selectPaperBySubject(class1.getId(),teacher.getUsername());
+        return ServerResponse.createBySuccess(paperList);
     }
 
 
