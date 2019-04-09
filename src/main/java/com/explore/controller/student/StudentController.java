@@ -6,6 +6,7 @@ import com.explore.common.ServerResponse;
 import com.explore.pojo.ExamStudent;
 import com.explore.pojo.Student;
 import com.explore.pojo.User;
+import com.explore.service.IClassService;
 import com.explore.service.IExamService;
 import com.explore.service.IExamStudentService;
 import com.explore.service.IStudentService;
@@ -31,13 +32,15 @@ public class StudentController {
     IExamService examService;
     @Autowired
     IExamStudentService examStudentService;
+    @Autowired
+    IClassService classService;
 
     /**
      * 学生登录
      */
-    @PostMapping("/login")
-    public ServerResponse<Student> login(@RequestBody User user, HttpSession session) {
-        ServerResponse<Student> serverResponse = studentService.login(user.getUsername(), user.getPassword());
+    @GetMapping("/login")
+    public ServerResponse<Student> login(String sno, String password, HttpSession session) {
+        ServerResponse<Student> serverResponse = studentService.login(sno, password);
         if (serverResponse.isSuccess()) {
             Student student = serverResponse.getData();
             session.setAttribute(Const.CURRENT_USER,student);
@@ -103,6 +106,21 @@ public class StudentController {
         return ServerResponse.createBySuccess(student);
     }
 
+
+    /**
+     * 获取个人所属班级
+     */
+    @PostMapping("/myclass")
+    public ServerResponse<List<Class>> getMyClass(HttpSession session) {
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
+        }
+
+        ServerResponse serverResponse = classService.getClassesByStudentID(student.getId());
+
+        return serverResponse;
+    }
 
 
 

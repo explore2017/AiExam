@@ -1,6 +1,7 @@
 package com.explore.dao;
 
 import com.explore.pojo.PaperCompose;
+import com.explore.vo.PaperComposeVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public interface PaperComposeMapper {
 
     int updateByPrimaryKey(PaperCompose record);
 
-    List<PaperCompose> selectQuestionByPaperIdOrderBySequence(Integer paperId);
+    List<PaperComposeVo> selectQuestionByPaperIdOrderBySequence(Integer paperId);
 
     PaperCompose  selectPaperComposeByPaperIdAndSequence(@Param("paperId") Integer paperId, @Param("sequence")Integer sequence);
 

@@ -138,10 +138,20 @@ public class PaperController {
     public ServerResponse changeSequence(@RequestBody PaperCompose paperCompose){
         return paperService.changeSequence(paperCompose);
     }
-
+    /**
+     * 通过不同班级获得可选的试卷
+     */
     @GetMapping(value = "/class")
     public ServerResponse getPaper(Integer classId){
         return paperService.getPaperByClass(classId);
+    }
+
+    /**
+     * 随机生成试卷
+     */
+    @PostMapping(value = "/random")
+    public ServerResponse addRandomPaper(@RequestBody Paper paper){
+        return paperService.addRandomPaper(paper);
     }
 
 }

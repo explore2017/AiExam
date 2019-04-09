@@ -22,4 +22,5 @@ public interface IPaperService {
     ServerResponse changeSequence(PaperCompose paperCompose);
     ServerResponse updatePaperScore(Integer paperId);
     ServerResponse getPaperByClass(Integer classId);
+    ServerResponse addRandomPaper(Paper paper);
 }

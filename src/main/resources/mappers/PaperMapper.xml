@@ -32,7 +32,7 @@
     delete from paper
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.explore.pojo.Paper" >
+  <insert id="insert" parameterType="com.explore.pojo.Paper" useGeneratedKeys="true" keyProperty="id" >
     insert into paper (id, `name`,`describe`,
       status, difficulty, create_time, 
       update_time, pass_score, total_score, 

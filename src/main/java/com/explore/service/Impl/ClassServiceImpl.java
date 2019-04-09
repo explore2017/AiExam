@@ -120,4 +120,11 @@ public class ClassServiceImpl implements IClassService {
         }
         return ServerResponse.createByErrorMessage("添加学生失败");
     }
+
+    @Override
+    public ServerResponse<List<Class>> getClassesByStudentID(Integer id) {
+        List<Class> classes = classMapper.getClassesByStudentID(id);
+
+        return ServerResponse.createBySuccess(classes);
+    }
 }

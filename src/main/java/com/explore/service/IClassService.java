@@ -15,4 +15,5 @@ public interface IClassService {
     ServerResponse reviseClass(Class classes);
     ServerResponse deleteStudent(Integer studentId,Integer classId);
     ServerResponse addStudent(StudentClass studentClass);
+    ServerResponse<List<Class>> getClassesByStudentID(Integer id);
 }
