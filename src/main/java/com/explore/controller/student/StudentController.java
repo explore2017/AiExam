@@ -3,10 +3,8 @@ package com.explore.controller.student;
 import com.explore.common.Const;
 import com.explore.common.ResponseCode;
 import com.explore.common.ServerResponse;
+import com.explore.pojo.*;
 import com.explore.pojo.Class;
-import com.explore.pojo.ExamStudent;
-import com.explore.pojo.Student;
-import com.explore.pojo.User;
 import com.explore.service.IClassService;
 import com.explore.service.IExamService;
 import com.explore.service.IExamStudentService;
@@ -126,6 +124,15 @@ public class StudentController {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
         }
         return studentService.getExamVOs(student.getId());
+    }
+
+    @PostMapping("/batch/enroll")
+    public ServerResponse batchEnroll(@RequestBody Batch batch, HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
+        }
+        return studentService.batchEnroll(batch.getId(),student.getId());
     }
 
 

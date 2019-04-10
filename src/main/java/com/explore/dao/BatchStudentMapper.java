@@ -17,4 +17,8 @@ public interface BatchStudentMapper {
     int updateByPrimaryKey(BatchStudent record);
 
     int checkHasSelected(@Param("studentId") Integer studentId,@Param("batchId") Integer batchId);
+
+    int getBatchSelelectedNumberByBatchId(Integer batchId);
+
+    int checkHasEnroll(@Param("studentId") Integer studentId,@Param("batchId") Integer batchId);
 }

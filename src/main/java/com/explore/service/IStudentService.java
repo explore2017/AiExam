@@ -2,7 +2,6 @@ package com.explore.service;
 
 import com.explore.common.ServerResponse;
 import com.explore.pojo.Student;
-import com.explore.pojo.Teacher;
 
 public interface IStudentService {
     ServerResponse<Student> login(String sno, String password);
@@ -14,4 +13,6 @@ public interface IStudentService {
     ServerResponse resetPassword(String sno,String phone,String password);
 
     ServerResponse getExamVOs(Integer id);
+
+    ServerResponse batchEnroll(Integer id, Integer id1);
 }

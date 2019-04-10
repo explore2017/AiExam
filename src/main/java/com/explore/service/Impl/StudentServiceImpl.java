@@ -6,6 +6,7 @@ import com.explore.dao.BatchStudentMapper;
 import com.explore.dao.ExamMapper;
 import com.explore.dao.StudentMapper;
 import com.explore.pojo.Batch;
+import com.explore.pojo.BatchStudent;
 import com.explore.pojo.Exam;
 import com.explore.pojo.Student;
 import com.explore.service.IStudentService;
@@ -97,18 +98,24 @@ public class StudentServiceImpl implements IStudentService {
         List<ExamVO> examVOs = new LinkedList<>();
         for (Exam exam:exams) {
             ExamVO examVO = modelMapper.map(exam,ExamVO.class);
+            examVO.setHasEnroll(false);
             List<Batch> batches = batchMapper.selectBatchesByExamId(exam.getId());
             //判断是否报名了
             List<BatchVO> batchVOs = new LinkedList<>();
             for (Batch batch:batches) {
                 BatchVO batchVO = modelMapper.map(batch,BatchVO.class);
+                batchVO.setHasSelected(false);
+                batchVO.setIsFull(false);
                 int count = batchStudentMapper.checkHasSelected(studentId,batch.getId());
                 if (count>0){
                     batchVO.setHasSelected(true);
                     examVO.setHasEnroll(true);
-                }else{
-                    batchVO.setHasSelected(false);
-                    examVO.setHasEnroll(false);
+                }
+                int selectedNumber = batchStudentMapper.getBatchSelelectedNumberByBatchId(batch.getId());
+                batchVO.setSelectedNumber(selectedNumber);
+                //批次满人
+                if (batchVO.getMaxNumber()==selectedNumber){
+                    batchVO.setIsFull(true);
                 }
                 batchVOs.add(batchVO);
             }
@@ -116,6 +123,25 @@ public class StudentServiceImpl implements IStudentService {
             examVOs.add(examVO);
         }
         return ServerResponse.createBySuccess(examVOs);
+    }
+
+    @Override
+    public ServerResponse batchEnroll(Integer batchId, Integer studentId) {
+        //验证是否已经报名了该批次-考试
+        //int count = batchStudentMapper.checkHasSelected(studentId,batchId);
+        int count = batchStudentMapper.checkHasEnroll(studentId,batchId);
+        if (count>0){
+            return ServerResponse.createByErrorMessage("报名失败，你已经报名过该考试");
+        }
+        BatchStudent batchStudent = new BatchStudent();
+        batchStudent.setStudentId(studentId);
+        batchStudent.setBatchId(batchId);
+        Date now =  new Date();
+        batchStudent.setCreateTime(now);
+        batchStudent.setUpdateTime(now);
+        batchStudent.setStatus(0);
+        batchStudentMapper.insert(batchStudent);
+        return ServerResponse.createBySuccessMessage("报名成功");
     }
 
 }
