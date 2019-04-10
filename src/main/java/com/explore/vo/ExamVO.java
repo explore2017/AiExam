@@ -1,5 +1,6 @@
 package com.explore.vo;
 
+import com.explore.pojo.Batch;
 import com.explore.pojo.Exam;
 import lombok.Data;
 
@@ -11,7 +12,10 @@ import java.util.List;
  */
 @Data
 public class ExamVO extends Exam {
+
     private List<BatchVO> batches;
 
     private Boolean hasEnroll;
+
+    private Batch batch;
 }

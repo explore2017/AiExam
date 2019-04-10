@@ -127,11 +127,16 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public ServerResponse batchEnroll(Integer batchId, Integer studentId) {
-        //验证是否已经报名了该批次-考试
-        //int count = batchStudentMapper.checkHasSelected(studentId,batchId);
+        //验证是否已经报名了该考试
         int count = batchStudentMapper.checkHasEnroll(studentId,batchId);
         if (count>0){
-            return ServerResponse.createByErrorMessage("报名失败，你已经报名过该考试");
+            return ServerResponse.createByErrorMessage("报名失败，你已经报名过该考试!");
+        }
+        //判断是否满人
+        Batch batch = batchMapper.selectByPrimaryKey(batchId);
+        int selectedNumber = batchStudentMapper.getBatchSelelectedNumberByBatchId(batchId);
+        if (selectedNumber>=batch.getMaxNumber()){
+            return ServerResponse.createByErrorMessage("报名失败，批次人数已满!");
         }
         BatchStudent batchStudent = new BatchStudent();
         batchStudent.setStudentId(studentId);
@@ -142,6 +147,30 @@ public class StudentServiceImpl implements IStudentService {
         batchStudent.setStatus(0);
         batchStudentMapper.insert(batchStudent);
         return ServerResponse.createBySuccessMessage("报名成功");
+    }
+
+    @Override
+    public ServerResponse batchCancel(Integer batchId, Integer studentId) {
+        //TODO 批次开始后不能删除（包括已考试）
+        int count = batchStudentMapper.cancel(batchId,studentId);
+        if (count>0){
+            return ServerResponse.createBySuccessMessage("取消成功");
+        }
+        return ServerResponse.createByErrorMessage("取消异常，请检查是否成功处理");
+    }
+
+    @Override
+    public ServerResponse getMyEnrollBatch(Integer studentId) {
+        List<BatchStudent> list = batchStudentMapper.selectByStudentId(studentId);
+        List<ExamVO> examVOs = new ArrayList<>();
+        for (BatchStudent b:list) {
+            Batch batch = batchMapper.selectByPrimaryKey(b.getBatchId());
+            Exam exam = examMapper.selectByPrimaryKey(batch.getExamId());
+            ExamVO examVO = modelMapper.map(exam,ExamVO.class);
+            examVO.setBatch(batch);
+            examVOs.add(examVO);
+        }
+        return ServerResponse.createBySuccess(examVOs);
     }
 
 }

@@ -45,9 +45,12 @@ public class ExamStudentServiceImpl implements IExamStudentService {
         if(count==1){return  ServerResponse.createBySuccessMessage("修改成绩成功");}
         return ServerResponse.createByErrorMessage("修改成绩失败");
     }
- /*
-   获得学生考试
- */
+
+    /**
+     * 获得学生考试
+     * @param student_id
+     * @return
+     */
     @Override
     public ServerResponse<List<ExamStudent>> getStudentExam(Integer student_id) {
         return ServerResponse.createBySuccessMessage("查询成功",examStudentMapper.selectByStudentId(student_id));

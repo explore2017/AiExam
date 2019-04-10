@@ -15,4 +15,8 @@ public interface IStudentService {
     ServerResponse getExamVOs(Integer id);
 
     ServerResponse batchEnroll(Integer id, Integer id1);
+
+    ServerResponse batchCancel(Integer id, Integer id1);
+
+    ServerResponse getMyEnrollBatch(Integer id);
 }

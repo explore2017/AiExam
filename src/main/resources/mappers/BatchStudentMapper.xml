@@ -29,13 +29,23 @@
   </select>
   <select id="checkHasEnroll" resultType="java.lang.Integer">
     select count(*) from batch_student
-    inner join batch on batch.id = batch_student.id
+    inner join batch on batch.id = batch_student.batch_id
     where student_id = #{studentId} and exam_id = (select exam_id from batch where id = #{batchId})
+  </select>
+  <select id="selectByStudentId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from batch_student
+    where student_id = #{studentId}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from batch_student
     where id = #{id,jdbcType=INTEGER}
   </delete>
+  <delete id="cancel" parameterType="map">
+    delete from batch_student
+    where student_id = #{studentId} and batch_id = #{batchId}
+   </delete>
   <insert id="insert" parameterType="com.explore.pojo.BatchStudent">
     insert into batch_student (id, batch_id, student_id, 
       score, status, start_time, 

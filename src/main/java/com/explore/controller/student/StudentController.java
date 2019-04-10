@@ -126,6 +126,26 @@ public class StudentController {
         return studentService.getExamVOs(student.getId());
     }
 
+    /**
+     * 获取我的考试列表
+     * @param session
+     * @return
+     */
+    @GetMapping("/batch/me")
+    public ServerResponse myEnrollBatch(HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
+        }
+        return studentService.getMyEnrollBatch(student.getId());
+    }
+
+    /**
+     * 考试批次报名
+     * @param batch
+     * @param session
+     * @return
+     */
     @PostMapping("/batch/enroll")
     public ServerResponse batchEnroll(@RequestBody Batch batch, HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
@@ -135,5 +155,18 @@ public class StudentController {
         return studentService.batchEnroll(batch.getId(),student.getId());
     }
 
-
+    /**
+     * 取消选择批次
+     * @param batch
+     * @param session
+     * @return
+     */
+    @PostMapping("/batch/cancel")
+    public ServerResponse batchCancel(@RequestBody Batch batch, HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
+        }
+        return studentService.batchCancel(batch.getId(),student.getId());
+    }
 }

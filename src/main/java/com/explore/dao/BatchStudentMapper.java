@@ -3,6 +3,8 @@ package com.explore.dao;
 import com.explore.pojo.BatchStudent;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface BatchStudentMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -21,4 +23,8 @@ public interface BatchStudentMapper {
     int getBatchSelelectedNumberByBatchId(Integer batchId);
 
     int checkHasEnroll(@Param("studentId") Integer studentId,@Param("batchId") Integer batchId);
+
+    int cancel(@Param("batchId")Integer batchId,@Param("studentId") Integer studentId);
+
+    List<BatchStudent> selectByStudentId(Integer studentId);
 }
