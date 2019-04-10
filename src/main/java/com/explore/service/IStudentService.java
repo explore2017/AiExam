@@ -12,4 +12,6 @@ public interface IStudentService {
     ServerResponse reviseMessage(int id, String newPhone, String newEmail);
 
     ServerResponse resetPassword(String sno,String phone,String password);
+
+    ServerResponse getExamVOs(Integer id);
 }

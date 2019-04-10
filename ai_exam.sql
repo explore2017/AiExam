@@ -3,18 +3,18 @@
 
  Source Server         : localhost
  Source Server Type    : MySQL
- Source Server Version : 50553
+ Source Server Version : 80013
  Source Host           : localhost:3306
  Source Schema         : ai_exam
 
  Target Server Type    : MySQL
- Target Server Version : 50553
+ Target Server Version : 80013
  File Encoding         : 65001
 
- Date: 09/04/2019 20:51:35
+ Date: 10/04/2019 12:37:02
 */
 
-SET NAMES utf8;
+SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
@@ -39,9 +39,9 @@ CREATE TABLE `batch`  (
   `exam_id` int(11) NULL DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '批次名称',
   `describe` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '批次描述',
-  `start_time` datetime NULL DEFAULT NULL COMMENT '开始时间',
-  `end_time` datetime NULL DEFAULT NULL COMMENT '结束时间',
-  `number` int(11) UNSIGNED ZEROFILL NULL DEFAULT NULL COMMENT '批次人数',
+  `start_time` datetime(0) NULL DEFAULT NULL COMMENT '开始时间',
+  `end_time` datetime(0) NULL DEFAULT NULL COMMENT '结束时间',
+  `max_number` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '批次最大人数',
   `paper_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
@@ -49,8 +49,8 @@ CREATE TABLE `batch`  (
 -- ----------------------------
 -- Records of batch
 -- ----------------------------
-INSERT INTO `batch` VALUES (1, 1, 'Java批次一', '描述', '2019-02-16 19:13:22', '2019-02-16 19:13:25', NULL, NULL);
-INSERT INTO `batch` VALUES (2, 1, 'Java批次二', '描述', '2019-02-16 19:13:44', '2019-02-16 19:13:47', NULL, NULL);
+INSERT INTO `batch` VALUES (1, 1, 'Java批次一', '描述', '2019-02-16 19:13:22', '2019-02-16 19:13:25', 40, NULL);
+INSERT INTO `batch` VALUES (2, 1, 'Java批次二', '描述', '2019-02-16 19:13:44', '2019-02-16 19:13:47', 30, NULL);
 INSERT INTO `batch` VALUES (3, 2, 'Linux批次一', '批次描述', '2019-02-17 17:44:02', '2019-02-17 17:44:04', NULL, NULL);
 INSERT INTO `batch` VALUES (4, 3, '考试批次一', '批次描述', '2019-02-17 17:44:32', '2019-02-17 17:44:35', NULL, NULL);
 
@@ -64,10 +64,10 @@ CREATE TABLE `batch_student`  (
   `student_id` int(11) NULL DEFAULT NULL,
   `score` double(255, 0) NULL DEFAULT NULL,
   `status` int(11) NULL DEFAULT NULL,
-  `start_time` datetime NULL DEFAULT NULL,
-  `submit_time` datetime NULL DEFAULT NULL,
-  `create_time` datetime NULL DEFAULT NULL,
-  `update_time` datetime NULL DEFAULT NULL,
+  `start_time` datetime(0) NULL DEFAULT NULL,
+  `submit_time` datetime(0) NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
 
@@ -84,15 +84,15 @@ CREATE TABLE `class`  (
   `teacher_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '老师名称',
   `subject_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '科目名称',
   `number` int(11) NULL DEFAULT NULL COMMENT '班级人数',
-  `create_time` datetime NULL DEFAULT NULL,
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of class
 -- ----------------------------
-INSERT INTO `class` VALUES (1, '11122', '2', 6, 1, '6556', '555', 2, NULL, '2019-03-25 13:36:43');
+INSERT INTO `class` VALUES (1, '班级1', '111111', 6, 1, '6556', '555', 2, NULL, '2019-03-25 13:36:43');
 INSERT INTO `class` VALUES (3, 'demo555', '58787', 2, 1, '4554', 'java', 0, '2019-03-19 22:36:36', '2019-04-02 11:49:24');
 INSERT INTO `class` VALUES (4, 'demo', NULL, 45, 1, '5445', 'java', 0, '2019-03-22 14:23:25', NULL);
 
@@ -106,11 +106,11 @@ CREATE TABLE `exam`  (
   `subject_id` int(11) NULL DEFAULT NULL COMMENT '对应科目id',
   `exam_type_id` int(255) NULL DEFAULT NULL COMMENT '类型',
   `subscribe` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
-  `start_time` datetime NULL DEFAULT NULL COMMENT '考试开始时间',
-  `end_time` datetime NULL DEFAULT NULL COMMENT '考试终止时间',
+  `start_time` datetime(0) NULL DEFAULT NULL COMMENT '考试开始时间',
+  `end_time` datetime(0) NULL DEFAULT NULL COMMENT '考试终止时间',
   `creator_id` int(11) NULL DEFAULT NULL COMMENT '创建者',
-  `create_time` datetime NULL DEFAULT NULL,
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
   `class_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
@@ -118,7 +118,7 @@ CREATE TABLE `exam`  (
 -- ----------------------------
 -- Records of exam
 -- ----------------------------
-INSERT INTO `exam` VALUES (1, 'java考试', 1, 1, '其中考试', '2019-02-14 18:07:52', '2019-02-14 18:07:54', 1, '2019-02-14 18:07:57', '2019-02-17 17:34:50', NULL);
+INSERT INTO `exam` VALUES (1, 'java考试', 1, 1, '其中考试', '2019-02-14 18:07:52', '2019-02-14 18:07:54', 1, '2019-02-14 18:07:57', '2019-02-17 17:34:50', 1);
 INSERT INTO `exam` VALUES (2, 'linux考试', 2, 1, '期末考试', '2019-02-14 19:47:31', '2019-02-14 19:47:28', 1, '2019-02-14 19:47:25', '2019-02-17 17:34:52', NULL);
 INSERT INTO `exam` VALUES (3, '考试名称', 3, 1, '描述', '2019-02-15 15:39:11', '2019-02-15 15:39:13', 2, '2019-02-15 13:32:03', '2019-02-17 17:34:55', NULL);
 
@@ -150,8 +150,8 @@ CREATE TABLE `paper`  (
   `describe` varchar(2550) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '试卷描述',
   `status` int(11) UNSIGNED NULL DEFAULT 0 COMMENT '试卷状态',
   `difficulty` int(11) NULL DEFAULT NULL COMMENT '试卷难度',
-  `create_time` datetime NULL DEFAULT NULL,
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
   `pass_score` double(255, 0) NULL DEFAULT 0 COMMENT '及格分数',
   `total_score` double(255, 0) NULL DEFAULT 0 COMMENT '总分',
   `need_time` int(11) NULL DEFAULT NULL COMMENT '考试时长（分钟）',
@@ -228,8 +228,8 @@ CREATE TABLE `question`  (
   `question_type_id` int(255) NULL DEFAULT NULL COMMENT '题目类型',
   `answer` varchar(3000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '题目答案',
   `selects` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '选项',
-  `create_time` datetime NULL DEFAULT NULL,
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
   `is_subjective` int(255) NULL DEFAULT NULL COMMENT '1-主观题，0-客观题',
   `difficulty` int(255) NULL DEFAULT NULL COMMENT '题目难度',
   `subject_id` int(11) NULL DEFAULT NULL COMMENT '题目对应的科目',
@@ -318,8 +318,8 @@ CREATE TABLE `student`  (
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `create_time` datetime NULL DEFAULT NULL,
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
   `classes` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
@@ -373,8 +373,8 @@ CREATE TABLE `subject`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课程名称',
   `subject_no` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课程号(预留)',
   `subject_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课程代码(预留)',
-  `create_time` datetime NULL DEFAULT NULL,
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
   `creator` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
@@ -397,8 +397,8 @@ CREATE TABLE `teacher`  (
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `create_time` datetime NULL DEFAULT NULL,
-  `update_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL DEFAULT NULL,
+  `update_time` datetime(0) NULL DEFAULT NULL,
   `subject_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所属科目(可以多个)',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 59 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;

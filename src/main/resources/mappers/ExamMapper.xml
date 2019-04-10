@@ -54,7 +54,13 @@
     INNER JOIN batch on batch_id = batch.id
     where student_id = #{student_id}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="selectExamsByStudentId" resultType="com.explore.pojo.Exam">
+      select
+      <include refid="Base_Column_List" />
+      from exam
+      where class_id in (select class_id from student_class where student_id = #{studentId})
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from exam
     where id = #{id,jdbcType=INTEGER}
   </delete>

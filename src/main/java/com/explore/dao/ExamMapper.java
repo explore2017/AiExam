@@ -21,4 +21,6 @@ public interface ExamMapper {
     List<Exam> selectExams();
 
     List<ExamBatchVo> selectExamBatchVoByStudentId(Integer student_id);
+
+    List<Exam> selectExamsByStudentId(Integer id);
 }

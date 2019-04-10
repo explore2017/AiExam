@@ -8,9 +8,12 @@
     <result column="describe" jdbcType="VARCHAR" property="describe" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="max_number" jdbcType="INTEGER" property="maxNumber" />
+    <result column="paper_id" jdbcType="INTEGER" property="paperId" />
+
   </resultMap>
   <sql id="Base_Column_List">
-    id, exam_id, `name`, `describe`, start_time, end_time
+    id, exam_id, `name`, `describe`, start_time, end_time,max_number,paper_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
@@ -33,11 +36,11 @@
   </delete>
   <insert id="insert" parameterType="com.explore.pojo.Batch">
     insert into batch (id, exam_id, `name`,
-      `describe`, start_time, end_time
+      `describe`, start_time, end_time,max_number,paper_id
       )
     values (#{id,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR},
       #{describe,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}
-      )
+      ,#{maxNumber,jdbcType=INTEGER},#{paperId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.explore.pojo.Batch">
     insert into batch
@@ -99,6 +102,12 @@
       </if>
       <if test="endTime != null">
         end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="examId != null">
+        max_number = #{maxNumber,jdbcType=INTEGER},
+      </if>
+      <if test="examId != null">
+        paper_id = #{paperId,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

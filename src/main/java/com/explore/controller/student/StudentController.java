@@ -3,6 +3,7 @@ package com.explore.controller.student;
 import com.explore.common.Const;
 import com.explore.common.ResponseCode;
 import com.explore.common.ServerResponse;
+import com.explore.pojo.Class;
 import com.explore.pojo.ExamStudent;
 import com.explore.pojo.Student;
 import com.explore.pojo.User;
@@ -10,16 +11,10 @@ import com.explore.service.IClassService;
 import com.explore.service.IExamService;
 import com.explore.service.IExamStudentService;
 import com.explore.service.IStudentService;
-import com.explore.service.Impl.StudentServiceImpl;
-import com.explore.vo.ExamBatchVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import javax.xml.ws.RequestWrapper;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -38,9 +33,9 @@ public class StudentController {
     /**
      * 学生登录
      */
-    @GetMapping("/login")
-    public ServerResponse<Student> login(String sno, String password, HttpSession session) {
-        ServerResponse<Student> serverResponse = studentService.login(sno, password);
+    @PostMapping("/login")
+    public ServerResponse<Student> login(@RequestBody User user, HttpSession session) {
+        ServerResponse<Student> serverResponse = studentService.login(user.getUsername(), user.getPassword());
         if (serverResponse.isSuccess()) {
             Student student = serverResponse.getData();
             session.setAttribute(Const.CURRENT_USER,student);
@@ -110,19 +105,28 @@ public class StudentController {
     /**
      * 获取个人所属班级
      */
-    @PostMapping("/myclass")
+    @PostMapping("/myClass")
     public ServerResponse<List<Class>> getMyClass(HttpSession session) {
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
         }
-
-        ServerResponse serverResponse = classService.getClassesByStudentID(student.getId());
-
-        return serverResponse;
+        return classService.getClassesByStudentID(student.getId());
     }
 
-
+    /**
+     * 获取考试、批次列表
+     * @param session
+     * @return
+     */
+    @GetMapping("/exam")
+    public ServerResponse getExams(HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
+        }
+        return studentService.getExamVOs(student.getId());
+    }
 
 
 }

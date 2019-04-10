@@ -21,7 +21,10 @@
     from batch_student
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="checkHasSelected" resultType="java.lang.Integer">
+      select count(*) from batch_student where student_id = #{studentId} and batch_id = #{batchId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from batch_student
     where id = #{id,jdbcType=INTEGER}
   </delete>

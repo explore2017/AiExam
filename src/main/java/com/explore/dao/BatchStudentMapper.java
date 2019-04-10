@@ -1,6 +1,7 @@
 package com.explore.dao;
 
 import com.explore.pojo.BatchStudent;
+import org.apache.ibatis.annotations.Param;
 
 public interface BatchStudentMapper {
     int deleteByPrimaryKey(Integer id);
@@ -14,4 +15,6 @@ public interface BatchStudentMapper {
     int updateByPrimaryKeySelective(BatchStudent record);
 
     int updateByPrimaryKey(BatchStudent record);
+
+    int checkHasSelected(@Param("studentId") Integer studentId,@Param("batchId") Integer batchId);
 }
