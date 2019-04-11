@@ -2,9 +2,10 @@ package com.explore.dao;
 
 import com.explore.pojo.BatchStudent;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Component
 public interface BatchStudentMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -27,4 +28,6 @@ public interface BatchStudentMapper {
     int cancel(@Param("batchId")Integer batchId,@Param("studentId") Integer studentId);
 
     List<BatchStudent> selectByStudentId(Integer studentId);
+
+    int deleteByBatchId(Integer batchId);
 }

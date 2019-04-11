@@ -2,15 +2,18 @@ package com.explore.service.Impl;
 
 import com.explore.common.ServerResponse;
 import com.explore.dao.BatchMapper;
+import com.explore.dao.BatchStudentMapper;
+import com.explore.dao.ExamMapper;
 import com.explore.dao.ExamStudentMapper;
 import com.explore.pojo.Batch;
+import com.explore.pojo.BatchStudent;
+import com.explore.pojo.Exam;
 import com.explore.pojo.ExamStudent;
 import com.explore.service.IBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class BatchServiceImpl implements IBatchService {
@@ -19,10 +22,22 @@ public class BatchServiceImpl implements IBatchService {
     BatchMapper batchMapper;
     @Autowired
     ExamStudentMapper examStudentMapper;
+    @Autowired
+    BatchStudentMapper batchStudentMapper;
+    @Autowired
+    ExamMapper examMapper;
 
     @Override
-    public List<Batch> getBatchesByExamId(Integer exam_id) {
-        return batchMapper.selectBatchesByExamId(exam_id);
+    public ServerResponse getBatchesByExamId(Integer exam_id) {
+        List<Batch> batchList=batchMapper.selectBatchesByExamId(exam_id);
+        List<Map<String,Object>>  data=new ArrayList<>();
+        for(Batch batch:batchList){
+            Map<String,Object> single=new HashMap<>();
+            single.put("number", batchStudentMapper.getBatchSelelectedNumberByBatchId(batch.getId()));
+            single.put("batch",batch);
+            data.add(single);
+        }
+        return  ServerResponse.createBySuccess(data);
     }
 
     @Override
@@ -50,8 +65,13 @@ public class BatchServiceImpl implements IBatchService {
 
     @Override
     public ServerResponse save(Batch batch) {
-        batchMapper.insert(batch);
-        return ServerResponse.createBySuccessMessage("创建批次成功");
+        Exam exam =examMapper.selectByPrimaryKey(batch.getExamId());
+        if(exam==null){return ServerResponse.createByErrorMessage("发生未知错误");}
+        batch.setPaperId(exam.getPaperId());
+       if(batchMapper.insert(batch)>0) {
+           return ServerResponse.createBySuccessMessage("添加批次成功");
+       }
+        return ServerResponse.createByErrorMessage("添加批次失败");
     }
 
     @Override

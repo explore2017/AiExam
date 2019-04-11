@@ -5,6 +5,7 @@ import com.explore.pojo.Batch;
 import com.explore.service.IBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,7 +18,7 @@ public class BatchController {
 
     @RequestMapping(value = "/batch",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse save(Batch batch){
+    public ServerResponse save(@RequestBody Batch batch){
         return batchService.save(batch);
     }
 

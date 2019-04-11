@@ -33,19 +33,16 @@ public class ExamController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET)
     public ServerResponse list(){
-        List<Exam> exams = examService.getExams();
-        return ServerResponse.createBySuccess(exams);
+        return examService.getExams();
     }
 
     /**
      * 通过考试id列出所有批次
      */
     @ResponseBody
-    @RequestMapping("/batch/{exam_id}")
-    public ServerResponse batch(@PathVariable("exam_id") Integer exam_id){
-        List<Batch> batches = batchService.getBatchesByExamId(exam_id);
-
-        return ServerResponse.createBySuccess(batches);
+    @GetMapping("/batch")
+    public ServerResponse batch( Integer examId){
+        return batchService.getBatchesByExamId(examId);
     }
 
     /**
@@ -83,7 +80,6 @@ public class ExamController {
     public ServerResponse add(@RequestBody Exam exam){
         ServerResponse serverResponse = examService.save(exam);
         return serverResponse;
-//        return  null;
     }
 
 
@@ -92,9 +88,8 @@ public class ExamController {
      */
     @PostMapping("batch")
     @ResponseBody
-    public ServerResponse addBatch(Batch batch){
-        ServerResponse serverResponse = batchService.save(batch);
-        return serverResponse;
+    public ServerResponse addBatch(@RequestBody  Batch batch){
+        return batchService.save(batch);
     }
 
     /**
@@ -110,10 +105,16 @@ public class ExamController {
     /**
      * 自动批改
      */
-    @GetMapping("batch")
     @ResponseBody
     public ServerResponse autoCheck(ExamStudent examStudent, Paper paper, List<Question> questions){
         ServerResponse serverResponse = examService.autoCheck(examStudent, paper, questions);
         return serverResponse;
     }
+
+    @DeleteMapping("/{exam_id}")
+    @ResponseBody
+    public ServerResponse deleteExam(@PathVariable("exam_id")Integer exam_id){
+        return examService.deleteExam(exam_id);
+    }
+
 }

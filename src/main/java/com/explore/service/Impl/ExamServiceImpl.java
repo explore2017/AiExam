@@ -1,21 +1,20 @@
 package com.explore.service.Impl;
 
 import com.explore.common.ServerResponse;
-import com.explore.dao.BatchMapper;
-import com.explore.dao.ExamMapper;
-import com.explore.dao.QuestionMapper;
+import com.explore.dao.*;
 import com.explore.pojo.*;
+import com.explore.pojo.Class;
 import com.explore.service.IExamService;
 import com.explore.vo.ExamBatchVo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 
@@ -27,11 +26,36 @@ public class ExamServiceImpl implements IExamService {
     @Autowired
     BatchMapper batchMapper;
     @Autowired
+    BatchStudentMapper batchStudentMapper;
+    @Autowired
     PaperServiceImpl paperService;
+    @Autowired
+    TeacherMapper teacherMapper;
+    @Autowired
+    ClassMapper classMapper;
+    @Autowired
+    SubjectMapper subjectMapper;
 
     @Override
-    public List<Exam> getExams() {
-        return examMapper.selectExams();
+    public ServerResponse getExams() {
+        List<Exam> examList=examMapper.selectExams();
+        List<HashMap<String,Object>>  allData=new ArrayList<>();
+        for(Exam exam:examList){
+            Class class1=classMapper.selectByPrimaryKey(exam.getClassId());
+            if(class1==null){return  ServerResponse.createByError();}
+            Teacher teacher=teacherMapper.selectByPrimaryKey(class1.getTeacherId());
+            if(teacher==null){return  ServerResponse.createByError();}
+            teacher.setPassword(StringUtils.EMPTY);
+            teacher.setUsername(StringUtils.EMPTY);
+            Subject subject=subjectMapper.selectByPrimaryKey(class1.getSubjectId());
+            HashMap<String,Object> data=new HashMap<>();
+            data.put("exam",exam);
+            data.put("class",class1);
+            data.put("teacher",teacher);
+            data.put("subject",subject);
+            allData.add(data);
+        }
+        return ServerResponse.createBySuccess(allData) ;
     }
 
     @Override
@@ -77,6 +101,24 @@ public class ExamServiceImpl implements IExamService {
         }
         examStudent.setScore(score);
         return ServerResponse.createBySuccess(examStudent);
+    }
+
+    @Override
+    public ServerResponse deleteExam(Integer examId) {
+        Exam exam=examMapper.selectByPrimaryKey(examId);
+        if(exam==null){return  ServerResponse.createByErrorMessage("没有这个考试");}
+        List<Batch> batches=batchMapper.selectBatchesByExamId(examId);
+        if(batches==null){
+            examMapper.deleteByPrimaryKey(examId);
+            return ServerResponse.createBySuccessMessage("删除考试成功");
+        }else {
+            for(Batch batch:batches){
+             batchStudentMapper.deleteByBatchId(batch.getId());
+             batchMapper.deleteByPrimaryKey(batch.getId());
+            }
+            examMapper.deleteByPrimaryKey(examId);
+            return ServerResponse.createBySuccessMessage("删除考试成功");
+        }
     }
 
     /**

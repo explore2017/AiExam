@@ -6,7 +6,7 @@ import com.explore.pojo.Batch;
 import java.util.List;
 
 public interface IBatchService {
-    List<Batch> getBatchesByExamId(Integer exam_id);
+    ServerResponse getBatchesByExamId(Integer exam_id);
 
     ServerResponse enroll(Integer batch_id,Integer student_id);
 

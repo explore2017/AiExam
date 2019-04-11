@@ -46,7 +46,7 @@
   <select id="selectExams" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from exam
+    from exam order By create_time Desc
   </select>
   <select id="selectExamBatchVoByStudentId" resultMap="ExamBatchVo">
     SELECT exam.*,batch.id as batchId,batch.name as batchName,batch.describe as batchDescribe,batch.start_time as batchStartTime,

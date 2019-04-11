@@ -159,4 +159,8 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <delete id="deleteByBatchId" >
+    delete from batch_student
+    where  batch_id = #{batchId}
+  </delete>
 </mapper>
