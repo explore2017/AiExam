@@ -2,9 +2,10 @@ package com.explore.dao;
 
 import com.explore.pojo.Exam;
 import com.explore.vo.ExamBatchVo;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Component
 public interface ExamMapper {
     int deleteByPrimaryKey(Integer id);
 

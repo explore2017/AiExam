@@ -9,25 +9,23 @@ public class Exam {
 
     private String name;
 
-    private Integer subjectId;
+    private Integer paperId;
 
     private Integer examTypeId;
 
     private String subscribe;
-
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     private Date startTime;
-
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     private Date endTime;
 
     private Integer creatorId;
 
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     private Date createTime;
 
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     private Date updateTime;
+
+    private Integer classId;
 
     public Integer getId() {
         return id;
@@ -45,12 +43,12 @@ public class Exam {
         this.name = name == null ? null : name.trim();
     }
 
-    public Integer getSubjectId() {
-        return subjectId;
+    public Integer getPaperId() {
+        return paperId;
     }
 
-    public void setSubjectId(Integer subjectId) {
-        this.subjectId = subjectId;
+    public void setPaperId(Integer paperId) {
+        this.paperId = paperId;
     }
 
     public Integer getExamTypeId() {
@@ -107,5 +105,13 @@ public class Exam {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getClassId() {
+        return classId;
+    }
+
+    public void setClassId(Integer classId) {
+        this.classId = classId;
     }
 }

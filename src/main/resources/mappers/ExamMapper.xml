@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.explore.pojo.Exam">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="subject_id" jdbcType="INTEGER" property="subjectId" />
+    <result column="paper_id" jdbcType="INTEGER" property="paperId" />
     <result column="exam_type_id" jdbcType="INTEGER" property="examTypeId" />
     <result column="subscribe" jdbcType="VARCHAR" property="subscribe" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
@@ -12,11 +12,12 @@
     <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
   </resultMap>
   <resultMap id="ExamBatchVo" type="com.explore.vo.ExamBatchVo">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="subject_id" jdbcType="INTEGER" property="subjectId" />
+    <result column="paper_id" jdbcType="INTEGER" property="paperId" />
     <result column="exam_type_id" jdbcType="INTEGER" property="examTypeId" />
     <result column="subscribe" jdbcType="VARCHAR" property="subscribe" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
@@ -30,10 +31,11 @@
     <result column="batchStartTime" jdbcType="TIMESTAMP" property="batchStartTime" />
     <result column="batchEndTime" jdbcType="TIMESTAMP" property="batchEndTime" />
     <result column="batchStudentStatus" jdbcType="INTEGER" property="batchStudentStatus" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, `name`, subject_id, exam_type_id, subscribe, start_time, end_time, creator_id,
-    create_time, update_time
+    id, `name`, paper_id, exam_type_id, subscribe, start_time, end_time, creator_id,
+    create_time, update_time,class_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -64,15 +66,15 @@
     delete from exam
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.explore.pojo.Exam">
-    insert into exam (id, name, subject_id, 
+  <insert id="insert" parameterType="com.explore.pojo.Exam"  useGeneratedKeys="true" keyProperty="id">
+    insert into exam (id, `name`, paper_id,
       exam_type_id, subscribe, start_time, 
       end_time, creator_id, create_time, 
-      update_time)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{subjectId,jdbcType=INTEGER}, 
+      update_time,class_id)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{paperId,jdbcType=INTEGER}, 
       #{examTypeId,jdbcType=INTEGER}, #{subscribe,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
       #{endTime,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{updateTime,jdbcType=TIMESTAMP}, #{classId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.explore.pojo.Exam">
     insert into exam
@@ -81,10 +83,10 @@
         id,
       </if>
       <if test="name != null">
-        name,
+        `name`,
       </if>
-      <if test="subjectId != null">
-        subject_id,
+      <if test="paperId != null">
+        paper_id,
       </if>
       <if test="examTypeId != null">
         exam_type_id,
@@ -107,6 +109,9 @@
       <if test="updateTime != null">
         update_time,
       </if>
+      <if test="classId != null">
+        class_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -115,8 +120,8 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="subjectId != null">
-        #{subjectId,jdbcType=INTEGER},
+      <if test="paperId != null">
+        #{paperId,jdbcType=INTEGER},
       </if>
       <if test="examTypeId != null">
         #{examTypeId,jdbcType=INTEGER},
@@ -139,16 +144,20 @@
       <if test="updateTime != null">
         #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="classId != null">
+        #{classId,jdbcType=INTEGER},
+      </if>
+
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.explore.pojo.Exam">
     update exam
     <set>
       <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+        `name` = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="subjectId != null">
-        subject_id = #{subjectId,jdbcType=INTEGER},
+      <if test="paperId != null">
+        paper_id = #{paperId,jdbcType=INTEGER},
       </if>
       <if test="examTypeId != null">
         exam_type_id = #{examTypeId,jdbcType=INTEGER},
@@ -171,20 +180,24 @@
       <if test="updateTime != null">
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="classId != null">
+        class_id = #{classId,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.explore.pojo.Exam">
     update exam
-    set name = #{name,jdbcType=VARCHAR},
-      subject_id = #{subjectId,jdbcType=INTEGER},
+    set `name` = #{name,jdbcType=VARCHAR},
+      paper_id = #{paperId,jdbcType=INTEGER},
       exam_type_id = #{examTypeId,jdbcType=INTEGER},
       subscribe = #{subscribe,jdbcType=VARCHAR},
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
       creator_id = #{creatorId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+        class_id = #{classId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
