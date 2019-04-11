@@ -3,18 +3,18 @@
 
  Source Server         : localhost
  Source Server Type    : MySQL
- Source Server Version : 80013
+ Source Server Version : 50553
  Source Host           : localhost:3306
  Source Schema         : ai_exam
 
  Target Server Type    : MySQL
- Target Server Version : 80013
+ Target Server Version : 50553
  File Encoding         : 65001
 
- Date: 10/04/2019 12:37:02
+ Date: 12/04/2019 00:28:33
 */
 
-SET NAMES utf8mb4;
+SET NAMES utf8;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
@@ -39,20 +39,22 @@ CREATE TABLE `batch`  (
   `exam_id` int(11) NULL DEFAULT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '批次名称',
   `describe` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '批次描述',
-  `start_time` datetime(0) NULL DEFAULT NULL COMMENT '开始时间',
-  `end_time` datetime(0) NULL DEFAULT NULL COMMENT '结束时间',
+  `start_time` datetime NULL DEFAULT NULL COMMENT '开始时间',
+  `end_time` datetime NULL DEFAULT NULL COMMENT '结束时间',
   `max_number` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '批次最大人数',
   `paper_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of batch
 -- ----------------------------
 INSERT INTO `batch` VALUES (1, 1, 'Java批次一', '描述', '2019-02-16 19:13:22', '2019-02-16 19:13:25', 40, NULL);
 INSERT INTO `batch` VALUES (2, 1, 'Java批次二', '描述', '2019-02-16 19:13:44', '2019-02-16 19:13:47', 30, NULL);
-INSERT INTO `batch` VALUES (3, 2, 'Linux批次一', '批次描述', '2019-02-17 17:44:02', '2019-02-17 17:44:04', NULL, NULL);
-INSERT INTO `batch` VALUES (4, 3, '考试批次一', '批次描述', '2019-02-17 17:44:32', '2019-02-17 17:44:35', NULL, NULL);
+INSERT INTO `batch` VALUES (3, 2, 'Linux批次一', '批次描述', '2019-02-17 17:44:02', '2019-02-17 17:44:04', 50, NULL);
+INSERT INTO `batch` VALUES (4, 3, '考试批次一', '批次描述', '2019-02-17 17:44:32', '2019-02-17 17:44:35', 40, NULL);
+INSERT INTO `batch` VALUES (11, 2, NULL, NULL, '2019-04-11 00:22:00', '2019-04-14 00:22:00', 2, 2);
+INSERT INTO `batch` VALUES (12, 2, NULL, NULL, '2019-04-10 00:26:00', '2019-04-11 00:26:00', 2, 2);
 
 -- ----------------------------
 -- Table structure for batch_student
@@ -64,12 +66,12 @@ CREATE TABLE `batch_student`  (
   `student_id` int(11) NULL DEFAULT NULL,
   `score` double(255, 0) NULL DEFAULT NULL,
   `status` int(11) NULL DEFAULT NULL,
-  `start_time` datetime(0) NULL DEFAULT NULL,
-  `submit_time` datetime(0) NULL DEFAULT NULL,
-  `create_time` datetime(0) NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
+  `start_time` datetime NULL DEFAULT NULL,
+  `submit_time` datetime NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Fixed;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Table structure for class
@@ -84,10 +86,10 @@ CREATE TABLE `class`  (
   `teacher_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '老师名称',
   `subject_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '科目名称',
   `number` int(11) NULL DEFAULT NULL COMMENT '班级人数',
-  `create_time` datetime(0) NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of class
@@ -103,24 +105,24 @@ DROP TABLE IF EXISTS `exam`;
 CREATE TABLE `exam`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '考试名称',
-  `subject_id` int(11) NULL DEFAULT NULL COMMENT '对应科目id',
+  `paper_id` int(11) NULL DEFAULT NULL COMMENT '对应试卷id',
   `exam_type_id` int(255) NULL DEFAULT NULL COMMENT '类型',
-  `subscribe` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
-  `start_time` datetime(0) NULL DEFAULT NULL COMMENT '考试开始时间',
-  `end_time` datetime(0) NULL DEFAULT NULL COMMENT '考试终止时间',
+  `subscribe` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '描述',
+  `start_time` datetime NULL DEFAULT NULL COMMENT '考试报名开始时间',
+  `end_time` datetime NULL DEFAULT NULL COMMENT '考试报名终止时间',
   `creator_id` int(11) NULL DEFAULT NULL COMMENT '创建者',
-  `create_time` datetime(0) NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
   `class_id` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of exam
 -- ----------------------------
 INSERT INTO `exam` VALUES (1, 'java考试', 1, 1, '其中考试', '2019-02-14 18:07:52', '2019-02-14 18:07:54', 1, '2019-02-14 18:07:57', '2019-02-17 17:34:50', 1);
-INSERT INTO `exam` VALUES (2, 'linux考试', 2, 1, '期末考试', '2019-02-14 19:47:31', '2019-02-14 19:47:28', 1, '2019-02-14 19:47:25', '2019-02-17 17:34:52', NULL);
-INSERT INTO `exam` VALUES (3, '考试名称', 3, 1, '描述', '2019-02-15 15:39:11', '2019-02-15 15:39:13', 2, '2019-02-15 13:32:03', '2019-02-17 17:34:55', NULL);
+INSERT INTO `exam` VALUES (2, 'linux考试', 2, 1, '期末考试', '2019-02-14 19:47:31', '2019-02-14 19:47:28', 1, '2019-02-14 19:47:25', '2019-02-17 17:34:52', 1);
+INSERT INTO `exam` VALUES (3, '考试名称', 3, 1, '描述', '2019-02-15 15:39:11', '2019-02-15 15:39:13', 2, '2019-02-15 13:32:03', '2019-02-17 17:34:55', 1);
 
 -- ----------------------------
 -- Table structure for manager
@@ -150,8 +152,8 @@ CREATE TABLE `paper`  (
   `describe` varchar(2550) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '试卷描述',
   `status` int(11) UNSIGNED NULL DEFAULT 0 COMMENT '试卷状态',
   `difficulty` int(11) NULL DEFAULT NULL COMMENT '试卷难度',
-  `create_time` datetime(0) NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
   `pass_score` double(255, 0) NULL DEFAULT 0 COMMENT '及格分数',
   `total_score` double(255, 0) NULL DEFAULT 0 COMMENT '总分',
   `need_time` int(11) NULL DEFAULT NULL COMMENT '考试时长（分钟）',
@@ -161,7 +163,7 @@ CREATE TABLE `paper`  (
   `creator` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '出题人',
   `usufruct` int(11) NULL DEFAULT 0 COMMENT '使用权',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 47 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+) ENGINE = InnoDB AUTO_INCREMENT = 48 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of paper
@@ -189,6 +191,7 @@ INSERT INTO `paper` VALUES (43, NULL, '{\"singeNumber\":20,\"singeKeyPoint\":\"\
 INSERT INTO `paper` VALUES (44, NULL, '{\"singeNumber\":5,\"singeKeyPoint\":\"\",\"singescore\":5,\"judgeNumber\":1,\"judgeKeyPoint\":\"\",\"judgescore\":5,\"multipleNumber\":0,\"multipleKeyPoint\":\"\",\"multiplescore\":0,\"completionNumber\":0,\"completionKeyPoint\":\"\",\"completionscore\":0,\"shortNumber\":0,\"shortKeyPoint\":\"\",\"shortscore\":0,\"analysisNumber\":0,\"analysisKeyPoint\":\"\",\"analysisscore\":0}', 2, 0, '2019-04-09 19:12:46', NULL, NULL, 30, NULL, NULL, 1, NULL, NULL, 0);
 INSERT INTO `paper` VALUES (45, NULL, '{\"singeNumber\":10,\"singeKeyPoint\":\"\",\"singescore\":5,\"judgeNumber\":2,\"judgeKeyPoint\":\"\",\"judgescore\":5,\"multipleNumber\":1,\"multipleKeyPoint\":\"\",\"multiplescore\":15,\"completionNumber\":0,\"completionKeyPoint\":\"\",\"completionscore\":0,\"shortNumber\":0,\"shortKeyPoint\":\"\",\"shortscore\":0,\"analysisNumber\":0,\"analysisKeyPoint\":\"\",\"analysisscore\":0}', 2, 0, '2019-04-09 19:23:16', NULL, NULL, 75, NULL, NULL, 1, NULL, NULL, 0);
 INSERT INTO `paper` VALUES (46, NULL, '{\"singeNumber\":10,\"singeKeyPoint\":\"\",\"singescore\":10,\"judgeNumber\":0,\"judgeKeyPoint\":\"\",\"judgescore\":0,\"multipleNumber\":0,\"multipleKeyPoint\":\"\",\"multiplescore\":0,\"completionNumber\":0,\"completionKeyPoint\":\"\",\"completionscore\":0,\"shortNumber\":0,\"shortKeyPoint\":\"\",\"shortscore\":0,\"analysisNumber\":0,\"analysisKeyPoint\":\"\",\"analysisscore\":0}', 2, 0, '2019-04-09 20:04:39', NULL, NULL, 100, NULL, NULL, 1, NULL, NULL, 0);
+INSERT INTO `paper` VALUES (47, NULL, '{\"singeNumber\":0,\"singeKeyPoint\":\"\",\"singescore\":0,\"judgeNumber\":0,\"judgeKeyPoint\":\"\",\"judgescore\":0,\"multipleNumber\":0,\"multipleKeyPoint\":\"\",\"multiplescore\":0,\"completionNumber\":0,\"completionKeyPoint\":\"\",\"completionscore\":0,\"shortNumber\":0,\"shortKeyPoint\":\"\",\"shortscore\":0,\"analysisNumber\":0,\"analysisKeyPoint\":\"\",\"analysisscore\":0}', 2, 0, '2019-04-11 12:32:05', NULL, NULL, 0, NULL, NULL, 1, NULL, NULL, -1);
 
 -- ----------------------------
 -- Table structure for paper_compose
@@ -228,8 +231,8 @@ CREATE TABLE `question`  (
   `question_type_id` int(255) NULL DEFAULT NULL COMMENT '题目类型',
   `answer` varchar(3000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '题目答案',
   `selects` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '选项',
-  `create_time` datetime(0) NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
   `is_subjective` int(255) NULL DEFAULT NULL COMMENT '1-主观题，0-客观题',
   `difficulty` int(255) NULL DEFAULT NULL COMMENT '题目难度',
   `subject_id` int(11) NULL DEFAULT NULL COMMENT '题目对应的科目',
@@ -318,8 +321,8 @@ CREATE TABLE `student`  (
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `create_time` datetime(0) NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
   `classes` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 31 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
@@ -351,18 +354,18 @@ CREATE TABLE `student_class`  (
   `class_id` int(11) NOT NULL,
   `class_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of student_class
 -- ----------------------------
-INSERT INTO `student_class` VALUES (5, 22, 3, NULL);
-INSERT INTO `student_class` VALUES (12, 1, 3, 'demo555');
 INSERT INTO `student_class` VALUES (4, 1, 1, '455454');
+INSERT INTO `student_class` VALUES (5, 22, 3, NULL);
 INSERT INTO `student_class` VALUES (7, 1, 4, NULL);
 INSERT INTO `student_class` VALUES (8, 1, 6, NULL);
-INSERT INTO `student_class` VALUES (13, 11, 3, 'demo555');
 INSERT INTO `student_class` VALUES (10, 2, 1, '111');
+INSERT INTO `student_class` VALUES (12, 1, 3, 'demo555');
+INSERT INTO `student_class` VALUES (13, 11, 3, 'demo555');
 
 -- ----------------------------
 -- Table structure for subject
@@ -373,8 +376,8 @@ CREATE TABLE `subject`  (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课程名称',
   `subject_no` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课程号(预留)',
   `subject_code` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '课程代码(预留)',
-  `create_time` datetime(0) NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
   `creator` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '创建者',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
@@ -397,8 +400,8 @@ CREATE TABLE `teacher`  (
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `create_time` datetime(0) NULL DEFAULT NULL,
-  `update_time` datetime(0) NULL DEFAULT NULL,
+  `create_time` datetime NULL DEFAULT NULL,
+  `update_time` datetime NULL DEFAULT NULL,
   `subject_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '所属科目(可以多个)',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 59 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
@@ -451,21 +454,21 @@ CREATE TABLE `teacher_subject`  (
   `subject_id` int(11) NOT NULL,
   `subject_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 49 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
 -- ----------------------------
 -- Records of teacher_subject
 -- ----------------------------
-INSERT INTO `teacher_subject` VALUES (22, 55, 2, NULL);
 INSERT INTO `teacher_subject` VALUES (21, 55, 1, '55555');
+INSERT INTO `teacher_subject` VALUES (22, 55, 2, NULL);
 INSERT INTO `teacher_subject` VALUES (23, 6, 1, '5555555');
 INSERT INTO `teacher_subject` VALUES (24, 6, 2, NULL);
-INSERT INTO `teacher_subject` VALUES (42, 56, 2, NULL);
 INSERT INTO `teacher_subject` VALUES (32, 44, 1, NULL);
 INSERT INTO `teacher_subject` VALUES (33, 44, 2, NULL);
 INSERT INTO `teacher_subject` VALUES (36, 46, 1, NULL);
 INSERT INTO `teacher_subject` VALUES (37, 46, 2, NULL);
 INSERT INTO `teacher_subject` VALUES (40, 45, 1, NULL);
+INSERT INTO `teacher_subject` VALUES (42, 56, 2, NULL);
 INSERT INTO `teacher_subject` VALUES (43, 56, 1, NULL);
 INSERT INTO `teacher_subject` VALUES (47, 57, 2, NULL);
 INSERT INTO `teacher_subject` VALUES (48, 58, 1, NULL);
