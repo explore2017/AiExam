@@ -1,14 +1,8 @@
 package com.explore.service.Impl;
 
 import com.explore.common.ServerResponse;
-import com.explore.dao.BatchMapper;
-import com.explore.dao.BatchStudentMapper;
-import com.explore.dao.ExamMapper;
-import com.explore.dao.ExamStudentMapper;
-import com.explore.pojo.Batch;
-import com.explore.pojo.BatchStudent;
-import com.explore.pojo.Exam;
-import com.explore.pojo.ExamStudent;
+import com.explore.dao.*;
+import com.explore.pojo.*;
 import com.explore.service.IBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +20,8 @@ public class BatchServiceImpl implements IBatchService {
     BatchStudentMapper batchStudentMapper;
     @Autowired
     ExamMapper examMapper;
+    @Autowired
+    StudentMapper studentMapper;
 
     @Override
     public ServerResponse getBatchesByExamId(Integer exam_id) {
@@ -75,8 +71,35 @@ public class BatchServiceImpl implements IBatchService {
     }
 
     @Override
-    public ServerResponse delBacth(Batch batch) {
-        batchMapper.deleteByPrimaryKey(batch.getId());
+    public ServerResponse delBacth(Integer batchId) {
+        batchStudentMapper.deleteByBatchId(batchId);
+        batchMapper.deleteByPrimaryKey(batchId);
         return ServerResponse.createBySuccessMessage("删除批次成功");
+    }
+
+    @Override
+    public ServerResponse getBatchDetails(Integer batchId) {
+        List<Map<String,Object>> data=new ArrayList<>();
+        List<BatchStudent> batchStudentList=batchStudentMapper.selectByBatchId(batchId);
+        for(BatchStudent batchStudent:batchStudentList){
+            Map<String,Object> single=new HashMap<>();
+           Student student=studentMapper.selectByPrimaryKey(batchStudent.getStudentId());
+           if(student==null){return ServerResponse.createByErrorMessage("发生未知错误");}
+           student.setPassword("");
+           student.setPhone("");
+           student.setEmail("");
+           single.put("student",student);
+           single.put("batchStudent",batchStudent);
+           data.add(single);
+        }
+        return ServerResponse.createBySuccess(data);
+    }
+
+    @Override
+    public ServerResponse deleteBatchStudent(Integer studentId, Integer batchId) {
+        if(batchStudentMapper.cancel(studentId,batchId)>0){
+          return   ServerResponse.createBySuccessMessage("删除成功");
+        }
+        return ServerResponse.createByErrorMessage("删除失败");
     }
 }

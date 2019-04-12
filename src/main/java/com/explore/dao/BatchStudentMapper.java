@@ -25,9 +25,12 @@ public interface BatchStudentMapper {
 
     int checkHasEnroll(@Param("studentId") Integer studentId,@Param("batchId") Integer batchId);
 
-    int cancel(@Param("batchId")Integer batchId,@Param("studentId") Integer studentId);
+    int cancel(@Param("studentId") Integer studentId,@Param("batchId")Integer batchId);
 
     List<BatchStudent> selectByStudentId(Integer studentId);
 
+    List<BatchStudent> selectByBatchId(Integer batchId);
+
     int deleteByBatchId(Integer batchId);
+
 }

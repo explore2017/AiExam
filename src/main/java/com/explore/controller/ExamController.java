@@ -60,16 +60,12 @@ public class ExamController {
     }
 
     /**
-     * 取消考试
+     * 取消一个学生的考试
      */
-    @RequestMapping("/batch/cancel/{exam_id}")
+    @DeleteMapping("/batch/details/{studentId}")
     @ResponseBody
-    public ServerResponse cancel(@PathVariable("exam_id")Integer exam_id,HttpSession session){
-        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
-        if(student==null){
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(),"请登录后尝试");
-        }
-        return examStudentService.cancel(exam_id,student.getId());
+    public ServerResponse deleteBatchStudent(@PathVariable("studentId")Integer studentId,Integer batchId){
+        return batchService.deleteBatchStudent(studentId,batchId);
     }
 
     /**
@@ -95,10 +91,10 @@ public class ExamController {
     /**
      * 删除考试批次
      */
-    @DeleteMapping("batch")
+    @DeleteMapping("batch/{batchId}")
     @ResponseBody
-    public ServerResponse delBatch(Batch batch){
-        ServerResponse serverResponse = batchService.delBacth(batch);
+    public ServerResponse delBatch(@PathVariable("batchId") Integer batchId){
+        ServerResponse serverResponse = batchService.delBacth(batchId);
         return serverResponse;
     }
 
@@ -110,11 +106,22 @@ public class ExamController {
         ServerResponse serverResponse = examService.autoCheck(examStudent, paper, questions);
         return serverResponse;
     }
-
+    /**
+     * 删除考试
+     */
     @DeleteMapping("/{exam_id}")
     @ResponseBody
     public ServerResponse deleteExam(@PathVariable("exam_id")Integer exam_id){
         return examService.deleteExam(exam_id);
+    }
+
+    /**
+     * 通过批次id列出批次所有学生考试信息
+     */
+    @ResponseBody
+    @GetMapping("/batch/details")
+    public ServerResponse getBatchDetails(Integer batchId) {
+        return batchService.getBatchDetails(batchId);
     }
 
 }

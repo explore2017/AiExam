@@ -16,4 +16,5 @@ public interface IExamService {
     ServerResponse autoCheck(ExamStudent examStudent, Paper paper, List<Question> questions);
 
     ServerResponse deleteExam(Integer examId);
+
 }

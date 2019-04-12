@@ -12,5 +12,9 @@ public interface IBatchService {
 
     ServerResponse save(Batch batch);
 
-    ServerResponse delBacth(Batch batch);
+    ServerResponse delBacth(Integer batchId);
+
+    ServerResponse getBatchDetails(Integer batchId);
+
+    ServerResponse deleteBatchStudent(Integer studentId,Integer batchId);
 }
