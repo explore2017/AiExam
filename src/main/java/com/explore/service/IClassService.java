@@ -8,7 +8,7 @@ import com.explore.pojo.StudentClass;
 import java.util.List;
 
 public interface IClassService {
-    ServerResponse<List<Class>> getClasses();
+    ServerResponse getClasses();
     ServerResponse<List<Student>> getClassDetail(Integer id);
     ServerResponse addClass(Class classes);
     ServerResponse deleteClass(Integer id);

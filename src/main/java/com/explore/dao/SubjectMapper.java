@@ -20,5 +20,5 @@ public interface SubjectMapper {
 
     List<Subject> getAllSubject();
 
-    Subject getOneSuject(String SubjectNo);
+    Subject getOneSuject(String name);
 }

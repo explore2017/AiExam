@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Transactional
 @Service
@@ -28,8 +26,23 @@ public class ClassServiceImpl implements IClassService {
     @Autowired
     TeacherMapper teacherMapper;
     @Override
-    public ServerResponse<List<Class>> getClasses() {
-        return ServerResponse.createBySuccess(classMapper.selectAllClass());
+    public ServerResponse getClasses() {
+        List<Class> classList=classMapper.selectAllClass();
+        List<HashMap<String,Object>>  allData=new ArrayList<>();
+        for(Class class1:classList){
+        Teacher teacher =teacherMapper.selectByPrimaryKey(class1.getTeacherId());
+        Subject subject=subjectMapper.selectByPrimaryKey(class1.getSubjectId());
+        HashMap<String,Object> data=new HashMap<>();
+        if(null==teacher){
+            data.put("teacherName","");
+        }else {
+            data.put("teacherName",teacher.getName());
+        }
+        data.put("subject",subject);
+        data.put("class",class1);
+            allData.add(data);
+        }
+        return ServerResponse.createBySuccess(allData);
     }
 
     @Override
@@ -52,12 +65,6 @@ public class ClassServiceImpl implements IClassService {
 
     @Override
     public ServerResponse addClass(Class classes) {
-        Subject subject=subjectMapper.selectByPrimaryKey(classes.getSubjectId());
-        if(subject==null){return ServerResponse.createByErrorMessage("找不到该科目");}
-        Teacher teacher=teacherMapper.selectByPrimaryKey(classes.getTeacherId());
-        if(teacher==null){return ServerResponse.createByErrorMessage("找不到该老师");}
-        classes.setSubjectName(subject.getName());
-        classes.setTeacherName(teacher.getName());
         classes.setCreateTime(new Date());
         classes.setNumber(0);
         if(classMapper.insert(classes)==1){
@@ -115,7 +122,7 @@ public class ClassServiceImpl implements IClassService {
             return ServerResponse.createByErrorMessage("该学生已在该班级");
         }
         class1.setNumber(class1.getNumber()+1);
-        if(studentClassMapper.insertStudentClass(studentClass)==1&&classMapper.updateByPrimaryKeySelective(class1)==1){
+        if(studentClassMapper.insertStudentClass(studentClass.getStudentId(),studentClass.getClassId())==1&&classMapper.updateByPrimaryKeySelective(class1)==1){
             return ServerResponse.createBySuccessMessage("添加学生成功");
         }
         return ServerResponse.createByErrorMessage("添加学生失败");

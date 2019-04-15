@@ -61,19 +61,20 @@ public class ManageServicempl implements IManageService {
         List<Student> students=studentMapper.getAllStudent();
         for(Student student:students){                         //给科目赋值
             String str="";
-            List<StudentClass> studentClasses=studentClassMapper.selectByStudentId(student.getId());
-            if(studentClasses!=null){
-                for(int i=0;i<studentClasses.size();i++){
-                    if(studentClasses.get(i).getClassName()!=null){
+            List<Class> Classes=studentClassMapper.selectClassByStudentId(student.getId());
+            if(Classes!=null){
+                for(int i=0;i<Classes.size();i++){
+                    if(Classes.get(i).getName()!=null){
                         if(str.equals("")){
-                            str=studentClasses.get(i).getClassName();
-                        }else{
-                            str=str+","+studentClasses.get(i).getClassName();
+                            str=Classes.get(i).getName();
+                        }else {
+                            str+=","+Classes.get(i).getName();
                         }
                     }
                 }
             }
             student.setClasses(str);
+            student.setPassword("");
         }
         return ServerResponse.createBySuccess(students);
     }
@@ -122,18 +123,20 @@ public class ManageServicempl implements IManageService {
         List<Teacher> teachers=teacherMapper.getAllTeacher();
         for(Teacher teacher:teachers){                         //给科目赋值
             String str="";
-            List<TeacherSubject> teacherSubjects=teacherSubjectMapper.selectByTeacherId(teacher.getId());
-            if(teacherSubjects!=null){
-                for(int i=0;i<teacherSubjects.size();i++){
-                    if(teacherSubjects.get(i).getSubjectName()!=null)
-                    if(str.equals("")){
-                        str=teacherSubjects.get(i).getSubjectName();
-                    }else{
-                        str=str+","+teacherSubjects.get(i).getSubjectName();
-                    }
+            List<Subject> subjects=teacherSubjectMapper.selectSubjectByTeacherId(teacher.getId());
+            if(subjects!=null){
+                for(int i=0;i<subjects.size();i++){
+                   if(subjects.get(i).getName()!=null){
+                       if(str.equals("")){
+                           str=subjects.get(i).getName();
+                       }else {
+                           str+=","+subjects.get(i).getName();
+                       }
+                   }
                 }
             }
             teacher.setSubjectId(str);
+            teacher.setPassword("");
         }
         return ServerResponse.createBySuccess(teachers);
     }
@@ -169,13 +172,12 @@ public class ManageServicempl implements IManageService {
     @Override
     public ServerResponse reviseTeacher(Teacher teacher, String[] subjectId) {
         teacher.setUpdateTime(new Date());
-        if ( teacherSubjectMapper.deleteSubjectByTeacherId(teacher.getId())== 1) {
+    teacherSubjectMapper.deleteSubjectByTeacherId(teacher.getId());
             addRelation(teacher.getId(),subjectId,TEACHER_TYPE);
             if(teacherMapper.updateByPrimaryKeySelective(teacher)==1)
             {
                 return ServerResponse.createBySuccessMessage("老师信息修改成功");
             }
-        }
         return ServerResponse.createByErrorMessage("老师信息修改失败");
     }
 
@@ -188,11 +190,11 @@ public class ManageServicempl implements IManageService {
                 if(type.equals(TEACHER_TYPE)){
                     Subject subject= subjectMapper.selectByPrimaryKey(Integer.parseInt(relationId[i]));
                     if(subject==null) {continue;}
-                  teacherSubjectMapper.insertTeacherSubject(id, Integer.parseInt(relationId[i]),subject.getName());
+                  teacherSubjectMapper.insertTeacherSubject(id, Integer.parseInt(relationId[i]));
                 }else if(type.equals(STUDENT_TYPE)){
                     Class classes=classMapper.selectByPrimaryKey(Integer.parseInt(relationId[i]));
                     if(classes==null) {continue;}
-                  studentClassMapper.insertStudentClass(new StudentClass(id, Integer.parseInt(relationId[i]),classes.getName()));
+                  studentClassMapper.insertStudentClass(id, Integer.parseInt(relationId[i]));
                 }
             }
         }

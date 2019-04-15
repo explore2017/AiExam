@@ -1,8 +1,11 @@
 package com.explore.service.Impl;
 
 import com.explore.common.ServerResponse;
+import com.explore.dao.QuestionMapper;
 import com.explore.dao.SubjectMapper;
+import com.explore.dao.TeacherSubjectMapper;
 import com.explore.pojo.Subject;
+import com.explore.pojo.TeacherSubject;
 import com.explore.service.ISubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,10 @@ public class SubjectServicelmpl implements ISubjectService {
 
     @Autowired
     SubjectMapper subjectMapper;
+    @Autowired
+    TeacherSubjectMapper teacherSubjectMapper;
+    @Autowired
+    QuestionMapper questionMapper;
 
     @Override
     public ServerResponse<List<Subject>> Subject() {
@@ -28,12 +35,11 @@ public class SubjectServicelmpl implements ISubjectService {
         if(subject==null){
             return ServerResponse.createByErrorMessage("不能为空");
         }
-        Subject suject1=subjectMapper.getOneSuject(subject.getSubjectNo());
-        if(suject1!=null){
-            return  ServerResponse.createByErrorMessage("课程号相同");
+        Subject subject1=subjectMapper.getOneSuject(subject.getName());
+        if(subject1!=null){
+            return  ServerResponse.createByErrorMessage("科目名称已存在");
         }
-        int count =subjectMapper.insert(subject);
-        if(count==1) {
+        if(subjectMapper.insert(subject)==1) {
             return ServerResponse.createBySuccessMessage("增加成功");
         }
         return ServerResponse.createByErrorMessage("增加失败");
@@ -41,22 +47,28 @@ public class SubjectServicelmpl implements ISubjectService {
 
     @Override
     public ServerResponse outSubject(Integer id) {
-        int count=subjectMapper.deleteByPrimaryKey(id);
-        if(count==1){
-            return ServerResponse.createBySuccessMessage("删除成功");
-        }
-        return ServerResponse.createByErrorMessage("删除失败");
+        teacherSubjectMapper.deleteSubjectBySubjectId(id);
+        subjectMapper.deleteByPrimaryKey(id);
+        return ServerResponse.createBySuccessMessage("删除成功");
     }
 
     @Override
-    public ServerResponse reviseSuject(Subject subject) {
+    public ServerResponse reviseSubject(Subject subject) {
         Date update_time=new Date();
         subject.setUpdateTime(update_time);
-        int count=subjectMapper.updateByPrimaryKeySelective(subject);
-        if(count==1){
+        Subject subject1=subjectMapper.getOneSuject(subject.getName());
+        if(subject1!=null){
+            return  ServerResponse.createByErrorMessage("科目名称已存在");
+        }
+        if(subjectMapper.updateByPrimaryKeySelective(subject)==1){
             return ServerResponse.createBySuccessMessage("修改成功");
         }
         return ServerResponse.createByErrorMessage("修改失败");
+    }
+
+    @Override
+    public ServerResponse getSubjectQuestion(Integer subjectId) {
+        return ServerResponse.createBySuccess(questionMapper.selectQuestionsByCondition(subjectId,null,null,null));
     }
 
 

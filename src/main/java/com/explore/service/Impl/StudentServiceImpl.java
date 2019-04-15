@@ -152,7 +152,7 @@ public class StudentServiceImpl implements IStudentService {
     @Override
     public ServerResponse batchCancel(Integer batchId, Integer studentId) {
         //TODO 批次开始后不能删除（包括已考试）
-        int count = batchStudentMapper.cancel(batchId,studentId);
+        int count = batchStudentMapper.cancel(studentId,batchId);
         if (count>0){
             return ServerResponse.createBySuccessMessage("取消成功");
         }

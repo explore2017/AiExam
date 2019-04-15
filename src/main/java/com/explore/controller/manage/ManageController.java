@@ -51,7 +51,7 @@ public class ManageController {
      * 查看所有学生数据
      */
     @GetMapping("/students")
-    public ServerResponse<List<Student>> getAllStudent(Student student){
+    public ServerResponse<List<Student>> getAllStudent(){
         ServerResponse<List<Student>> serverResponse=manageService.Students();
         return serverResponse;
     }
@@ -88,7 +88,7 @@ public class ManageController {
      * 查看所有老师数据
      */
     @GetMapping("/Teachers")
-    public ServerResponse<List<Teacher>> getAllStudent(Teacher teacher){
+    public ServerResponse<List<Teacher>> getAllTeachers(){
         ServerResponse<List<Teacher>> serverResponse=manageService.Teachers();
         return serverResponse;
     }

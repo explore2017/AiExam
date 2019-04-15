@@ -1,4 +1,5 @@
 package com.explore.dao;
+import com.explore.pojo.Class;
 import com.explore.pojo.StudentClass;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
@@ -9,11 +10,14 @@ import java.util.List;
 @Mapper
 @Component
 public interface StudentClassMapper {
-    @Insert("insert into student_class(student_id,class_id,class_name) values(#{studentId},#{classId},#{className})")
-    int insertStudentClass(StudentClass studentClass);
+    @Insert("insert into student_class(student_id,class_id) values(#{studentId},#{classId})")
+    int insertStudentClass(@Param("studentId")Integer studentId, @Param("classId")Integer classId);
 
     @Select("select * from student_class where student_id=#{studentId}")
     List<StudentClass> selectByStudentId(Integer studentId);
+
+    @Select("select B.* from student_class as A,class as B where A.student_id=#{studentId} and A.class_id=B.id")
+    List<Class> selectClassByStudentId(Integer studentId);
 
     @Select("select * from student_class where class_id=#{classId}")
     List<StudentClass> selectByClassId(Integer classId);

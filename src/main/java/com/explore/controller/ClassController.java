@@ -30,8 +30,8 @@ public class ClassController {
      * 查看所有班级
      */
     @GetMapping("/allclass")
-    public ServerResponse<List<Class>> getAllStudent(){
-        ServerResponse<List<Class>> serverResponse=classesService.getClasses();
+    public ServerResponse getAllStudent(){
+        ServerResponse serverResponse=classesService.getClasses();
         return serverResponse;
     }
 

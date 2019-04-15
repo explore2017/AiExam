@@ -19,8 +19,8 @@ public class SubjectController {
     /**
      * 查看所有课程
      */
-    @GetMapping("/allSubject")
-    public ServerResponse<List<Subject>> getAllStudent(){
+    @GetMapping
+    public ServerResponse<List<Subject>> getAllSubject(){
         ServerResponse<List<Subject>> serverResponse=subjectService.Subject();
         return serverResponse;
     }
@@ -37,8 +37,8 @@ public class SubjectController {
     /**
      * 删除课程
      */
-    @DeleteMapping("/deleteSubject")
-    public ServerResponse outSubject(Integer id){
+    @DeleteMapping("/{subjectId}")
+    public ServerResponse outSubject(@PathVariable("subjectId") Integer id){
         ServerResponse serverResponse=subjectService.outSubject(id);
         return serverResponse;
     }
@@ -46,9 +46,18 @@ public class SubjectController {
     /**
      * 修改课程
      */
-    @PutMapping("/reviseSubject")
-    public ServerResponse reviseSubject(Subject subject){
-        ServerResponse serverResponse=subjectService.reviseSuject(subject);
+    @PutMapping
+    public ServerResponse reviseSubject(@RequestBody  Subject subject){
+        ServerResponse serverResponse=subjectService.reviseSubject(subject);
         return serverResponse;
     }
+    /**
+     * 查看科目下试题
+     */
+    @GetMapping("/question")
+    public ServerResponse<List<Subject>> getSubjectQuestion(Integer subjectId){
+        return subjectService.getSubjectQuestion(subjectId);
+    }
+
+
 }

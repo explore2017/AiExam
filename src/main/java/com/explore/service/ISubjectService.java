@@ -12,5 +12,7 @@ public interface ISubjectService {
 
     ServerResponse outSubject(Integer id);
 
-    ServerResponse reviseSuject(Subject subject);
+    ServerResponse reviseSubject(Subject subject);
+
+    ServerResponse getSubjectQuestion(Integer subjectId);
 }
