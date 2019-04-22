@@ -3,6 +3,8 @@ package com.explore.controller.student;
 import com.explore.common.Const;
 import com.explore.common.ResponseCode;
 import com.explore.common.ServerResponse;
+import com.explore.form.PasswordForm;
+import com.explore.form.StudentInfoForm;
 import com.explore.pojo.*;
 import com.explore.pojo.Class;
 import com.explore.service.IClassService;
@@ -44,10 +46,13 @@ public class StudentController {
     /**
      * 学生密码修改
      */
-    @PutMapping("/password")
-    public ServerResponse revise(String sno, String oldPassword, String newPassword) {
-        ServerResponse serverResponse = studentService.revise(sno, oldPassword, newPassword);
-        return serverResponse;
+    @PostMapping("/password")
+    public ServerResponse revise(HttpSession session, @RequestBody PasswordForm passwordForm) {
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.createByErrorMessage("请重新登录");
+        }
+        return studentService.revise(student.getSno(), passwordForm.getOldPassword(), passwordForm.getNewPassword());
     }
 
     /**
@@ -55,22 +60,19 @@ public class StudentController {
      */
     @PutMapping("/resetPassword")
     public ServerResponse resetPassword(String sno,String phone,String password){
-        ServerResponse serverResponse=studentService.resetPassword(sno,phone,password);
-        return serverResponse;
+        return studentService.resetPassword(sno,phone,password);
     }
 
     /**
      * 学生信息修改
      */
-    @PutMapping("/reviseMessage")
-    public ServerResponse response(HttpSession session,String newPhone,String newEmail){
+    @PostMapping("/reviseMessage")
+    public ServerResponse response(HttpSession session,@RequestBody StudentInfoForm form){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if(student==null) {
             return ServerResponse.createByErrorMessage("请重新登录");
         }
-        int id=student.getId();
-        ServerResponse serverResponse=studentService.reviseMessage(id,newPhone,newEmail);
-        return serverResponse;
+        return studentService.reviseMessage(student.getId(),form.getPhone(),form.getEmail());
     }
 
 

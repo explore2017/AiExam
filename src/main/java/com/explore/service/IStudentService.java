@@ -8,7 +8,7 @@ public interface IStudentService {
 
     ServerResponse revise(String sno, String oldPassword,String newPassword);
 
-    ServerResponse reviseMessage(int id, String newPhone, String newEmail);
+    ServerResponse reviseMessage(Integer id, String newPhone, String newEmail);
 
     ServerResponse resetPassword(String sno,String phone,String password);
 

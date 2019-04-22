@@ -12,6 +12,7 @@ import com.explore.pojo.Student;
 import com.explore.service.IStudentService;
 import com.explore.vo.BatchVO;
 import com.explore.vo.ExamVO;
+import io.swagger.models.auth.In;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,30 +48,29 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public ServerResponse revise(String sno, String oldPassword, String newPassword) {
+        //TODO
         Student student = studentMapper.login(sno, oldPassword);
         if (student == null) {
-            return ServerResponse.createByErrorMessage("学号或密码错误");
+            return ServerResponse.createByErrorMessage("原密码错误");
         }
         student.setPassword(newPassword);
-        Date update_time = new Date();
-        student.setUpdateTime(update_time);
+        student.setUpdateTime(new Date());
         int count = studentMapper.updateByPrimaryKey(student);
         if (count == 1) {
-            return ServerResponse.createBySuccessMessage("修改密码成功");
+            return ServerResponse.createBySuccessMessage("修改成功");
         }
         return ServerResponse.createByErrorMessage("修改失败");
     }
 
     @Override
-    public ServerResponse reviseMessage(int id, String newPhone, String newEmail) {
+    public ServerResponse reviseMessage(Integer id, String newPhone, String newEmail) {
         Student student = studentMapper.selectByPrimaryKey(id);
         student.setPhone(newPhone);
         student.setEmail(newEmail);
-        Date update_time = new Date();
-        student.setUpdateTime(update_time);
+        student.setUpdateTime(new Date());
         int count = studentMapper.updateByPrimaryKeySelective(student);
         if (count == 1) {
-            return ServerResponse.createBySuccessMessage("修改信息成功");
+            return ServerResponse.createBySuccessMessage("修改成功");
         }
         return ServerResponse.createByErrorMessage("修改失败");
     }

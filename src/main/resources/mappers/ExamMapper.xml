@@ -17,7 +17,7 @@
   <resultMap id="ExamBatchVo" type="com.explore.vo.ExamBatchVo">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="paper_id" jdbcType="INTEGER" property="paperId" />
+    <!--<result column="paper_id" jdbcType="INTEGER" property="paperId" />-->
     <result column="exam_type_id" jdbcType="INTEGER" property="examTypeId" />
     <result column="subscribe" jdbcType="VARCHAR" property="subscribe" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
@@ -31,7 +31,7 @@
     <result column="batchStartTime" jdbcType="TIMESTAMP" property="batchStartTime" />
     <result column="batchEndTime" jdbcType="TIMESTAMP" property="batchEndTime" />
     <result column="batchStudentStatus" jdbcType="INTEGER" property="batchStudentStatus" />
-    <result column="class_id" jdbcType="INTEGER" property="classId" />
+    <!--<result column="class_id" jdbcType="INTEGER" property="classId" />-->
   </resultMap>
   <sql id="Base_Column_List">
     id, `name`, paper_id, exam_type_id, subscribe, start_time, end_time, creator_id,

@@ -14,8 +14,10 @@ public class Exam {
     private Integer examTypeId;
 
     private String subscribe;
+
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     private Date startTime;
+
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     private Date endTime;
 
