@@ -21,4 +21,6 @@ public interface BatchMapper {
     List<Batch> selectBatchesByExamId(Integer exam_id);
 
     int selectExamIdByBatchId(Integer batch_id);
+
+    Integer selectPaperIdByBatchId(Integer batchId);
 }

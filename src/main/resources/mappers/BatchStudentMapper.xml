@@ -44,7 +44,13 @@
     from batch_student
     where batch_id = #{batchId}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="selectByStudentIdAndBatchId" resultType="com.explore.pojo.BatchStudent">
+      select
+      <include refid="Base_Column_List" />
+      from batch_student
+      where batch_id = #{batchId} and student_id = #{studentId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from batch_student
     where id = #{id,jdbcType=INTEGER}
   </delete>

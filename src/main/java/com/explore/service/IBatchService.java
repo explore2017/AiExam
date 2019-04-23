@@ -17,4 +17,6 @@ public interface IBatchService {
     ServerResponse getBatchDetails(Integer batchId);
 
     ServerResponse deleteBatchStudent(Integer studentId,Integer batchId);
+
+    Integer getPaperIdByBatchId(Integer batchId);
 }

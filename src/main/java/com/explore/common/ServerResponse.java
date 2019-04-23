@@ -72,4 +72,8 @@ public class ServerResponse<T> {
     public static <T> ServerResponse<T> createByErrorCodeMessage(int status, String errorMessage){
         return new ServerResponse<T>(status,errorMessage);
     }
+
+    public static <T> ServerResponse<T> needLogin(){
+        return new ServerResponse<T>(ResponseCode.NEED_LOGIN.getCode(),"请登录后重试");
+    }
 }

@@ -1,6 +1,8 @@
 package com.explore.vo;
 
 import com.explore.pojo.Batch;
+import com.explore.pojo.BatchStudent;
+import com.explore.pojo.Class;
 import com.explore.pojo.Exam;
 import lombok.Data;
 
@@ -17,5 +19,12 @@ public class ExamVO extends Exam {
 
     private Boolean hasEnroll;
 
+    /**
+     * 可以删除
+     */
     private Batch batch;
+
+    private BatchStudent batchStudent;
+
+    private Class itsClass;
 }

@@ -102,4 +102,9 @@ public class BatchServiceImpl implements IBatchService {
         }
         return ServerResponse.createByErrorMessage("删除失败");
     }
+
+    @Override
+    public Integer getPaperIdByBatchId(Integer batchId) {
+        return batchMapper.selectPaperIdByBatchId(batchId);
+    }
 }

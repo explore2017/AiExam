@@ -7,10 +7,9 @@ import com.explore.form.PasswordForm;
 import com.explore.form.StudentInfoForm;
 import com.explore.pojo.*;
 import com.explore.pojo.Class;
-import com.explore.service.IClassService;
-import com.explore.service.IExamService;
-import com.explore.service.IExamStudentService;
-import com.explore.service.IStudentService;
+import com.explore.service.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +28,12 @@ public class StudentController {
     IExamStudentService examStudentService;
     @Autowired
     IClassService classService;
+    @Autowired
+    IPaperService paperService;
+    @Autowired
+    IBatchService batchService;
+    @Autowired
+    IBatchStudentService batchStudentService;
 
     /**
      * 学生登录
@@ -50,7 +55,7 @@ public class StudentController {
     public ServerResponse revise(HttpSession session, @RequestBody PasswordForm passwordForm) {
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
-            return ServerResponse.createByErrorMessage("请重新登录");
+            return ServerResponse.needLogin();
         }
         return studentService.revise(student.getSno(), passwordForm.getOldPassword(), passwordForm.getNewPassword());
     }
@@ -70,7 +75,7 @@ public class StudentController {
     public ServerResponse response(HttpSession session,@RequestBody StudentInfoForm form){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if(student==null) {
-            return ServerResponse.createByErrorMessage("请重新登录");
+            return ServerResponse.needLogin();
         }
         return studentService.reviseMessage(student.getId(),form.getPhone(),form.getEmail());
     }
@@ -96,7 +101,7 @@ public class StudentController {
     public ServerResponse<Student> info(HttpSession session) {
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
+            return ServerResponse.needLogin();
         }
         return ServerResponse.createBySuccess(student);
     }
@@ -109,66 +114,87 @@ public class StudentController {
     public ServerResponse<List<Class>> getMyClass(HttpSession session) {
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
+            return ServerResponse.needLogin();
         }
         return classService.getClassesByStudentID(student.getId());
     }
 
     /**
      * 获取考试、批次列表
-     * @param session
-     * @return
      */
     @GetMapping("/exam")
     public ServerResponse getExams(HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
+            return ServerResponse.needLogin();
         }
         return studentService.getExamVOs(student.getId());
     }
 
-    /**
-     * 获取我的考试列表
-     * @param session
-     * @return
-     */
     @GetMapping("/batch/me")
     public ServerResponse myEnrollBatch(HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
+            return ServerResponse.needLogin();
         }
         return studentService.getMyEnrollBatch(student.getId());
     }
 
-    /**
-     * 考试批次报名
-     * @param batch
-     * @param session
-     * @return
-     */
+
     @PostMapping("/batch/enroll")
     public ServerResponse batchEnroll(@RequestBody Batch batch, HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
+            return ServerResponse.needLogin();
         }
         return studentService.batchEnroll(batch.getId(),student.getId());
     }
 
-    /**
-     * 取消选择批次
-     * @param batch
-     * @param session
-     * @return
-     */
     @PostMapping("/batch/cancel")
     public ServerResponse batchCancel(@RequestBody Batch batch, HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "请登录后尝试");
+            return ServerResponse.needLogin();
         }
         return studentService.batchCancel(batch.getId(),student.getId());
+    }
+
+    @GetMapping("/batch/{id}/sign")
+    @ApiOperation("用户签到")
+    public ServerResponse signIn(@PathVariable("id") Integer batchId,HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.needLogin();
+        }
+        return batchStudentService.signIn(student.getId(),batchId);
+    }
+
+    @GetMapping("/batch/{id}/check")
+    @ApiOperation("点击开始考试")
+    public ServerResponse checkExam(@PathVariable("id") Integer batchId,HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.needLogin();
+        }
+        //batch_student 有记录 且 status ！= finished status
+        boolean flag = batchStudentService.checkIsEnroll(student.getId(),batchId);
+        if (!flag){
+            return ServerResponse.createByErrorMessage("您未报名该批次！");
+        }
+        return ServerResponse.createBySuccess();
+    }
+
+    @GetMapping("/batch/{id}/start")
+    @ApiOperation("开始考试")
+    public ServerResponse startExam(@PathVariable("id") Integer batchId,HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.needLogin();
+        }
+        //TODO 验证考试时间、学生选课状态
+        batchStudentService.checkIsEnroll(student.getId(),batchId);
+        //通过批次获取考试试卷
+        Integer paperId = batchService.getPaperIdByBatchId(batchId);
+        return paperService.getDetailsByPaperId(paperId);
     }
 }

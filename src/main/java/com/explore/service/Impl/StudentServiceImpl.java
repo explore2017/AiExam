@@ -1,15 +1,14 @@
 package com.explore.service.Impl;
 
+import com.explore.common.Const;
 import com.explore.common.ServerResponse;
-import com.explore.dao.BatchMapper;
-import com.explore.dao.BatchStudentMapper;
-import com.explore.dao.ExamMapper;
-import com.explore.dao.StudentMapper;
+import com.explore.dao.*;
 import com.explore.pojo.Batch;
 import com.explore.pojo.BatchStudent;
 import com.explore.pojo.Exam;
 import com.explore.pojo.Student;
 import com.explore.service.IStudentService;
+import com.explore.vo.BatchStudentVO;
 import com.explore.vo.BatchVO;
 import com.explore.vo.ExamVO;
 import io.swagger.models.auth.In;
@@ -35,6 +34,8 @@ public class StudentServiceImpl implements IStudentService {
     BatchStudentMapper batchStudentMapper;
     @Autowired
     ModelMapper modelMapper;
+    @Autowired
+    ClassMapper classMapper;
 
     @Override
     public ServerResponse<Student> login(String sno, String password) {
@@ -119,6 +120,7 @@ public class StudentServiceImpl implements IStudentService {
                 }
                 batchVOs.add(batchVO);
             }
+            examVO.setItsClass(classMapper.selectByPrimaryKey(exam.getClassId()));
             examVO.setBatches(batchVOs);
             examVOs.add(examVO);
         }
@@ -162,15 +164,16 @@ public class StudentServiceImpl implements IStudentService {
     @Override
     public ServerResponse getMyEnrollBatch(Integer studentId) {
         List<BatchStudent> list = batchStudentMapper.selectByStudentId(studentId);
-        List<ExamVO> examVOs = new ArrayList<>();
-        for (BatchStudent b:list) {
-            Batch batch = batchMapper.selectByPrimaryKey(b.getBatchId());
-            Exam exam = examMapper.selectByPrimaryKey(batch.getExamId());
-            ExamVO examVO = modelMapper.map(exam,ExamVO.class);
-            examVO.setBatch(batch);
-            examVOs.add(examVO);
+        List<BatchStudentVO> batchStudentVOList = new ArrayList<>();
+        for (BatchStudent batchStudent : list) {
+            BatchStudentVO batchStudentVO = modelMapper.map(batchStudent,BatchStudentVO.class);
+            Batch batch = batchMapper.selectByPrimaryKey(batchStudent.getBatchId());
+            batchStudentVO.setBatch(batch);
+            batchStudentVO.setExam(examMapper.selectByPrimaryKey(batch.getExamId()));
+            batchStudentVOList.add(batchStudentVO);
         }
-        return ServerResponse.createBySuccess(examVOs);
+        return ServerResponse.createBySuccess(batchStudentVOList);
     }
+
 
 }
