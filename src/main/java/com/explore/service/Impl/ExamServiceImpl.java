@@ -138,20 +138,15 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public ServerResponse startReply(Integer studentId, Integer batchId) {
-        //TODO 开启定时任务
-        Timer timer = new Timer();
-
-        //service层调用service层
-        boolean flag = batchStudentService.checkCanStart(studentId,batchId);
-        if (!flag){
-            return ServerResponse.createByErrorMessage("考试已结束");
-        }
+        List<PaperQuestionVo> paperQuestionVos;
         BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
         int status = batchStudent.getStatus();
+        //开始考试
         if (status == Const.BATCH_STUDENT_STATUS.HAD_SIGN.getStatus()){
             //更新状态 1 > 2
             BatchStudent bs = new BatchStudent();
             bs.setId(batchStudent.getId());
+            bs.setStartTime(new Date());
             bs.setStatus(Const.BATCH_STUDENT_STATUS.IN_PROGRESS.getStatus());
             batchStudentMapper.updateByPrimaryKeySelective(bs);
             //获取试卷
@@ -175,17 +170,41 @@ public class ExamServiceImpl implements IExamService {
             }catch (Exception e){
                 throw new RuntimeException("插入记录异常");
             }
-            List<PaperQuestionVo> paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords);
-            return ServerResponse.createBySuccess(paperQuestionVos);
+            paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords);
+            //TODO 开启定时任务 更新状态即可
         }else if (status == Const.BATCH_STUDENT_STATUS.IN_PROGRESS.getStatus()){
             //从record表中获取
             List<PaperRecord> paperRecords = paperRecordMapper.selectByStudentIdAndBatchId(studentId,batchId);
             //获取后封装成PaperQuestionVo返回
-            List<PaperQuestionVo> paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords);
-            return ServerResponse.createBySuccess(paperQuestionVos);
+            paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords);
         }else{
             return ServerResponse.createByError();
         }
+        //封装返回对象
+        Map<String,Object> map = new HashMap<>(2);
+        Batch batch = batchMapper.selectByPrimaryKey(batchId);
+        long countDown = batch.getEndTime().getTime() - System.currentTimeMillis();
+        map.put("data",paperQuestionVos);
+        map.put("countDown",countDown);
+        return ServerResponse.createBySuccess(map);
+    }
+
+    @Override
+    public ServerResponse monitor(Integer studentId, Integer batchId, List<PaperQuestionVo> records) {
+        //TODO 必须判断当前状态
+        Batch batch = batchMapper.selectByPrimaryKey(batchId);
+        int flag = batch.getEndTime().compareTo(new Date());
+        if (flag>=0){
+            //未到时间
+            paperRecordMapper.updateRecords(studentId,batchId,records);
+        }else{
+            //到时
+            //TODO 是否要更新呢？
+            BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
+            batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
+            batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
+        }
+        return ServerResponse.createBySuccess();
     }
 
     private List<PaperQuestionVo> packagePaperRecordToPaperQuestionVo(List<PaperRecord> paperRecords){
@@ -209,8 +228,9 @@ public class ExamServiceImpl implements IExamService {
      * 判断问题是否需要自动批改
      */
     public boolean checkJudge(Question question){
-        if(question.getQuestionTypeId() == 3 || question.getQuestionTypeId() == 5 || question.getQuestionTypeId() == 6)
+        if(question.getQuestionTypeId() == 3 || question.getQuestionTypeId() == 5 || question.getQuestionTypeId() == 6){
             return false;
+        }
         return true;
     }
 }

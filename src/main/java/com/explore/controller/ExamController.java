@@ -3,11 +3,13 @@ package com.explore.controller;
 import com.explore.common.Const;
 import com.explore.common.ResponseCode;
 import com.explore.common.ServerResponse;
+import com.explore.form.PaperRecordForm;
 import com.explore.pojo.*;
 import com.explore.service.IBatchService;
 import com.explore.service.IBatchStudentService;
 import com.explore.service.IExamService;
 import com.explore.service.IExamStudentService;
+import com.explore.vo.PaperQuestionVo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -139,17 +141,21 @@ public class ExamController {
         if (student == null) {
             return ServerResponse.needLogin();
         }
+        ServerResponse serverResponse =checkCanStart(student.getId(),batchId);
+        if (!serverResponse.isSuccess()){
+            return serverResponse;
+        }
         return examService.startReply(student.getId(),batchId);
     }
 
-    @GetMapping("/batch/{id}/monitor")
+    @PostMapping("/batch/{id}/monitor")
     @ApiOperation("监听器")
-    public ServerResponse monitor(@PathVariable("id") Integer batchId,HttpSession session){
+    public ServerResponse monitor(@PathVariable("id") Integer batchId, @RequestBody PaperRecordForm model, HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
             return ServerResponse.needLogin();
         }
-        return null;
+        return examService.monitor(student.getId(),batchId,model.getRecords());
     }
 
     private ServerResponse checkCanStart(Integer studentId,Integer batchId){
