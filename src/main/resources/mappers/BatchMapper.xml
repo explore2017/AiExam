@@ -31,7 +31,7 @@
       select exam_id from batch where id = #{batch_id}
     </select>
     <select id="selectPaperIdByBatchId" resultType="java.lang.Integer">
-      select papar_id from batch where id = #{batch_id}
+      select paper_id from batch where id = #{batch_id}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from batch

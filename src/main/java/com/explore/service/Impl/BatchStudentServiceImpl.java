@@ -8,8 +8,6 @@ import com.explore.service.IBatchStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * @author PinTeh
  * @date 2019/4/23
@@ -41,5 +39,27 @@ public class BatchStudentServiceImpl implements IBatchStudentService {
             return ServerResponse.createBySuccessMessage("签到成功");
         }
         return ServerResponse.createByErrorMessage("签到异常");
+    }
+
+    @Override
+    public boolean checkCanStart(Integer id, Integer batchId) {
+        int count = batchStudentMapper.checkCanStart(id,batchId);
+        if (count==0){
+            return false;
+        }
+        //TODO 校验时间合法
+        return count > 0;
+    }
+
+    @Override
+    public int updateReplyStart(Integer studentId, Integer batchId) {
+        BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
+        batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.IN_PROGRESS.getStatus());
+        return batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
+    }
+
+    @Override
+    public BatchStudent getByBatchIdAndStudentId(Integer id, Integer batchId) {
+        return batchStudentMapper.selectByStudentIdAndBatchId(id,batchId);
     }
 }

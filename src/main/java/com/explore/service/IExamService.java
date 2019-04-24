@@ -17,4 +17,5 @@ public interface IExamService {
 
     ServerResponse deleteExam(Integer examId);
 
+    ServerResponse startReply(Integer id, Integer batchId);
 }

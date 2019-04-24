@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.explore.dao.PaperRecordMapper">
+  <resultMap id="BaseResultMap" type="com.explore.pojo.PaperRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="batch_id" jdbcType="INTEGER" property="batchId" />
+    <result column="student_id" jdbcType="INTEGER" property="studentId" />
+    <result column="sequence" jdbcType="INTEGER" property="sequence" />
+    <result column="single_score" jdbcType="DOUBLE" property="singleScore" />
+    <result column="score" jdbcType="DOUBLE" property="score" />
+    <result column="question_id" jdbcType="INTEGER" property="questionId" />
+    <result column="reply" jdbcType="VARCHAR" property="reply" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, batch_id, student_id, sequence, single_score, score, question_id, reply
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from paper_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByStudentIdAndBatchId" resultMap="BaseResultMap">
+  select
+  <include refid="Base_Column_List" />
+  from paper_record
+  where student_id = #{studentId} and batch_id = #{batchId}
+  order by sequence
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from paper_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.explore.pojo.PaperRecord">
+    insert into paper_record (id, batch_id, student_id, 
+      sequence, single_score, score, 
+      question_id, reply)
+    values (#{id,jdbcType=INTEGER}, #{batchId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, 
+      #{sequence,jdbcType=INTEGER}, #{singleScore,jdbcType=DOUBLE}, #{score,jdbcType=DOUBLE}, 
+      #{questionId,jdbcType=INTEGER}, #{reply,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.explore.pojo.PaperRecord">
+    insert into paper_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="batchId != null">
+        batch_id,
+      </if>
+      <if test="studentId != null">
+        student_id,
+      </if>
+      <if test="sequence != null">
+        sequence,
+      </if>
+      <if test="singleScore != null">
+        single_score,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="questionId != null">
+        question_id,
+      </if>
+      <if test="reply != null">
+        reply,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="batchId != null">
+        #{batchId,jdbcType=INTEGER},
+      </if>
+      <if test="studentId != null">
+        #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="sequence != null">
+        #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="singleScore != null">
+        #{singleScore,jdbcType=DOUBLE},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="questionId != null">
+        #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="reply != null">
+        #{reply,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+    <insert id="insertRecords" parameterType="list">
+      insert into paper_record (batch_id, student_id,
+      sequence, single_score,question_id)
+    values
+      <!--item就是List里每一项的对象名，要用","分割每一条数据，最后要";"结尾-->
+      <foreach collection="list" item="record" separator="," close=";">
+        ( #{record.batchId,jdbcType=INTEGER}, #{record.studentId,jdbcType=INTEGER},
+        #{record.sequence,jdbcType=INTEGER}, #{record.singleScore,jdbcType=DOUBLE},
+        #{record.questionId,jdbcType=INTEGER})
+      </foreach>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.explore.pojo.PaperRecord">
+    update paper_record
+    <set>
+      <if test="batchId != null">
+        batch_id = #{batchId,jdbcType=INTEGER},
+      </if>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="sequence != null">
+        sequence = #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="singleScore != null">
+        single_score = #{singleScore,jdbcType=DOUBLE},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="questionId != null">
+        question_id = #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="reply != null">
+        reply = #{reply,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.explore.pojo.PaperRecord">
+    update paper_record
+    set batch_id = #{batchId,jdbcType=INTEGER},
+      student_id = #{studentId,jdbcType=INTEGER},
+      sequence = #{sequence,jdbcType=INTEGER},
+      single_score = #{singleScore,jdbcType=DOUBLE},
+      score = #{score,jdbcType=DOUBLE},
+      question_id = #{questionId,jdbcType=INTEGER},
+      reply = #{reply,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
