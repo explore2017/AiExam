@@ -13,7 +13,7 @@ public interface IBatchStudentService {
 
     ServerResponse signIn(Integer id, Integer batchId);
 
-    boolean checkCanStart(Integer id, Integer batchId);
+    ServerResponse checkCanStart(Integer studentId, Integer batchId);
 
     int updateReplyStart(Integer id, Integer batchId);
 

@@ -26,7 +26,7 @@ CREATE TABLE `answer_record`  (
   `paper_id` int(11) NULL DEFAULT NULL,
   `question_id` int(11) NULL DEFAULT NULL,
   `answer` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '答案',
-  `score` double(255, 0) NULL DEFAULT NULL COMMENT '得分',
+  `score` double(3, 2) NULL DEFAULT NULL COMMENT '得分',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
@@ -64,7 +64,7 @@ CREATE TABLE `batch_student`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `batch_id` int(11) NULL DEFAULT NULL,
   `student_id` int(11) NULL DEFAULT NULL,
-  `score` double(255, 0) NULL DEFAULT NULL,
+  `score` double(3, 2) NULL DEFAULT NULL,
   `status` int(11) NULL DEFAULT NULL,
   `start_time` datetime NULL DEFAULT NULL,
   `submit_time` datetime NULL DEFAULT NULL,
@@ -154,10 +154,10 @@ CREATE TABLE `paper`  (
   `difficulty` int(11) NULL DEFAULT NULL COMMENT '试卷难度',
   `create_time` datetime NULL DEFAULT NULL,
   `update_time` datetime NULL DEFAULT NULL,
-  `pass_score` double(255, 0) NULL DEFAULT 0 COMMENT '及格分数',
-  `total_score` double(255, 0) NULL DEFAULT 0 COMMENT '总分',
+  `pass_score` double(3, 2) NULL DEFAULT 0 COMMENT '及格分数',
+  `total_score` double(3, 2) NULL DEFAULT 0 COMMENT '总分',
   `need_time` int(11) NULL DEFAULT NULL COMMENT '考试时长（分钟）',
-  `score` double(255, 0) NULL DEFAULT NULL COMMENT '试卷答案',
+  `score` double(3, 2) NULL DEFAULT NULL COMMENT '试卷答案',
   `subject_id` int(11) NULL DEFAULT NULL COMMENT '科目id',
   `subject_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `creator` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '出题人',
