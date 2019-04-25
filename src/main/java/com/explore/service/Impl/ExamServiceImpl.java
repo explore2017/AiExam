@@ -1,24 +1,38 @@
 package com.explore.service.Impl;
 
+import com.explore.common.Const;
 import com.explore.common.ServerResponse;
 import com.explore.dao.*;
 import com.explore.pojo.*;
 import com.explore.pojo.Class;
+import com.explore.service.IBatchStudentService;
 import com.explore.service.IExamService;
 import com.explore.vo.ExamBatchVo;
+import com.explore.vo.PaperComposeVo;
+import com.explore.vo.PaperQuestionVo;
+import com.explore.vo.QuestionVo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.crypto.Data;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
-import static java.lang.Integer.parseInt;
 
 @Service
+@Transactional
 public class ExamServiceImpl implements IExamService {
 
     @Autowired
@@ -35,6 +49,14 @@ public class ExamServiceImpl implements IExamService {
     ClassMapper classMapper;
     @Autowired
     SubjectMapper subjectMapper;
+    @Autowired
+    IBatchStudentService batchStudentService;
+    @Autowired
+    QuestionMapper questionMapper;
+    @Autowired
+    ModelMapper modelMapper;
+    @Autowired
+    PaperRecordMapper paperRecordMapper;
 
     @Override
     public ServerResponse getExams() {
@@ -78,8 +100,8 @@ public class ExamServiceImpl implements IExamService {
                 batch.setMaxNumber(jsonObject.getInt("maxNumber"));
                 batch.setPaperId(exam.getPaperId());
                 try{
-                    batch.setStartTime(  new SimpleDateFormat("YYYY-MM-DD HH:mm").parse(jsonObject.getString("startTime")));
-                    batch.setEndTime(  new SimpleDateFormat("YYYY-MM-DD HH:mm").parse(jsonObject.getString("endTime")));
+                    batch.setStartTime(  new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(jsonObject.getString("startTime")));
+                    batch.setEndTime(  new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(jsonObject.getString("endTime")));
                 } catch (ParseException e){
                     return  ServerResponse.createByErrorMessage("创建考试失败");
                 }
@@ -121,12 +143,131 @@ public class ExamServiceImpl implements IExamService {
         }
     }
 
+    @Override
+    public ServerResponse startReply(Integer studentId, Integer batchId) {
+        List<PaperQuestionVo> paperQuestionVos;
+
+        Batch batch = batchMapper.selectByPrimaryKey(batchId);
+        long countDown = batch.getEndTime().getTime() - System.currentTimeMillis();
+
+        BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
+        int status = batchStudent.getStatus();
+        //开始考试
+        if (status == Const.BATCH_STUDENT_STATUS.HAD_SIGN.getStatus()){
+            //更新状态 1 > 2
+            BatchStudent bs = new BatchStudent();
+            bs.setId(batchStudent.getId());
+            bs.setStartTime(new Date());
+            bs.setStatus(Const.BATCH_STUDENT_STATUS.IN_PROGRESS.getStatus());
+            batchStudentMapper.updateByPrimaryKeySelective(bs);
+            //获取试卷
+            Integer paperId = batchMapper.selectPaperIdByBatchId(batchId);
+            //获取后封装成PaperQuestionVo返回
+            ServerResponse<List<PaperComposeVo>> serverResponse = paperService.getDetailsByPaperId(paperId);
+            //插入
+            List<PaperComposeVo> paperComposeVos = serverResponse.getData();
+            List<PaperRecord> paperRecords = new ArrayList<>();
+            for (PaperComposeVo paperComposeVo : paperComposeVos) {
+                PaperRecord paperRecord = new PaperRecord();
+                paperRecord.setBatchId(batchId);
+                paperRecord.setStudentId(studentId);
+                paperRecord.setSequence(paperComposeVo.getSequence());
+                paperRecord.setQuestionId(paperComposeVo.getQuestionId());
+                paperRecord.setSingleScore(paperComposeVo.getSingleScore());
+                paperRecords.add(paperRecord);
+            }
+            try {
+                paperRecordMapper.insertRecords(paperRecords);
+            }catch (Exception e){
+                throw new RuntimeException("插入记录异常");
+            }
+            paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords);
+            //简单开启个定时任务 更新状态即可
+            /*
+            ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
+                    new BasicThreadFactory.Builder().namingPattern("example-schedule-pool-%d").daemon(true).build());
+            executorService.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    BatchStudent bs = new BatchStudent();
+                    bs.setId(batchStudent.getId());
+                    bs.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
+                    batchStudentMapper.updateByPrimaryKeySelective(bs);
+                }
+            },countDown,TimeUnit.MILLISECONDS);
+            */
+
+        }else if (status == Const.BATCH_STUDENT_STATUS.IN_PROGRESS.getStatus()){
+            //从record表中获取
+            List<PaperRecord> paperRecords = paperRecordMapper.selectByStudentIdAndBatchId(studentId,batchId);
+            //获取后封装成PaperQuestionVo返回
+            paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords);
+        }else{
+            return ServerResponse.createByError();
+        }
+        //封装返回对象
+        Map<String,Object> map = new HashMap<>(2);
+        map.put("data",paperQuestionVos);
+        map.put("countDown",countDown-1000*5);
+        return ServerResponse.createBySuccess(map);
+    }
+
+    @Override
+    public ServerResponse monitor(Integer studentId, Integer batchId, List<PaperQuestionVo> records,Boolean isSubmit) {
+        boolean canStart = batchStudentService.checkCanStart(studentId,batchId);
+        if (!canStart){
+            //返回成功
+            return ServerResponse.createBySuccessMessage("考试已结束");
+        }
+        Batch batch = batchMapper.selectByPrimaryKey(batchId);
+        Date now = new Date();
+        int flag = batch.getEndTime().compareTo(now);
+        if (flag>=0){
+            //未到时间
+            paperRecordMapper.updateRecords(studentId,batchId,records);
+            //提交更新状态
+            if (isSubmit){
+                BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
+                batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
+                batchStudent.setSubmitTime(now);
+                batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
+                return ServerResponse.createBySuccessMessage("提交考试成功");
+            }
+        }else{
+            //时间到
+            BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
+            if(batchStudent.getStatus()==Const.BATCH_STUDENT_STATUS.IN_PROGRESS.getStatus()){
+                batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
+                batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
+            }
+        }
+        return ServerResponse.createBySuccess();
+    }
+
+    private List<PaperQuestionVo> packagePaperRecordToPaperQuestionVo(List<PaperRecord> paperRecords){
+        List<PaperQuestionVo> paperQuestionVos = new ArrayList<>();
+        for (PaperRecord paperRecord : paperRecords) {
+            PaperQuestionVo paperQuestionVo = new PaperQuestionVo();
+            //封装QuestionVo对象
+            Question question = questionMapper.selectByPrimaryKey(paperRecord.getQuestionId());
+            QuestionVo questionVo = modelMapper.map(question,QuestionVo.class);
+            paperQuestionVo.setQuestion(questionVo);
+            paperQuestionVo.setReply(paperRecord.getReply());
+            paperQuestionVo.setSequence(paperRecord.getSequence());
+            paperQuestionVo.setSingleScore(paperRecord.getScore());
+            paperQuestionVo.setSingleScore(paperRecord.getSingleScore());
+            paperQuestionVos.add(paperQuestionVo);
+        }
+        return paperQuestionVos;
+    }
+
     /**
      * 判断问题是否需要自动批改
      */
     public boolean checkJudge(Question question){
-        if(question.getQuestionTypeId() == 3 || question.getQuestionTypeId() == 5 || question.getQuestionTypeId() == 6)
+        if(question.getQuestionTypeId() == 3 || question.getQuestionTypeId() == 5 || question.getQuestionTypeId() == 6){
             return false;
+        }
         return true;
     }
 }

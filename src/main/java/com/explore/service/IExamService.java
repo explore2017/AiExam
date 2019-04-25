@@ -3,6 +3,7 @@ package com.explore.service;
 import com.explore.common.ServerResponse;
 import com.explore.pojo.*;
 import com.explore.vo.ExamBatchVo;
+import com.explore.vo.PaperQuestionVo;
 
 import java.util.List;
 
@@ -17,4 +18,7 @@ public interface IExamService {
 
     ServerResponse deleteExam(Integer examId);
 
+    ServerResponse startReply(Integer studentId, Integer batchId);
+
+    ServerResponse monitor(Integer studentId, Integer batchId, List<PaperQuestionVo> records,Boolean isSubmit);
 }

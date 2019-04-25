@@ -163,6 +163,7 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public ServerResponse getMyEnrollBatch(Integer studentId) {
+        //TODO 考试结束时间之前
         List<BatchStudent> list = batchStudentMapper.selectByStudentId(studentId);
         List<BatchStudentVO> batchStudentVOList = new ArrayList<>();
         for (BatchStudent batchStudent : list) {
@@ -175,5 +176,20 @@ public class StudentServiceImpl implements IStudentService {
         return ServerResponse.createBySuccess(batchStudentVOList);
     }
 
+
+    @Override
+    public ServerResponse getMyScore(Integer studentId) {
+        //考试提交状态以后的
+        List<BatchStudent> list = batchStudentMapper.selectAfterFinishedByStudentId(studentId);
+        List<BatchStudentVO> batchStudentVOList = new ArrayList<>();
+        for (BatchStudent batchStudent : list) {
+            BatchStudentVO batchStudentVO = modelMapper.map(batchStudent,BatchStudentVO.class);
+            Batch batch = batchMapper.selectByPrimaryKey(batchStudent.getBatchId());
+            batchStudentVO.setBatch(batch);
+            batchStudentVO.setExam(examMapper.selectByPrimaryKey(batch.getExamId()));
+            batchStudentVOList.add(batchStudentVO);
+        }
+        return ServerResponse.createBySuccess(batchStudentVOList);
+    }
 
 }

@@ -473,4 +473,20 @@ INSERT INTO `teacher_subject` VALUES (43, 56, 1, NULL);
 INSERT INTO `teacher_subject` VALUES (47, 57, 2, NULL);
 INSERT INTO `teacher_subject` VALUES (48, 58, 1, NULL);
 
+-- ----------------------------
+-- Table structure for paper_record
+-- ----------------------------
+DROP TABLE IF EXISTS `paper_record`;
+CREATE TABLE `paper_record`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `batch_id` int(11) NULL DEFAULT NULL,
+  `student_id` int(11) NULL DEFAULT NULL,
+  `sequence` int(11) NULL DEFAULT NULL,
+  `single_score` double(3, 2) NULL DEFAULT NULL,
+  `score` double(3, 2) NULL DEFAULT NULL COMMENT '分数',
+  `question_id` int(11) NULL DEFAULT NULL,
+  `reply` varchar(5000) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '填写的答案',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
 SET FOREIGN_KEY_CHECKS = 1;

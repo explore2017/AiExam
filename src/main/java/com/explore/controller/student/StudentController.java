@@ -159,42 +159,14 @@ public class StudentController {
         return studentService.batchCancel(batch.getId(),student.getId());
     }
 
-    @GetMapping("/batch/{id}/sign")
-    @ApiOperation("用户签到")
-    public ServerResponse signIn(@PathVariable("id") Integer batchId,HttpSession session){
-        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
-        if (student == null) {
-            return ServerResponse.needLogin();
-        }
-        return batchStudentService.signIn(student.getId(),batchId);
-    }
 
-    @GetMapping("/batch/{id}/check")
-    @ApiOperation("点击开始考试")
-    public ServerResponse checkExam(@PathVariable("id") Integer batchId,HttpSession session){
-        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
-        if (student == null) {
-            return ServerResponse.needLogin();
-        }
-        //batch_student 有记录 且 status ！= finished status
-        boolean flag = batchStudentService.checkIsEnroll(student.getId(),batchId);
-        if (!flag){
-            return ServerResponse.createByErrorMessage("您未报名该批次！");
-        }
-        return ServerResponse.createBySuccess();
-    }
 
-    @GetMapping("/batch/{id}/start")
-    @ApiOperation("开始考试")
-    public ServerResponse startExam(@PathVariable("id") Integer batchId,HttpSession session){
+    @GetMapping("/score/me")
+    public ServerResponse score(HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
             return ServerResponse.needLogin();
         }
-        //TODO 验证考试时间、学生选课状态
-        batchStudentService.checkIsEnroll(student.getId(),batchId);
-        //通过批次获取考试试卷
-        Integer paperId = batchService.getPaperIdByBatchId(batchId);
-        return paperService.getDetailsByPaperId(paperId);
+        return studentService.getMyScore(student.getId());
     }
 }

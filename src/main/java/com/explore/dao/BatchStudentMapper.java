@@ -34,4 +34,8 @@ public interface BatchStudentMapper {
     int deleteByBatchId(Integer batchId);
 
     BatchStudent selectByStudentIdAndBatchId(@Param("studentId") Integer studentId,@Param("batchId") Integer batchId);
+
+    int checkCanStart(@Param("studentId") Integer studentId,@Param("batchId") Integer batchId);
+
+    List<BatchStudent> selectAfterFinishedByStudentId(Integer studentId);
 }

@@ -6,7 +6,6 @@ import com.explore.pojo.*;
 import com.explore.pojo.Class;
 import com.explore.service.IPaperService;
 import com.explore.vo.PaperComposeVo;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
