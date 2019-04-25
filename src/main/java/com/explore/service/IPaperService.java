@@ -13,7 +13,7 @@ public interface IPaperService {
     ServerResponse deletePaperByPaperId(Integer paperId);
     ServerResponse<Paper> getPaperById(Integer id);
     ServerResponse<List<Paper>> getAllPaper();
-    ServerResponse<List<Question>> getDetailsByPaperId(Integer paperId);
+    ServerResponse getDetailsByPaperId(Integer paperId);
     ServerResponse addPaperComposeByPaperId(PaperCompose paperCompose );
     ServerResponse editPaperComposeByPaperId(Integer paperId,PaperCompose paperCompose );
     ServerResponse deletePaperComposeBySequenceAndPaperId(Integer paperId,Integer sequence);

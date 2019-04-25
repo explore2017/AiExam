@@ -86,11 +86,14 @@ public class PaperServiceImpl implements IPaperService {
                   return randomPaper(paper);
         }else {
             List<PaperComposeVo> paperComposeVos=paperComposeMapper.selectQuestionByPaperIdOrderBySequence(paperId);
-            for(PaperComposeVo paperComposeVo:paperComposeVos){
-                Question question=questionMapper.selectQuestionByQuestionId(paperComposeVo.getQuestionId());
+            for(int i=0;i<paperComposeVos.size();i++){
+                Question question=questionMapper.selectQuestionByQuestionId(paperComposeVos.get(i).getQuestionId());
                 if(question!=null){
+                    paperComposeMapper.deleteByPrimaryKey(paperComposeVos.get(i).getId());
+                    paperComposeVos.remove(i);
+                }else{
                     question.setAnswer(StringUtils.EMPTY);
-                    paperComposeVo.setQuestion(question);
+                    paperComposeVos.get(i).setQuestion(question);
                 }
             }
             return ServerResponse.createBySuccess(paperComposeVos);
