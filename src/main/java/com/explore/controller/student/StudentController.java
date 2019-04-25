@@ -159,56 +159,14 @@ public class StudentController {
         return studentService.batchCancel(batch.getId(),student.getId());
     }
 
-    @GetMapping("/batch/{id}/sign")
-    @ApiOperation("用户签到")
-    public ServerResponse signIn(@PathVariable("id") Integer batchId,HttpSession session){
+
+
+    @GetMapping("/score/me")
+    public ServerResponse score(HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
             return ServerResponse.needLogin();
         }
-        return batchStudentService.signIn(student.getId(),batchId);
-    }
-
-    @GetMapping("/batch/{id}/start")
-    @ApiOperation("开始考试")
-    public ServerResponse startExam(@PathVariable("id") Integer batchId,HttpSession session){
-        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
-        if (student == null) {
-            return ServerResponse.needLogin();
-        }
-        //开始答题
-        ServerResponse serverResponse2 = examService.startReply(student.getId(),batchId);
-        //验证
-        ServerResponse serverResponse = checkCanStart(student.getId(),batchId);
-        if (serverResponse.isSuccess()){
-            BatchStudent batchStudent = batchStudentService.getByBatchIdAndStudentId(student.getId(),batchId);
-            //开始考试
-            if (batchStudent.getStatus()==Const.BATCH_STUDENT_STATUS.HAD_SIGN.getStatus()){
-                //更新状态 1 > 2
-                batchStudentService.updateReplyStart(student.getId(),batchId);
-                //TODO 获取试卷然后记录返回
-                Integer paperId = batchService.getPaperIdByBatchId(batchId);
-                return paperService.getDetailsByPaperId(paperId);
-            }else if (batchStudent.getStatus()==Const.BATCH_STUDENT_STATUS.IN_PROGRESS.getStatus()){
-                //继续考试
-                //TODO 从Record取
-                Integer paperId = batchService.getPaperIdByBatchId(batchId);
-                return paperService.getDetailsByPaperId(paperId);
-            }else{
-                return ServerResponse.createByError();
-            }
-
-        }else{
-            return serverResponse;
-        }
-    }
-
-
-    private ServerResponse checkCanStart(Integer studentId,Integer batchId){
-        boolean flag = batchStudentService.checkCanStart(studentId,batchId);
-        if (!flag){
-            return ServerResponse.createByErrorMessage("考试已结束");
-        }
-        return ServerResponse.createBySuccess();
+        return studentService.getMyScore(student.getId());
     }
 }

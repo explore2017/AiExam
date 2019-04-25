@@ -20,5 +20,5 @@ public interface IExamService {
 
     ServerResponse startReply(Integer studentId, Integer batchId);
 
-    ServerResponse monitor(Integer studentId, Integer batchId, List<PaperQuestionVo> records);
+    ServerResponse monitor(Integer studentId, Integer batchId, List<PaperQuestionVo> records,Boolean isSubmit);
 }

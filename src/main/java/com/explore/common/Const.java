@@ -12,7 +12,9 @@ public class Const {
         HAD_SIGN(1,"已签到"),
         IN_PROGRESS(2,"正在考试"),
         FINISHED(3,"考试完成"),
-        MISSING_TEST(4,"缺考")
+        MISSING_TEST(4,"缺考"),
+        GET_SCORE(5,"已出成绩")
+
         ;
 
         private int status;

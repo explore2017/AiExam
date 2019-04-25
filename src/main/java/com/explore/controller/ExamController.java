@@ -121,6 +121,16 @@ public class ExamController {
         return batchService.getBatchDetails(batchId);
     }
 
+    @PostMapping("/batch/{id}/sign")
+    @ApiOperation("用户签到")
+    public ServerResponse signIn(@PathVariable("id") Integer batchId,HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.needLogin();
+        }
+        return batchStudentService.signIn(student.getId(),batchId);
+    }
+
     @GetMapping("/batch/{id}/check")
     @ApiOperation("点击开始考试")
     public ServerResponse checkExam(@PathVariable("id") Integer batchId,HttpSession session){
@@ -129,12 +139,12 @@ public class ExamController {
             return ServerResponse.needLogin();
         }
         // 1、batch_student 有记录
-        // 2、 status ！= (3,4)
+        // 2、 status == (1,2)
         // 3、是否在考试时间内
         return checkCanStart(student.getId(),batchId);
     }
 
-    @GetMapping("/batch/{id}/start")
+    @PostMapping("/batch/{id}/start")
     @ApiOperation("开始考试")
     public ServerResponse startExam(@PathVariable("id") Integer batchId,HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
@@ -155,7 +165,16 @@ public class ExamController {
         if (student == null) {
             return ServerResponse.needLogin();
         }
-        return examService.monitor(student.getId(),batchId,model.getRecords());
+        return examService.monitor(student.getId(),batchId,model.getRecords(),false);
+    }
+
+    @PostMapping("/batch/{id}/submit")
+    public ServerResponse submit(@PathVariable("id") Integer batchId, @RequestBody PaperRecordForm model, HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.needLogin();
+        }
+        return examService.monitor(student.getId(),batchId,model.getRecords(),true);
     }
 
     private ServerResponse checkCanStart(Integer studentId,Integer batchId){

@@ -14,14 +14,21 @@ import com.explore.vo.QuestionVo;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.crypto.Data;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 
 @Service
@@ -139,6 +146,10 @@ public class ExamServiceImpl implements IExamService {
     @Override
     public ServerResponse startReply(Integer studentId, Integer batchId) {
         List<PaperQuestionVo> paperQuestionVos;
+
+        Batch batch = batchMapper.selectByPrimaryKey(batchId);
+        long countDown = batch.getEndTime().getTime() - System.currentTimeMillis();
+
         BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
         int status = batchStudent.getStatus();
         //开始考试
@@ -171,7 +182,21 @@ public class ExamServiceImpl implements IExamService {
                 throw new RuntimeException("插入记录异常");
             }
             paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords);
-            //TODO 开启定时任务 更新状态即可
+            //简单开启个定时任务 更新状态即可
+            /*
+            ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
+                    new BasicThreadFactory.Builder().namingPattern("example-schedule-pool-%d").daemon(true).build());
+            executorService.schedule(new Runnable() {
+                @Override
+                public void run() {
+                    BatchStudent bs = new BatchStudent();
+                    bs.setId(batchStudent.getId());
+                    bs.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
+                    batchStudentMapper.updateByPrimaryKeySelective(bs);
+                }
+            },countDown,TimeUnit.MILLISECONDS);
+            */
+
         }else if (status == Const.BATCH_STUDENT_STATUS.IN_PROGRESS.getStatus()){
             //从record表中获取
             List<PaperRecord> paperRecords = paperRecordMapper.selectByStudentIdAndBatchId(studentId,batchId);
@@ -182,27 +207,39 @@ public class ExamServiceImpl implements IExamService {
         }
         //封装返回对象
         Map<String,Object> map = new HashMap<>(2);
-        Batch batch = batchMapper.selectByPrimaryKey(batchId);
-        long countDown = batch.getEndTime().getTime() - System.currentTimeMillis();
         map.put("data",paperQuestionVos);
-        map.put("countDown",countDown);
+        map.put("countDown",countDown-1000*5);
         return ServerResponse.createBySuccess(map);
     }
 
     @Override
-    public ServerResponse monitor(Integer studentId, Integer batchId, List<PaperQuestionVo> records) {
-        //TODO 必须判断当前状态
+    public ServerResponse monitor(Integer studentId, Integer batchId, List<PaperQuestionVo> records,Boolean isSubmit) {
+        boolean canStart = batchStudentService.checkCanStart(studentId,batchId);
+        if (!canStart){
+            //返回成功
+            return ServerResponse.createBySuccessMessage("考试已结束");
+        }
         Batch batch = batchMapper.selectByPrimaryKey(batchId);
-        int flag = batch.getEndTime().compareTo(new Date());
+        Date now = new Date();
+        int flag = batch.getEndTime().compareTo(now);
         if (flag>=0){
             //未到时间
             paperRecordMapper.updateRecords(studentId,batchId,records);
+            //提交更新状态
+            if (isSubmit){
+                BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
+                batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
+                batchStudent.setSubmitTime(now);
+                batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
+                return ServerResponse.createBySuccessMessage("提交考试成功");
+            }
         }else{
-            //到时
-            //TODO 是否要更新呢？
+            //时间到
             BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
-            batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
-            batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
+            if(batchStudent.getStatus()==Const.BATCH_STUDENT_STATUS.IN_PROGRESS.getStatus()){
+                batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
+                batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
+            }
         }
         return ServerResponse.createBySuccess();
     }

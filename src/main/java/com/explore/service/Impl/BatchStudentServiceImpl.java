@@ -35,7 +35,7 @@ public class BatchStudentServiceImpl implements IBatchStudentService {
         }
         batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.HAD_SIGN.getStatus());
         int count = batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
-        if (count==0){
+        if (count>0){
             return ServerResponse.createBySuccessMessage("签到成功");
         }
         return ServerResponse.createByErrorMessage("签到异常");

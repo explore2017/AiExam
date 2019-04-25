@@ -54,7 +54,13 @@
       select
       count(*)
       from batch_student
-      where batch_id = #{batchId} and student_id = #{studentId} and `status` not in (3,4)
+      where batch_id = #{batchId} and student_id = #{studentId} and `status` in (1,2)
+    </select>
+    <select id="selectAfterFinishedByStudentId" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List" />
+      from batch_student
+      where student_id = #{studentId} and status in (3,4,5)
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from batch_student
