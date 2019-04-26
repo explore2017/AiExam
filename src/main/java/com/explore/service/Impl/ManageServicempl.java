@@ -74,7 +74,7 @@ public class ManageServicempl implements IManageService {
                 }
             }
             student.setClasses(str);
-            student.setPassword("");
+//            student.setPassword("");
         }
         return ServerResponse.createBySuccess(students);
     }
@@ -136,7 +136,7 @@ public class ManageServicempl implements IManageService {
                 }
             }
             teacher.setSubjectId(str);
-            teacher.setPassword("");
+//            teacher.setPassword("");
         }
         return ServerResponse.createBySuccess(teachers);
     }

@@ -383,7 +383,9 @@ public class ExamServiceImpl implements IExamService {
                     }
                 }
             }
+            paperRecordMapper.updateByPrimaryKeySelective(paperRecord);
         }
+
         if (canAutoCheck){
             //设置总分数
             List<PaperRecord> list = paperRecordMapper.selectByStudentIdAndBatchId(studentId,batchId);
