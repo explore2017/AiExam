@@ -16,4 +16,6 @@ public class PaperQuestionVo {
     private QuestionVo question;
 
     private String reply;
+
+    private Double score;
 }

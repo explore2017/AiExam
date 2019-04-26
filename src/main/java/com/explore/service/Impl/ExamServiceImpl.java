@@ -181,7 +181,7 @@ public class ExamServiceImpl implements IExamService {
             }catch (Exception e){
                 throw new RuntimeException("插入记录异常");
             }
-            paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords);
+            paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords,false);
             //简单开启个定时任务 更新状态即可
             /*
             ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1,
@@ -201,7 +201,7 @@ public class ExamServiceImpl implements IExamService {
             //从record表中获取
             List<PaperRecord> paperRecords = paperRecordMapper.selectByStudentIdAndBatchId(studentId,batchId);
             //获取后封装成PaperQuestionVo返回
-            paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords);
+            paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords,false);
         }else{
             return ServerResponse.createByError();
         }
@@ -244,19 +244,62 @@ public class ExamServiceImpl implements IExamService {
         return ServerResponse.createBySuccess();
     }
 
-    private List<PaperQuestionVo> packagePaperRecordToPaperQuestionVo(List<PaperRecord> paperRecords){
+    @Override
+    public ServerResponse readPaper(Integer batchStudentId) {
+        BatchStudent batchStudent=batchStudentMapper.selectByPrimaryKey(batchStudentId);
+        if(batchStudent==null){
+            return ServerResponse.createByErrorMessage("没有这个学生的考试");
+        }
+        if(batchStudent.getStatus()!=Const.BATCH_STUDENT_STATUS.FINISHED.getStatus()&&batchStudent.getStatus()!=Const.BATCH_STUDENT_STATUS.GET_SCORE.getStatus()){
+            return ServerResponse.createByErrorMessage("还未可以阅卷");
+        }
+        List<PaperRecord> paperRecords=paperRecordMapper.selectByStudentIdAndBatchId(batchStudent.getStudentId(),batchStudent.getBatchId());
+        List<PaperQuestionVo> paperQuestionVos = packagePaperRecordToPaperQuestionVo(paperRecords,true);
+        Map<String,Object> map = new HashMap<>(1);
+        map.put("data",paperQuestionVos);
+        return ServerResponse.createBySuccess(map);
+    }
+
+    @Override
+    public ServerResponse readPaperSubmit(Integer batchStudentId, List<PaperQuestionVo> records) {
+        BatchStudent batchStudent=batchStudentMapper.selectByPrimaryKey(batchStudentId);
+        if(batchStudent==null){
+            return ServerResponse.createByErrorMessage("没有这个学生的考试");
+        }
+        if(batchStudent.getStatus()!=Const.BATCH_STUDENT_STATUS.FINISHED.getStatus()&&batchStudent.getStatus()!=Const.BATCH_STUDENT_STATUS.GET_SCORE.getStatus()){
+            return ServerResponse.createByErrorMessage("还未可以阅卷");
+        }
+        if(paperRecordMapper.updateScore(batchStudent.getStudentId(),batchStudent.getBatchId(),records)==1){
+            Double totalScore=paperRecordMapper.getTotalScore(batchStudent.getStudentId(),batchStudent.getBatchId());
+            batchStudent.setScore(totalScore);
+            batchStudent.setStatus(5);
+            batchStudent.setUpdateTime(new Date());
+            if(batchStudentMapper.updateByPrimaryKeySelective(batchStudent)==1){
+                return ServerResponse.createBySuccessMessage("提交成功");
+            }
+        }
+        return ServerResponse.createByErrorMessage("提交失败");
+    }
+
+    private List<PaperQuestionVo> packagePaperRecordToPaperQuestionVo(List<PaperRecord> paperRecords,Boolean answer){
         List<PaperQuestionVo> paperQuestionVos = new ArrayList<>();
         for (PaperRecord paperRecord : paperRecords) {
             PaperQuestionVo paperQuestionVo = new PaperQuestionVo();
             //封装QuestionVo对象
             Question question = questionMapper.selectByPrimaryKey(paperRecord.getQuestionId());
+            if(!answer){
+                question.setAnswer("");
+            }
             QuestionVo questionVo = modelMapper.map(question,QuestionVo.class);
             paperQuestionVo.setQuestion(questionVo);
             paperQuestionVo.setReply(paperRecord.getReply());
             paperQuestionVo.setSequence(paperRecord.getSequence());
-            paperQuestionVo.setSingleScore(paperRecord.getScore());
             paperQuestionVo.setSingleScore(paperRecord.getSingleScore());
+            if(answer){
+                paperQuestionVo.setScore(paperRecord.getScore());
+            }
             paperQuestionVos.add(paperQuestionVo);
+
         }
         return paperQuestionVos;
     }

@@ -176,6 +176,25 @@ public class ExamController {
         }
         return examService.monitor(student.getId(),batchId,model.getRecords(),true);
     }
+    @GetMapping("/read_paper/{id}")
+    @ApiOperation("阅卷")
+    public ServerResponse readPaper(@PathVariable("id") Integer batchStudentId,HttpSession session){
+//        Teacher student = (Teacher) session.getAttribute(Const.CURRENT_USER);
+//        if (student == null) {
+//            return ServerResponse.needLogin();
+//        }
+
+        return examService.readPaper(batchStudentId);
+    }
+    @PostMapping("/read_paper/{id}")
+    @ApiOperation("阅卷")
+    public ServerResponse readPaperSubmit(@PathVariable("id") Integer batchStudentId,@RequestBody PaperRecordForm model,HttpSession session){
+//        Teacher student = (Teacher) session.getAttribute(Const.CURRENT_USER);
+//        if (student == null) {
+//            return ServerResponse.needLogin();
+//        }
+        return examService.readPaperSubmit(batchStudentId,model.getRecords());
+    }
 
     private ServerResponse checkCanStart(Integer studentId,Integer batchId){
         boolean flag = batchStudentService.checkCanStart(studentId,batchId);

@@ -20,6 +20,9 @@
     from paper_record
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="getTotalScore"  resultType="java.lang.Double">
+    SELECT sum(score) FROM paper_record WHERE  student_id = #{studentId} and batch_id = #{batchId}
+  </select>
   <select id="selectByStudentIdAndBatchId" resultMap="BaseResultMap">
   select
   <include refid="Base_Column_List" />
@@ -147,8 +150,16 @@
       <foreach collection="records" item="item" index="index" open="" close="" separator=";">
       update paper_record
       set
-      reply = #{item.reply}
+         reply = #{item.reply}
       where student_id = #{studentId} and batch_id = #{batchId} and sequence = #{item.sequence}
       </foreach>
     </update>
+  <update id="updateScore" parameterType="map">
+    <foreach collection="records" item="item" index="index" open="" close="" separator=";">
+      update paper_record
+      set
+      score = #{item.score}
+      where student_id = #{studentId} and batch_id = #{batchId} and sequence = #{item.sequence}
+    </foreach>
+  </update>
 </mapper>

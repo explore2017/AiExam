@@ -17,4 +17,6 @@ public class QuestionVo {
     private String selects;
 
     private Integer questionTypeId;
+
+    private String answer;
 }
