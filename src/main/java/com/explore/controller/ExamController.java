@@ -197,10 +197,6 @@ public class ExamController {
     }
 
     private ServerResponse checkCanStart(Integer studentId,Integer batchId){
-        boolean flag = batchStudentService.checkCanStart(studentId,batchId);
-        if (!flag){
-            return ServerResponse.createByErrorMessage("考试已结束");
-        }
-        return ServerResponse.createBySuccess();
+        return batchStudentService.checkCanStart(studentId,batchId);
     }
 }

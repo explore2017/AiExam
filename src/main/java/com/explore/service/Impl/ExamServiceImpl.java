@@ -7,10 +7,12 @@ import com.explore.pojo.*;
 import com.explore.pojo.Class;
 import com.explore.service.IBatchStudentService;
 import com.explore.service.IExamService;
+import com.explore.thread.AutoCheck;
 import com.explore.vo.ExamBatchVo;
 import com.explore.vo.PaperComposeVo;
 import com.explore.vo.PaperQuestionVo;
 import com.explore.vo.QuestionVo;
+import io.swagger.models.auth.In;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
@@ -57,6 +59,7 @@ public class ExamServiceImpl implements IExamService {
     ModelMapper modelMapper;
     @Autowired
     PaperRecordMapper paperRecordMapper;
+    @Autowired
 
     @Override
     public ServerResponse getExams() {
@@ -189,6 +192,7 @@ public class ExamServiceImpl implements IExamService {
             executorService.schedule(new Runnable() {
                 @Override
                 public void run() {
+                    //提交后可以终止、若不终止则需判断是否需要更新
                     BatchStudent bs = new BatchStudent();
                     bs.setId(batchStudent.getId());
                     bs.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
@@ -214,10 +218,10 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public ServerResponse monitor(Integer studentId, Integer batchId, List<PaperQuestionVo> records,Boolean isSubmit) {
-        boolean canStart = batchStudentService.checkCanStart(studentId,batchId);
-        if (!canStart){
+        ServerResponse serverResponse = batchStudentService.checkCanStart(studentId,batchId);
+        if (!serverResponse.isSuccess()){
             //返回成功
-            return ServerResponse.createBySuccessMessage("考试已结束");
+            return ServerResponse.createBySuccessMessage(serverResponse.getMsg());
         }
         Batch batch = batchMapper.selectByPrimaryKey(batchId);
         Date now = new Date();
@@ -225,12 +229,13 @@ public class ExamServiceImpl implements IExamService {
         if (flag>=0){
             //未到时间
             paperRecordMapper.updateRecords(studentId,batchId,records);
-            //提交更新状态
+            //手动提交
             if (isSubmit){
                 BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
                 batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
                 batchStudent.setSubmitTime(now);
                 batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
+                autoJudge(studentId,batchId);
                 return ServerResponse.createBySuccessMessage("提交考试成功");
             }
         }else{
@@ -240,6 +245,7 @@ public class ExamServiceImpl implements IExamService {
                 batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
                 batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
             }
+            autoJudge(studentId,batchId);
         }
         return ServerResponse.createBySuccess();
     }
@@ -308,9 +314,89 @@ public class ExamServiceImpl implements IExamService {
      * 判断问题是否需要自动批改
      */
     public boolean checkJudge(Question question){
-        if(question.getQuestionTypeId() == 3 || question.getQuestionTypeId() == 5 || question.getQuestionTypeId() == 6){
+        int type = question.getQuestionTypeId();
+        if(type == 3 || type == 5 || type == 4){
             return false;
         }
         return true;
+    }
+
+    /**
+     * 自动阅卷
+     */
+    public void autoJudge(Integer studentId,Integer batchId){
+        //判断是否能全部自动阅卷
+        boolean canAutoCheck = true;
+        List<PaperRecord> paperRecords = paperRecordMapper.selectByStudentIdAndBatchId(studentId,batchId);
+        for (PaperRecord paperRecord : paperRecords) {
+            Question question = questionMapper.selectByPrimaryKey(paperRecord.getQuestionId());
+            if (!checkJudge(question)){
+                //非客观题
+                canAutoCheck = false;
+            }else{
+                //客观题
+                String reply = (paperRecord.getReply()).trim();
+                if (question.getQuestionTypeId()==0||question.getQuestionTypeId()==1){
+                    //0、单选 1、判断
+                    if(reply.equals((question.getAnswer()).trim())){
+                        paperRecord.setScore(paperRecord.getSingleScore());
+                    }else{
+                        paperRecord.setScore(0.0);
+                    }
+                }else if(question.getQuestionTypeId()==2){
+                    //2、多选 可能顺序不一样，因此需要遍历判断
+                    //计分规则：漏选得一般、错选多选0分
+                    String[] answers = (question.getAnswer()).trim().split(",");
+                    String[] res = (paperRecord.getReply()).trim().split(",");
+                    if (answers.length>res.length){
+                        //漏选
+                        int right = 0;
+                        for (String r : res) {
+                            for (String answer : answers) {
+                                if (r.equals(answer)){
+                                    right++;
+                                }
+                            }
+                        }
+                        if (right!=res.length){
+                            paperRecord.setScore(0.0);
+                        }else{
+                            paperRecord.setScore(paperRecord.getSingleScore()/2);
+                        }
+                    }else if (answers.length==res.length){
+                        int right = 0;
+                        for (String r : res) {
+                            for (String answer : answers) {
+                                if (r.equals(answer)){
+                                    right++;
+                                }
+                            }
+                        }
+                        if (right!=res.length){
+                            paperRecord.setScore(0.0);
+                        }else{
+                            paperRecord.setScore(paperRecord.getSingleScore());
+                        }
+                    }else{
+                        //多选0分
+                        paperRecord.setScore(0.0);
+                    }
+                }
+            }
+        }
+        if (canAutoCheck){
+            //设置总分数
+            List<PaperRecord> list = paperRecordMapper.selectByStudentIdAndBatchId(studentId,batchId);
+            Double totalScore = 0.0;
+            for (PaperRecord paperRecord : list) {
+                totalScore+=paperRecord.getScore();
+                BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
+                batchStudent.setScore(totalScore);
+                batchStudent.setUpdateTime(new Date());
+                batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.GET_SCORE.getStatus());
+                batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
+            }
+
+        }
     }
 }

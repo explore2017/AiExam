@@ -18,8 +18,8 @@
     <result column="selects" jdbcType="VARCHAR" property="selects" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, title, content, question_type_id, answer, create_time, update_time, is_subjective, 
-    difficulty, subject_id, status, key_point,selects
+    id, title, content, question_type_id, answer, create_time, update_time, is_subjective,
+    difficulty, subject_id, status, key_point, selects
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
