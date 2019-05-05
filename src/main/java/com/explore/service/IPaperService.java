@@ -12,7 +12,7 @@ public interface IPaperService {
     ServerResponse editPaperByPaperId(Integer paperId,Paper paper);
     ServerResponse deletePaperByPaperId(Integer paperId);
     ServerResponse<Paper> getPaperById(Integer id);
-    ServerResponse<List<Paper>> getAllPaper();
+    ServerResponse<List<Paper>> getAllPaper(String role,Integer teacherId);
     ServerResponse getDetailsByPaperId(Integer paperId);
     ServerResponse addPaperComposeByPaperId(PaperCompose paperCompose );
     ServerResponse editPaperComposeByPaperId(Integer paperId,PaperCompose paperCompose );

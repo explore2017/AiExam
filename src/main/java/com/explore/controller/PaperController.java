@@ -1,9 +1,8 @@
 package com.explore.controller;
 
+import com.explore.common.Const;
 import com.explore.common.ServerResponse;
-import com.explore.pojo.Paper;
-import com.explore.pojo.PaperCompose;
-import com.explore.pojo.Question;
+import com.explore.pojo.*;
 import com.explore.service.IPaperService;
 import com.explore.service.IQuestionService;
 import com.github.pagehelper.PageHelper;
@@ -12,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
@@ -53,9 +53,15 @@ public class PaperController {
      */
     @GetMapping
     @ApiOperation(value="获得所有试卷基本信息", notes="不需要参数")
-    public ServerResponse<List<Paper>> getAllPaper(){
-        ServerResponse serverResponse=paperService.getAllPaper();
-        return serverResponse;
+    public ServerResponse<List<Paper>> getAllPaper(HttpSession session){
+        if(session.getAttribute(Const.CURRENT_USER) instanceof Manager){
+            return paperService.getAllPaper(Const.Manager,null);
+        }else if(session.getAttribute(Const.CURRENT_USER) instanceof Teacher){
+            Teacher teacher=(Teacher) session.getAttribute(Const.CURRENT_USER);
+            return paperService.getAllPaper(Const.Teacher,teacher.getId());
+        }else{
+            return ServerResponse.createByErrorMessage("发生未知错误");
+        }
     }
 
     /**

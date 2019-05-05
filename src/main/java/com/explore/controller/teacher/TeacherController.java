@@ -2,6 +2,7 @@ package com.explore.controller.teacher;
 
 import com.explore.common.Const;
 import com.explore.common.ServerResponse;
+import com.explore.form.PasswordForm;
 import com.explore.pojo.Student;
 import com.explore.pojo.Teacher;
 import com.explore.pojo.User;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -23,8 +25,8 @@ public class TeacherController {
     /**
      * 老师登录
      */
-    @PostMapping("/Login")
-    public ServerResponse login(@RequestBody User user, HttpSession session) {
+    @PostMapping("/login")
+    public ServerResponse login(@RequestBody User user,  HttpSession session) {
         ServerResponse<Teacher> serverResponse = teacherService.login(user.getUsername(),user.getPassword());
         if (serverResponse.isSuccess()) {
             Teacher teacher = serverResponse.getData();
@@ -38,9 +40,9 @@ public class TeacherController {
      * 老师密码修改
      */
     @PutMapping("/password")
-    public ServerResponse revise(String username, String oldPassword, String newPassword) {
-        ServerResponse serverResponse = teacherService.revise(username, oldPassword, newPassword);
-        return serverResponse;
+    public ServerResponse revise(@RequestBody PasswordForm passwordForm,HttpSession session) {
+        Teacher teacher=(Teacher)session.getAttribute(Const.CURRENT_USER);
+        return teacherService.revise(teacher.getUsername(), passwordForm.getOldPassword(), passwordForm.getNewPassword());
     }
 
     /**

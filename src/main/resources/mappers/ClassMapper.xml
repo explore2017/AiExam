@@ -28,6 +28,11 @@
     <include refid="Base_Column_List" />
     from class
   </select>
+  <select id="selectTeacherClass" resultMap="BaseResultMap" >
+    select
+      *
+    from class where teacher_id=#{teacherId}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from class
     where id = #{id,jdbcType=INTEGER}
@@ -157,5 +162,8 @@
   </update>
   <select id="getClassesByStudentID" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
     SELECT c.*  FROM student_class AS sc, class AS c WHERE student_id = #{id,jdbcType=INTEGER} AND sc.class_id = c.id
+  </select>
+  <select id="checkHasEnroll" resultMap="BaseResultMap" >
+    select * from class where class_no=#{classNo}
   </select>
 </mapper>

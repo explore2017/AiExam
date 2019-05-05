@@ -5,6 +5,7 @@ import com.explore.common.ServerResponse;
 import com.explore.dao.*;
 import com.explore.pojo.Batch;
 import com.explore.pojo.BatchStudent;
+import com.explore.pojo.Class;
 import com.explore.pojo.Exam;
 import com.explore.pojo.Student;
 import com.explore.service.IStudentService;
@@ -36,6 +37,8 @@ public class StudentServiceImpl implements IStudentService {
     ModelMapper modelMapper;
     @Autowired
     ClassMapper classMapper;
+    @Autowired
+    StudentClassMapper studentClassMapper;
 
     @Override
     public ServerResponse<Student> login(String sno, String password) {
@@ -190,6 +193,27 @@ public class StudentServiceImpl implements IStudentService {
             batchStudentVOList.add(batchStudentVO);
         }
         return ServerResponse.createBySuccess(batchStudentVOList);
+    }
+
+    @Override
+    public ServerResponse joinClass(Integer id,String classNo) {
+        Class class1=classMapper.checkHasEnroll(classNo.toUpperCase());
+        if(class1==null){
+            return  ServerResponse.createByErrorMessage("班级号错误");
+        }
+            if(studentClassMapper.check(id,class1.getId())!=null){
+                return  ServerResponse.createByErrorMessage("已加入班级");
+            }
+        if(studentClassMapper.insertStudentClass(id,class1.getId())>0){
+            return  ServerResponse.createBySuccessMessage("加入班级成功");
+        }
+        return ServerResponse.createByErrorMessage("加入班级失败");
+    }
+
+    @Override
+    public ServerResponse exitClass(Integer id) {
+        studentClassMapper.deleteClassByStudentId(id);
+        return ServerResponse.createBySuccessMessage("退出班级成功");
     }
 
 }

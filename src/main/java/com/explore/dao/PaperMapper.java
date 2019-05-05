@@ -26,4 +26,6 @@ public interface PaperMapper {
 
     List<Paper> selectPaperBySubject(@Param("subjectId") Integer subjectId, @Param("creator") String creator);
 
+    List<Paper> selectTeacherPaper(Integer teacherId);
+
 }

@@ -59,11 +59,15 @@ public class ExamServiceImpl implements IExamService {
     ModelMapper modelMapper;
     @Autowired
     PaperRecordMapper paperRecordMapper;
-    @Autowired
 
     @Override
-    public ServerResponse getExams() {
-        List<Exam> examList=examMapper.selectExams();
+    public ServerResponse getExams(String role,Integer teacherId) {
+        List<Exam> examList;
+        if(role.equals(Const.Manager)){
+            examList =examMapper.selectExams();
+        }else {
+            examList =examMapper.selectTeacherExams(teacherId);
+        }
         List<HashMap<String,Object>>  allData=new ArrayList<>();
         for(Exam exam:examList){
             Class class1=classMapper.selectByPrimaryKey(exam.getClassId());

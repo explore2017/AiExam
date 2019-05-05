@@ -14,8 +14,8 @@
   <select id="login" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from student
-    where sno = #{sno} and password = #{password}
+    from manager
+    where username = #{username} and password = #{password}
   </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 

@@ -6,7 +6,7 @@ import com.explore.pojo.Subject;
 import java.util.List;
 
 public interface ISubjectService {
-    ServerResponse<List<Subject>> Subject();
+    ServerResponse<List<Subject>> Subject(String role,Integer teacherId);
 
     ServerResponse addSubject(Subject subject);
 

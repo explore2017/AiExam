@@ -21,4 +21,6 @@ public interface SubjectMapper {
     List<Subject> getAllSubject();
 
     Subject getOneSuject(String name);
+
+    List<Subject> getTeacherSubject(Integer teacherId);
 }

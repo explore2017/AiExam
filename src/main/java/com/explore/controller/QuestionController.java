@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 
@@ -25,7 +26,7 @@ public class QuestionController {
      */
     @PostMapping
     @ApiOperation(value="向试题库添加试题", notes="参数为一个Question对象")
-    public ServerResponse save(@RequestBody Question question){
+    public ServerResponse save(@RequestBody Question question, HttpSession session){
         return questionService.saveQuestion(question);
     }
     /**

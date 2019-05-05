@@ -48,6 +48,15 @@
     <include refid="Base_Column_List" />
     from exam order By create_time Desc
   </select>
+  <select id="selectTeacherExams" resultMap="BaseResultMap">
+    SELECT
+      exam.*
+    FROM
+      exam
+        INNER JOIN class ON exam.class_id = class.id
+    WHERE
+      class.teacher_id =#{teacherId} order By create_time Desc
+  </select>
   <select id="selectExamBatchVoByStudentId" resultMap="ExamBatchVo">
     SELECT exam.*,batch.id as batchId,batch.name as batchName,batch.describe as batchDescribe,batch.start_time as batchStartTime,
     batch.end_time as batchEndTime,status as batchStudentStatus

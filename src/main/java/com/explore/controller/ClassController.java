@@ -1,13 +1,14 @@
 package com.explore.controller;
 
+import com.explore.common.Const;
 import com.explore.common.ServerResponse;
+import com.explore.pojo.*;
 import com.explore.pojo.Class;
-import com.explore.pojo.Student;
-import com.explore.pojo.StudentClass;
 import com.explore.service.IClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -30,9 +31,15 @@ public class ClassController {
      * 查看所有班级
      */
     @GetMapping("/allclass")
-    public ServerResponse getAllStudent(){
-        ServerResponse serverResponse=classesService.getClasses();
-        return serverResponse;
+    public ServerResponse getAllStudent(HttpSession session){
+        if(session.getAttribute(Const.CURRENT_USER) instanceof Manager){
+            return classesService.getClasses(Const.Manager,null);
+        }else if(session.getAttribute(Const.CURRENT_USER) instanceof Teacher){
+            Teacher teacher=(Teacher) session.getAttribute(Const.CURRENT_USER);
+            return classesService.getClasses(Const.Teacher,teacher.getId());
+        }else{
+            return ServerResponse.createByErrorMessage("发生未知错误");
+        }
     }
 
     /**

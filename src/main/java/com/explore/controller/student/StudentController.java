@@ -169,4 +169,20 @@ public class StudentController {
         }
         return studentService.getMyScore(student.getId());
     }
+    @PostMapping("/class")
+    public ServerResponse joinClass(HttpSession session,String classNo){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.needLogin();
+        }
+        return studentService.joinClass(student.getId(),classNo);
+    }
+    @DeleteMapping("/class/{id}")
+    public ServerResponse exitClass(HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.needLogin();
+        }
+        return studentService.exitClass(student.getId());
+    }
 }

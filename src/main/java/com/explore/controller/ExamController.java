@@ -37,8 +37,15 @@ public class ExamController {
      * 获取所有考试
      */
     @RequestMapping(method = RequestMethod.GET)
-    public ServerResponse list(){
-        return examService.getExams();
+    public ServerResponse list(HttpSession session){
+        if(session.getAttribute(Const.CURRENT_USER) instanceof Manager){
+            return examService.getExams(Const.Manager,null);
+        }else if(session.getAttribute(Const.CURRENT_USER) instanceof Teacher){
+            Teacher teacher=(Teacher) session.getAttribute(Const.CURRENT_USER);
+            return examService.getExams(Const.Teacher,teacher.getId());
+        }else{
+            return ServerResponse.createByErrorMessage("发生未知错误");
+        }
     }
 
     /**
@@ -179,20 +186,11 @@ public class ExamController {
     @GetMapping("/read_paper/{id}")
     @ApiOperation("阅卷")
     public ServerResponse readPaper(@PathVariable("id") Integer batchStudentId,HttpSession session){
-//        Teacher student = (Teacher) session.getAttribute(Const.CURRENT_USER);
-//        if (student == null) {
-//            return ServerResponse.needLogin();
-//        }
-
         return examService.readPaper(batchStudentId);
     }
     @PostMapping("/read_paper/{id}")
-    @ApiOperation("阅卷")
+    @ApiOperation("提交阅卷")
     public ServerResponse readPaperSubmit(@PathVariable("id") Integer batchStudentId,@RequestBody PaperRecordForm model,HttpSession session){
-//        Teacher student = (Teacher) session.getAttribute(Const.CURRENT_USER);
-//        if (student == null) {
-//            return ServerResponse.needLogin();
-//        }
         return examService.readPaperSubmit(batchStudentId,model.getRecords());
     }
 

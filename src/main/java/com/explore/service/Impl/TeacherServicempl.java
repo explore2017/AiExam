@@ -24,7 +24,7 @@ public class TeacherServicempl implements ITeacherService {
         if (teacher == null) {
             return ServerResponse.createByErrorMessage("登陆失败");
         }
-        return ServerResponse.createBySuccessMessage("登陆成功");
+        return ServerResponse.createBySuccessMessage("登陆成功",teacher);
     }
 
     @Override

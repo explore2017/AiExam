@@ -42,8 +42,11 @@ public class QuestionServiceImpl implements IQuestionService {
     public ServerResponse deleteQuestionByQuestionId(Integer questionId) {
         Question question= questionMapper.selectQuestionByQuestionId(questionId);
         if(question==null){return ServerResponse.createByErrorMessage("找不到这个题目");}
-        int count=questionMapper.deleteByPrimaryKey(questionId);
-        if(count==0){return ServerResponse.createByErrorMessage("删除失败");}
+        try{
+            questionMapper.deleteByPrimaryKey(questionId);
+        }catch (Exception e){
+            return ServerResponse.createByErrorMessage("该题目有被引用，无法删除改题目");
+        }
         return ServerResponse.createBySuccessMessage("删除题目成功");
     }
 

@@ -212,8 +212,20 @@
   <select id="selectAllPaper" resultMap="BaseResultMap">
     SELECT
       *
-    FROM paper order By create_time Desc
-
+    FROM paper WHERE status!=2 order By create_time Desc
+  </select>
+  <select id="selectTeacherPaper" resultMap="BaseResultMap">
+    SELECT
+      paper.*
+    FROM
+      paper
+        INNER JOIN teacher_subject ON paper.subject_id = teacher_subject.subject_id and teacher_subject.teacher_id=#{teacherId}
+        INNER JOIN teacher ON teacher.id = #{teacherId}
+    WHERE
+      paper.`status` =0
+      AND (paper.usufruct = 0 OR paper.creator=teacher.username)
+    ORDER BY
+      create_time DESC
   </select>
   <update id="updatePaperStatus">
     update paper
@@ -233,5 +245,6 @@
           OR
           creator = #{creator,jdbcType=VARCHAR}
       )
+      AND status=0
   </select>
 </mapper>

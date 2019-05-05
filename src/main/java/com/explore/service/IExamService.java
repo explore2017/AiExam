@@ -8,7 +8,7 @@ import com.explore.vo.PaperQuestionVo;
 import java.util.List;
 
 public interface IExamService {
-    ServerResponse getExams();
+    ServerResponse getExams(String role,Integer teacherId);
 
     List<ExamBatchVo> getExamBatchVoByStudentId(Integer id);
 

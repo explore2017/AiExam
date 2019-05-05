@@ -1,12 +1,16 @@
 package com.explore.controller;
 
+import com.explore.common.Const;
 import com.explore.common.ServerResponse;
 import com.explore.dao.TeacherSubjectMapper;
+import com.explore.pojo.Manager;
 import com.explore.pojo.Subject;
+import com.explore.pojo.Teacher;
 import com.explore.service.ISubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -20,9 +24,15 @@ public class SubjectController {
      * 查看所有课程
      */
     @GetMapping
-    public ServerResponse<List<Subject>> getAllSubject(){
-        ServerResponse<List<Subject>> serverResponse=subjectService.Subject();
-        return serverResponse;
+    public ServerResponse<List<Subject>> getAllSubject(HttpSession session){
+        if(session.getAttribute(Const.CURRENT_USER) instanceof Manager){
+            return subjectService.Subject(Const.Manager,null);
+        }else if(session.getAttribute(Const.CURRENT_USER) instanceof Teacher){
+            Teacher teacher=(Teacher) session.getAttribute(Const.CURRENT_USER);
+            return subjectService.Subject(Const.Teacher,teacher.getId());
+        }else{
+            return ServerResponse.createByErrorMessage("发生未知错误");
+        }
     }
 
     /**

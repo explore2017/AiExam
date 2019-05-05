@@ -21,4 +21,8 @@ public interface IStudentService {
     ServerResponse getMyEnrollBatch(Integer studentId);
 
     ServerResponse getMyScore(Integer studentId);
+
+    ServerResponse joinClass(Integer id,String classNo);
+
+    ServerResponse exitClass(Integer id);
 }

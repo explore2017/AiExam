@@ -3,6 +3,10 @@ package com.explore.common;
 public class Const {
     public static String CURRENT_USER = "current_user";
 
+    public static String Teacher = "teacher";
+
+    public static String Manager = "manage";
+
     public enum  BATCH_STUDENT_STATUS{
 
         /**

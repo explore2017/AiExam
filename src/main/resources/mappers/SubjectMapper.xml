@@ -18,6 +18,15 @@
     <include refid="Base_Column_List" />
     from subject
   </select>
+  <select id="getTeacherSubject" resultMap="BaseResultMap">
+    SELECT
+      `subject`.*
+    FROM
+      `subject`
+        INNER JOIN teacher_subject ON `subject`.id = teacher_subject.subject_id
+    WHERE
+      teacher_subject.teacher_id =#{teacherId}
+  </select>
   <select id="getOneSuject" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />

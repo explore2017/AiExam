@@ -21,4 +21,8 @@ public interface ClassMapper {
     List<Class> selectAllClass();
 
     List<Class> getClassesByStudentID(Integer id);
+
+    List<Class> selectTeacherClass(Integer teacherId);
+
+    Class checkHasEnroll(String classNo);
 }

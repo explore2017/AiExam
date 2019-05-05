@@ -1,5 +1,6 @@
 package com.explore.service.Impl;
 
+import com.explore.common.Const;
 import com.explore.common.ServerResponse;
 import com.explore.dao.*;
 import com.explore.pojo.*;
@@ -26,8 +27,13 @@ public class ClassServiceImpl implements IClassService {
     @Autowired
     TeacherMapper teacherMapper;
     @Override
-    public ServerResponse getClasses() {
-        List<Class> classList=classMapper.selectAllClass();
+    public ServerResponse getClasses(String role,Integer teacherId) {
+        List<Class> classList;
+        if(role.equals(Const.Manager)){
+           classList=classMapper.selectAllClass();
+        }else{
+           classList=classMapper.selectTeacherClass(teacherId);
+        }
         List<HashMap<String,Object>>  allData=new ArrayList<>();
         for(Class class1:classList){
         Teacher teacher =teacherMapper.selectByPrimaryKey(class1.getTeacherId());
@@ -67,6 +73,19 @@ public class ClassServiceImpl implements IClassService {
     public ServerResponse addClass(Class classes) {
         classes.setCreateTime(new Date());
         classes.setNumber(0);
+        String classNo;
+        try{
+            while(true){
+                classNo=getClassNo();
+                if(classMapper.checkHasEnroll(classNo)==null){
+                    classes.setClassNo(classNo);
+                    break;
+                }
+            }
+        }catch (Exception e){
+              return ServerResponse.createByErrorMessage("班级号已满，请联系管理员");
+        }
+
         if(classMapper.insert(classes)==1){
             return ServerResponse.createBySuccessMessage("创建班级成功");
         }
@@ -133,5 +152,16 @@ public class ClassServiceImpl implements IClassService {
         List<Class> classes = classMapper.getClassesByStudentID(id);
 
         return ServerResponse.createBySuccess(classes);
+    }
+    public static String getClassNo(){
+        String randomcode2 = "";
+        String model = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        char[] m = model.toCharArray();
+        for (int j=0;j<7 ;j++ )
+        {
+            char c = m[(int)(Math.random()*26)];
+            randomcode2 = randomcode2 + c;
+        }
+        return randomcode2;
     }
 }

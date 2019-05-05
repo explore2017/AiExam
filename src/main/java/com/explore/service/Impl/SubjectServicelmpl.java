@@ -1,5 +1,6 @@
 package com.explore.service.Impl;
 
+import com.explore.common.Const;
 import com.explore.common.ServerResponse;
 import com.explore.dao.QuestionMapper;
 import com.explore.dao.SubjectMapper;
@@ -24,14 +25,16 @@ public class SubjectServicelmpl implements ISubjectService {
     QuestionMapper questionMapper;
 
     @Override
-    public ServerResponse<List<Subject>> Subject() {
-        return ServerResponse.createBySuccess(subjectMapper.getAllSubject());
+    public ServerResponse<List<Subject>> Subject(String role,Integer teacherId) {
+        if(role.equals(Const.Teacher)){
+            return ServerResponse.createBySuccess(subjectMapper.getTeacherSubject(teacherId));
+        }else{
+            return ServerResponse.createBySuccess(subjectMapper.getAllSubject());
+        }
     }
 
     @Override
     public ServerResponse addSubject(Subject subject) {
-        Date creat_time = new Date();
-        subject.setCreateTime(creat_time);
         if(subject==null){
             return ServerResponse.createByErrorMessage("不能为空");
         }
@@ -42,13 +45,19 @@ public class SubjectServicelmpl implements ISubjectService {
         if(subjectMapper.insert(subject)==1) {
             return ServerResponse.createBySuccessMessage("增加成功");
         }
+        Date creat_time = new Date();
+        subject.setCreateTime(creat_time);
         return ServerResponse.createByErrorMessage("增加失败");
     }
 
     @Override
     public ServerResponse outSubject(Integer id) {
+        try{
+            subjectMapper.deleteByPrimaryKey(id);
+        }catch (Exception e){
+            return  ServerResponse.createByErrorMessage("不能删除该科目，该科目在其他地方还有引用");
+        }
         teacherSubjectMapper.deleteSubjectBySubjectId(id);
-        subjectMapper.deleteByPrimaryKey(id);
         return ServerResponse.createBySuccessMessage("删除成功");
     }
 

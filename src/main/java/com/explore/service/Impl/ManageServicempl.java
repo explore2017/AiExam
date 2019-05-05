@@ -46,7 +46,7 @@ public class ManageServicempl implements IManageService {
     public ServerResponse revise(String username, String oldPassword, String newPassword) {
         Manager manager = managerMapper.login(username, oldPassword);
         if (manager == null) {
-            return ServerResponse.createByErrorMessage("用户名或密码错误");
+            return ServerResponse.createByErrorMessage("原密码错误");
         }
         manager.setPassword(newPassword);
         int count = managerMapper.updateByPrimaryKey(manager);

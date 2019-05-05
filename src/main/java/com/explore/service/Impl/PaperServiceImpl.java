@@ -1,5 +1,6 @@
 package com.explore.service.Impl;
 
+import com.explore.common.Const;
 import com.explore.common.ServerResponse;
 import com.explore.dao.*;
 import com.explore.pojo.*;
@@ -58,9 +59,12 @@ public class PaperServiceImpl implements IPaperService {
     public ServerResponse deletePaperByPaperId(Integer paperId) {
         Paper paper=paperMapper.selectByPrimaryKey(paperId);
         if(paper==null){return ServerResponse.createByErrorMessage("找不到该试卷");}
+        try{
+            paperMapper.deleteByPrimaryKey(paperId);
+        }catch (Exception e){
+           return ServerResponse.createByErrorMessage("不能删除该试卷，因为还存在对该试卷的引用");
+        }
         int count= paperComposeMapper.deleteByPaperId(paperId);
-        if(count==0){ServerResponse.createByErrorMessage("删除失败");}
-        count=paperMapper.deleteByPrimaryKey(paperId);
         if(count==0){ServerResponse.createByErrorMessage("删除失败");}
         return ServerResponse.createBySuccessMessage("删除成功");
     }
@@ -73,8 +77,20 @@ public class PaperServiceImpl implements IPaperService {
     }
 
     @Override
-    public ServerResponse<List<Paper>> getAllPaper() {
-        return ServerResponse.createBySuccess(paperMapper.selectAllPaper());
+    public ServerResponse<List<Paper>> getAllPaper(String role,Integer teacherId) {
+        List<Paper> paperList;
+        if(role.equals(Const.Manager)){
+            paperList=paperMapper.selectAllPaper();
+        }else{
+            paperList=paperMapper.selectTeacherPaper(teacherId);
+        }
+        for(Paper paper:paperList){
+            Subject subject=subjectMapper.selectByPrimaryKey(paper.getSubjectId());
+            if(subject!=null){
+                paper.setSubjectName(subject.getName());
+            }
+        }
+        return ServerResponse.createBySuccess(paperList);
     }
 
     @Override
@@ -87,7 +103,7 @@ public class PaperServiceImpl implements IPaperService {
             List<PaperComposeVo> paperComposeVos=paperComposeMapper.selectQuestionByPaperIdOrderBySequence(paperId);
             for(int i=0;i<paperComposeVos.size();i++){
                 Question question=questionMapper.selectQuestionByQuestionId(paperComposeVos.get(i).getQuestionId());
-                if(question!=null){
+                if(question==null){
                     paperComposeMapper.deleteByPrimaryKey(paperComposeVos.get(i).getId());
                     paperComposeVos.remove(i);
                 }else{
@@ -306,7 +322,7 @@ public class PaperServiceImpl implements IPaperService {
         List<Question> allQuestions=  questionMapper.selectQuestionsByCondition(paper.getSubjectId(),null,null,null);
         for(int i=0;i<6;i++){
             final Integer targetNumber=jsonObject.getInt(number.get(i));
-            if(targetNumber==null||targetNumber==0){continue;}
+            if(targetNumber==0){continue;}
             Integer  questionNumber=0;                                       //记录已添加的题目数量
             String[] keyPoints=jsonObject.getString(keyPoint.get(i)).split(",");
             if(paper.getDifficulty()==1){             //记录难度
@@ -402,7 +418,6 @@ public class PaperServiceImpl implements IPaperService {
                       Question question=  commonQuestions.get(0);
                       questionList.add(question);
                       commonQuestions.remove(0);
-                      questionNumber++;
                       break;
                   }
                   int index=random.nextInt(commonQuestions.size()-1);
