@@ -28,7 +28,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // excludePathPatterns("/login", "/register") 表示除了登陆与注册之外，因为登陆注册不需要登陆也可以访问
         registry.addInterceptor(tLoginInterceptor).
                 addPathPatterns("/question","/subject/**","/teacher/**","/paper/**","/class/**","/manage/**","/exam/**").
-                excludePathPatterns("/teacher/login","/manage/login","/batch/enroll/{batch_id}","/batch/details/{studentId}","/batch/{id}/sign","/batch/{id}/check","/batch/{id}/start","/batch/{id}/monitor","/batch/{id}/submit");
+                excludePathPatterns("/teacher/login","/manage/login","/exam/batch/enroll/{batch_id}","/exam/batch/details/{studentId}","/exam/batch/{id}/sign","/exam/batch/{id}/check","/exam/batch/{id}/start","/exam/batch/{id}/monitor","/exam/batch/{id}/submit");
         registry.addInterceptor(mLoginInterceptor).
                 addPathPatterns("/manage/**").
                 excludePathPatterns("/teacher/login","/manage/login","/manage/reviseStudent","/manage/insertStudent","/manage/deleteStudent/","/manage/students");

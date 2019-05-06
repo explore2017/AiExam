@@ -66,10 +66,15 @@
     where student_id = #{student_id}
   </select>
     <select id="selectExamsByStudentId" resultType="com.explore.pojo.Exam">
-      select
-      <include refid="Base_Column_List" />
-      from exam
-      where class_id in (select class_id from student_class where student_id = #{studentId})
+      SELECT
+      exam.*
+      FROM
+      exam
+      INNER JOIN student_class ON student_class.student_id = #{studentId}
+      INNER JOIN class ON exam.class_id = class.id AND student_class.class_id = class.id
+      WHERE
+      exam.start_time &lt;= NOW() AND
+      exam.end_time >= NOW()
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from exam

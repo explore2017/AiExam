@@ -91,6 +91,7 @@ public class ManageServicempl implements IManageService {
         if (studentMapper.insert(student) == 1){
             student=studentMapper.selectSno(student.getSno());
             addRelation(student.getId(),ClassId,STUDENT_TYPE);    //添加班级
+            return ServerResponse.createBySuccessMessage("学生增加成功");
         }
 
         return ServerResponse.createByErrorMessage("学生增加失败");

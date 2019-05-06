@@ -96,9 +96,14 @@ public class ClassServiceImpl implements IClassService {
     public ServerResponse deleteClass(Integer id) {
            if(classMapper.selectByPrimaryKey(id)==null){   return ServerResponse.createByErrorMessage("找不到此班级");}
             studentClassMapper.deleteClassByClassId(id);
-            if(classMapper.deleteByPrimaryKey(id)==1){
-                return ServerResponse.createBySuccessMessage("删除成功");
-            }
+           try{
+               if(classMapper.deleteByPrimaryKey(id)==1){
+                   return ServerResponse.createBySuccessMessage("删除成功");
+               }
+           }catch (Exception e){
+               return ServerResponse.createByErrorMessage("不能删除该班级，因为还存在对该班级的引用");
+           }
+
 
         return ServerResponse.createByErrorMessage("删除失败");
     }
