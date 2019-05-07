@@ -3,11 +3,8 @@ package com.explore.service.Impl;
 import com.explore.common.Const;
 import com.explore.common.ServerResponse;
 import com.explore.dao.*;
-import com.explore.pojo.Batch;
-import com.explore.pojo.BatchStudent;
+import com.explore.pojo.*;
 import com.explore.pojo.Class;
-import com.explore.pojo.Exam;
-import com.explore.pojo.Student;
 import com.explore.service.IStudentService;
 import com.explore.vo.BatchStudentVO;
 import com.explore.vo.BatchVO;
@@ -39,6 +36,8 @@ public class StudentServiceImpl implements IStudentService {
     ClassMapper classMapper;
     @Autowired
     StudentClassMapper studentClassMapper;
+    @Autowired
+    ClassServiceImpl classService;
 
     @Override
     public ServerResponse<Student> login(String sno, String password) {
@@ -204,8 +203,12 @@ public class StudentServiceImpl implements IStudentService {
             if(studentClassMapper.check(id,class1.getId())!=null){
                 return  ServerResponse.createByErrorMessage("已加入班级");
             }
-        if(studentClassMapper.insertStudentClass(id,class1.getId())>0){
-            return  ServerResponse.createBySuccessMessage("加入班级成功");
+        StudentClass studentClass=new StudentClass();
+        studentClass.setClassId(class1.getId());
+        studentClass.setStudentId(id);
+       ServerResponse serverResponse= classService.addStudent(studentClass);
+        if(serverResponse.isSuccess()){
+            return ServerResponse.createBySuccessMessage("加入班级成功");
         }
         return ServerResponse.createByErrorMessage("加入班级失败");
     }

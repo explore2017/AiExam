@@ -111,7 +111,7 @@ public class StudentController {
      * 获取个人所属班级
      */
     @PostMapping("/myClass")
-    public ServerResponse<List<Class>> getMyClass(HttpSession session) {
+    public ServerResponse getMyClass(HttpSession session) {
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
             return ServerResponse.needLogin();

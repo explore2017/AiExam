@@ -273,7 +273,7 @@ public class PaperServiceImpl implements IPaperService {
         if(subjectMapper.selectByPrimaryKey(class1.getSubjectId())==null){
             return  ServerResponse.createByErrorMessage("找不到班级科目");
         }
-        List<Paper> paperList=  paperMapper.selectPaperBySubject(class1.getId(),teacher.getUsername());
+        List<Paper> paperList=  paperMapper.selectPaperBySubject(class1.getSubjectId(),teacher.getUsername());
         return ServerResponse.createBySuccess(paperList);
     }
 
