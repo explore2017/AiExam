@@ -153,10 +153,23 @@ public class ClassServiceImpl implements IClassService {
     }
 
     @Override
-    public ServerResponse<List<Class>> getClassesByStudentID(Integer id) {
+    public ServerResponse getClassesByStudentID(Integer id) {
         List<Class> classes = classMapper.getClassesByStudentID(id);
-
-        return ServerResponse.createBySuccess(classes);
+        List<HashMap<String,Object>>  allData=new ArrayList<>();
+        for(Class class1:classes){
+            Teacher teacher =teacherMapper.selectByPrimaryKey(class1.getTeacherId());
+            Subject subject=subjectMapper.selectByPrimaryKey(class1.getSubjectId());
+            HashMap<String,Object> data=new HashMap<>();
+            if(null==teacher){
+                data.put("teacherName","");
+            }else {
+                data.put("teacherName",teacher.getName());
+            }
+            data.put("subject",subject);
+            data.put("class",class1);
+            allData.add(data);
+        }
+        return ServerResponse.createBySuccess(allData);
     }
     public static String getClassNo(){
         String randomcode2 = "";

@@ -162,8 +162,13 @@ public class ManageServicempl implements IManageService {
 
     @Override
     public ServerResponse outTeacher(int id) {
-        teacherSubjectMapper.deleteSubjectByTeacherId(id);
-        int count = teacherMapper.deleteByPrimaryKey(id);
+        int count;
+        try{
+            teacherSubjectMapper.deleteSubjectByTeacherId(id);
+            count = teacherMapper.deleteByPrimaryKey(id);
+        }catch (Exception e){
+            return ServerResponse.createByErrorMessage("删除失败，请先删除该老师的班级");
+        }
         if (count == 1) {
             return ServerResponse.createBySuccessMessage("该老师删除成功");
         }
