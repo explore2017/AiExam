@@ -33,7 +33,13 @@
     <select id="selectPaperIdByBatchId" resultType="java.lang.Integer">
       select paper_id from batch where id = #{batch_id}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <select id="selectBatchesTimeOut" resultType="com.explore.pojo.Batch">
+    select
+    <include refid="Base_Column_List" />
+    from batch
+    where  #{date} > end_time and `describe` is null
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from batch
     where id = #{id,jdbcType=INTEGER}
   </delete>

@@ -140,7 +140,6 @@ public class StudentController {
         return studentService.getMyEnrollBatch(student.getId());
     }
 
-
     @PostMapping("/batch/enroll")
     public ServerResponse batchEnroll(@RequestBody Batch batch, HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
@@ -159,8 +158,6 @@ public class StudentController {
         return studentService.batchCancel(batch.getId(),student.getId());
     }
 
-
-
     @GetMapping("/score/me")
     public ServerResponse score(HttpSession session){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
@@ -169,6 +166,7 @@ public class StudentController {
         }
         return studentService.getMyScore(student.getId());
     }
+
     @PostMapping("/class")
     public ServerResponse joinClass(HttpSession session,String classNo){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
@@ -177,12 +175,13 @@ public class StudentController {
         }
         return studentService.joinClass(student.getId(),classNo);
     }
+
     @DeleteMapping("/class/{id}")
-    public ServerResponse exitClass(HttpSession session){
+    public ServerResponse exitClass(HttpSession session,@PathVariable("id") Integer classId){
         Student student = (Student) session.getAttribute(Const.CURRENT_USER);
         if (student == null) {
             return ServerResponse.needLogin();
         }
-        return studentService.exitClass(student.getId());
+        return studentService.exitClass(student.getId(),classId);
     }
 }

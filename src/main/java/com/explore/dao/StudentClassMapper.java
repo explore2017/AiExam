@@ -33,4 +33,5 @@ public interface StudentClassMapper {
 
     @Delete("delete from student_class where class_id=#{classId} and student_id=#{studentId}")
     int deleteStudent(@Param("studentId")Integer studentId,@Param("classId")Integer classId);
+
 }

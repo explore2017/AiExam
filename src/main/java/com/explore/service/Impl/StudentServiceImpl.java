@@ -132,6 +132,11 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public ServerResponse batchEnroll(Integer batchId, Integer studentId) {
+        //验证考试是否开始了
+        Batch checkTimeBatch = batchMapper.selectByPrimaryKey(batchId);
+        if(checkTimeBatch.getStartTime().compareTo(new Date())>=0){
+            return ServerResponse.createByErrorMessage("该批次已开始，报名失败！");
+        }
         //验证是否已经报名了该考试
         int count = batchStudentMapper.checkHasEnroll(studentId,batchId);
         if (count>0){
@@ -157,6 +162,11 @@ public class StudentServiceImpl implements IStudentService {
     @Override
     public ServerResponse batchCancel(Integer batchId, Integer studentId) {
         //TODO 批次开始后不能删除（包括已考试）
+        BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
+        int status = batchStudent.getStatus();
+        if (status!= Const.BATCH_STUDENT_STATUS.NOT_SIGN.getStatus()){
+            return ServerResponse.createByErrorMessage("取消失败，当前状态不允许取消");
+        }
         int count = batchStudentMapper.cancel(studentId,batchId);
         if (count>0){
             return ServerResponse.createBySuccessMessage("取消成功");
@@ -199,7 +209,7 @@ public class StudentServiceImpl implements IStudentService {
     public ServerResponse joinClass(Integer id,String classNo) {
         Class class1=classMapper.checkHasEnroll(classNo.toUpperCase());
         if(class1==null){
-            return  ServerResponse.createByErrorMessage("班级号错误");
+            return  ServerResponse.createByErrorMessage("找不到该班级号对应的班级");
         }
             if(studentClassMapper.check(id,class1.getId())!=null){
                 return  ServerResponse.createByErrorMessage("已加入班级");
@@ -211,8 +221,8 @@ public class StudentServiceImpl implements IStudentService {
     }
 
     @Override
-    public ServerResponse exitClass(Integer id) {
-        studentClassMapper.deleteClassByStudentId(id);
+    public ServerResponse exitClass(Integer studentId,Integer classId) {
+        studentClassMapper.deleteStudent(studentId,classId);
         return ServerResponse.createBySuccessMessage("退出班级成功");
     }
 

@@ -188,6 +188,7 @@ public class ExamController {
     public ServerResponse readPaper(@PathVariable("id") Integer batchStudentId,HttpSession session){
         return examService.readPaper(batchStudentId);
     }
+
     @PostMapping("/read_paper/{id}")
     @ApiOperation("提交阅卷")
     public ServerResponse readPaperSubmit(@PathVariable("id") Integer batchStudentId,@RequestBody PaperRecordForm model,HttpSession session){

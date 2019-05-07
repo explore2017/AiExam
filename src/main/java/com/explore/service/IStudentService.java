@@ -24,5 +24,5 @@ public interface IStudentService {
 
     ServerResponse joinClass(Integer id,String classNo);
 
-    ServerResponse exitClass(Integer id);
+    ServerResponse exitClass(Integer studentId,Integer classId);
 }

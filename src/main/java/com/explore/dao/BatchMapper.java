@@ -23,4 +23,6 @@ public interface BatchMapper {
     int selectExamIdByBatchId(Integer batch_id);
 
     Integer selectPaperIdByBatchId(Integer batchId);
+
+    List<Batch> selectBatchesTimeOut(String date);
 }

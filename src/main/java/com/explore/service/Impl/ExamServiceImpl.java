@@ -230,8 +230,8 @@ public class ExamServiceImpl implements IExamService {
         Batch batch = batchMapper.selectByPrimaryKey(batchId);
         Date now = new Date();
         int flag = batch.getEndTime().compareTo(now);
+        //未到时间
         if (flag>=0){
-            //未到时间
             paperRecordMapper.updateRecords(studentId,batchId,records);
             //手动提交
             if (isSubmit){
@@ -243,11 +243,14 @@ public class ExamServiceImpl implements IExamService {
                 return ServerResponse.createBySuccessMessage("提交考试成功");
             }
         }else{
-            //时间到
+            //时间到 将考试状态设置为已完成
             BatchStudent batchStudent = batchStudentMapper.selectByStudentIdAndBatchId(studentId,batchId);
             if(batchStudent.getStatus()==Const.BATCH_STUDENT_STATUS.IN_PROGRESS.getStatus()){
-                batchStudent.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
-                batchStudentMapper.updateByPrimaryKeySelective(batchStudent);
+                BatchStudent newBatchStudent = new BatchStudent();
+                newBatchStudent.setId(batchStudent.getId());
+                newBatchStudent.setStatus(Const.BATCH_STUDENT_STATUS.FINISHED.getStatus());
+                newBatchStudent.setSubmitTime(now);
+                batchStudentMapper.updateByPrimaryKeySelective(newBatchStudent);
             }
             autoJudge(studentId,batchId);
         }
@@ -328,6 +331,7 @@ public class ExamServiceImpl implements IExamService {
     /**
      * 自动阅卷
      */
+    @Override
     public void autoJudge(Integer studentId,Integer batchId){
         //判断是否能全部自动阅卷
         boolean canAutoCheck = true;

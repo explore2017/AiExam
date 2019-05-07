@@ -8,7 +8,7 @@ import com.explore.vo.PaperQuestionVo;
 import java.util.List;
 
 public interface IExamService {
-    ServerResponse getExams(String role,Integer teacherId);
+    ServerResponse getExams(String role, Integer teacherId);
 
     List<ExamBatchVo> getExamBatchVoByStudentId(Integer id);
 
@@ -20,9 +20,11 @@ public interface IExamService {
 
     ServerResponse startReply(Integer studentId, Integer batchId);
 
-    ServerResponse monitor(Integer studentId, Integer batchId, List<PaperQuestionVo> records,Boolean isSubmit);
+    ServerResponse monitor(Integer studentId, Integer batchId, List<PaperQuestionVo> records, Boolean isSubmit);
 
     ServerResponse readPaper(Integer batchStudentId);
 
-    ServerResponse readPaperSubmit(Integer batchStudentId,List<PaperQuestionVo> records);
+    ServerResponse readPaperSubmit(Integer batchStudentId, List<PaperQuestionVo> records);
+
+    void autoJudge(Integer studentId, Integer batchId);
 }
