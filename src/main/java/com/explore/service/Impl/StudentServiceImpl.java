@@ -133,7 +133,7 @@ public class StudentServiceImpl implements IStudentService {
     public ServerResponse batchEnroll(Integer batchId, Integer studentId) {
         //验证考试是否开始了
         Batch checkTimeBatch = batchMapper.selectByPrimaryKey(batchId);
-        if(checkTimeBatch.getStartTime().compareTo(new Date())>=0){
+        if(checkTimeBatch.getStartTime().compareTo(new Date())<=0){
             return ServerResponse.createByErrorMessage("该批次已开始，报名失败！");
         }
         //验证是否已经报名了该考试
