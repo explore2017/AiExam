@@ -25,4 +25,6 @@ public interface ClassMapper {
     List<Class> selectTeacherClass(Integer teacherId);
 
     Class checkHasEnroll(String classNo);
+
+    List<String> getKeyPoint(Integer classId);
 }

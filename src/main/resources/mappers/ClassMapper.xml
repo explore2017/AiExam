@@ -166,4 +166,11 @@
   <select id="checkHasEnroll" resultMap="BaseResultMap" >
     select * from class where class_no=#{classNo}
   </select>
+  <select id="getKeyPoint" resultType="java.lang.String" >
+    SELECT DISTINCT
+      question.key_point
+    FROM
+      question
+        INNER JOIN class ON class.id = #{classId} AND question.subject_id = class.subject_id
+  </select>
 </mapper>

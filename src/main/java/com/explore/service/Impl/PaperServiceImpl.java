@@ -318,26 +318,31 @@ public class PaperServiceImpl implements IPaperService {
         }catch (Exception e){
             ServerResponse.createByErrorMessage("发生了未知错误");
         }
-
+        Double easy=jsonObject.getDouble(number.get(6));
+        Double middle1=jsonObject.getDouble(keyPoint.get(6));
+        Double hard1=1-easy-middle1;
         List<Question> allQuestions=  questionMapper.selectQuestionsByCondition(paper.getSubjectId(),null,null,null);
         for(int i=0;i<6;i++){
             final Integer targetNumber=jsonObject.getInt(number.get(i));
             if(targetNumber==0){continue;}
             Integer  questionNumber=0;                                       //记录已添加的题目数量
             String[] keyPoints=jsonObject.getString(keyPoint.get(i)).split(",");
-            if(paper.getDifficulty()==1){             //记录难度
-                simple=(int)(0.4*targetNumber);
-                middle=(int)(0.4*targetNumber);
-                hard=(int)(0.2*targetNumber);
-            }else if(paper.getDifficulty()==2){
-                simple=(int)(0.3*targetNumber);
-                middle=(int)(0.4*targetNumber);
-                hard=(int)(0.3*targetNumber);
-            } else{
-                simple=(int)(0.6*targetNumber);
-                middle=(int)(0.3*targetNumber);
-                hard=(int)(0.1*targetNumber);
-            }
+//            if(paper.getDifficulty()==1){             //记录难度 中等
+//                simple=(int)(0.4*targetNumber);
+//                middle=(int)(0.4*targetNumber);
+//                hard=(int)(0.2*targetNumber);
+//            }else if(paper.getDifficulty()==2){        //困难
+//                simple=(int)(0.3*targetNumber);
+//                middle=(int)(0.4*targetNumber);
+//                hard=(int)(0.3*targetNumber);
+//            } else{                            //简单
+//                simple=(int)(0.6*targetNumber);
+//                middle=(int)(0.3*targetNumber);
+//                hard=(int)(0.1*targetNumber);
+//            }
+                   simple=(int)(easy*targetNumber);
+                   middle=(int)(middle1*targetNumber);
+                   hard=(int)(hard1*targetNumber);
                     List<Question> commonQuestions=new ArrayList<>();          //分出普通的问题集合和知识点相关的集合
                     List<Question> keyPointQuestions=new ArrayList<>();
                     boolean questionStatus=false;

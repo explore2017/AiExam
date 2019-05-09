@@ -16,4 +16,5 @@ public interface IClassService {
     ServerResponse deleteStudent(Integer studentId,Integer classId);
     ServerResponse addStudent(StudentClass studentClass);
     ServerResponse getClassesByStudentID(Integer id);
+    ServerResponse getKeyPoint(Integer classId);
 }

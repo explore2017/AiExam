@@ -171,6 +171,13 @@ public class ClassServiceImpl implements IClassService {
         }
         return ServerResponse.createBySuccess(allData);
     }
+
+    @Override
+    public ServerResponse getKeyPoint(Integer classId) {
+        List<String> keyPoints=classMapper.getKeyPoint(classId);
+        return ServerResponse.createBySuccess(keyPoints);
+    }
+
     public static String getClassNo(){
         String randomcode2 = "";
         String model = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

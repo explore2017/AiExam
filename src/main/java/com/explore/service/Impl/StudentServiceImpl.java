@@ -225,8 +225,11 @@ public class StudentServiceImpl implements IStudentService {
 
     @Override
     public ServerResponse exitClass(Integer studentId,Integer classId) {
-        studentClassMapper.deleteStudent(studentId,classId);
-        return ServerResponse.createBySuccessMessage("退出班级成功");
+        ServerResponse serverResponse= classService.deleteStudent(studentId,classId);
+        if(serverResponse.isSuccess()){
+            return ServerResponse.createBySuccessMessage("退出班级成功");
+        }
+        return ServerResponse.createByErrorMessage("退出班级失败");
     }
 
 }

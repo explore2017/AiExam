@@ -9,6 +9,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -61,6 +63,11 @@ public class QuestionController {
         return questionService.getQuestionsByCondition(subjectId,difficulty,questionTypeId,keyPoint);
     }
 
+    @PostMapping("/large")
+    public  ServerResponse batchImport(MultipartHttpServletRequest request){
+        MultipartFile file = request.getFile("file");
+        return questionService.batchImport(file);
+    }
 
 
 

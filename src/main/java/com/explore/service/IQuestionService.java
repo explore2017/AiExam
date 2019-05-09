@@ -2,6 +2,7 @@ package com.explore.service;
 
 import com.explore.common.ServerResponse;
 import com.explore.pojo.Question;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public interface IQuestionService {
     ServerResponse<Question> getQuestionsByQuestionId(Integer questionId);
     ServerResponse<List<Question>> getAllQuestions();
     ServerResponse<List<Question>> getQuestionsByCondition(Integer subjectId,Integer difficulty,Integer questionTypeId,String keyPoint);
+    ServerResponse batchImport(MultipartFile file);
 }

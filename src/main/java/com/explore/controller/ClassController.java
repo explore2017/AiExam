@@ -85,6 +85,10 @@ public class ClassController {
         ServerResponse serverResponse=classesService.addStudent(studentClass);
         return serverResponse;
     }
+    @GetMapping("/key_point")
+    public ServerResponse getKeyPoint(Integer classId){
+        return classesService.getKeyPoint(classId);
+    }
 
 
 }

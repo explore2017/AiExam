@@ -4,13 +4,17 @@ import com.explore.common.ServerResponse;
 import com.explore.dao.QuestionMapper;
 import com.explore.pojo.Question;
 import com.explore.service.IQuestionService;
+import com.explore.utils.ReadExcel;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 @Transactional
 @Service
 public class QuestionServiceImpl implements IQuestionService {
@@ -75,6 +79,15 @@ public class QuestionServiceImpl implements IQuestionService {
         }
         List<Question> questionList=questionMapper.selectQuestionsByCondition(subjectId,difficulty,questionTypeId,keyPoint);
         return ServerResponse.createBySuccess(questionList);
+    }
+
+    @Override
+    public ServerResponse batchImport(MultipartFile file) {
+        List<Map<Integer,String>> alldata= ReadExcel.readExcelContentByList(file);
+        for(Map<Integer,String> data:alldata ){
+
+        }
+        return ServerResponse.createBySuccess();
     }
 
 
