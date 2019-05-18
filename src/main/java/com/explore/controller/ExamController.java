@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +84,14 @@ public class ExamController {
     @PostMapping
     public ServerResponse add(@RequestBody Exam exam){
         ServerResponse serverResponse = examService.save(exam);
+        return serverResponse;
+    }
+    /**
+     * 修改考试
+     */
+    @PutMapping
+    public ServerResponse change(@RequestBody Exam exam){
+        ServerResponse serverResponse = examService.change(exam);
         return serverResponse;
     }
 
@@ -193,6 +202,18 @@ public class ExamController {
     @ApiOperation("提交阅卷")
     public ServerResponse readPaperSubmit(@PathVariable("id") Integer batchStudentId,@RequestBody PaperRecordForm model,HttpSession session){
         return examService.readPaperSubmit(batchStudentId,model.getRecords());
+    }
+
+    @GetMapping("/score")
+    @ApiOperation("考试成绩")
+    public ServerResponse examScore( Integer examId){
+        return examService.examScore(examId);
+    }
+
+    @GetMapping("/score/export")
+    @ApiOperation("考试成绩")
+    public void  exportScore(Integer examId, HttpServletResponse response){
+      examService.exportScore(examId,response);
     }
 
     private ServerResponse checkCanStart(Integer studentId,Integer batchId){

@@ -21,7 +21,7 @@ public class Exam {
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm")
     private Date endTime;
 
-    private Integer creatorId;
+    private Double passScore;
 
     private Date createTime;
 
@@ -85,12 +85,12 @@ public class Exam {
         this.endTime = endTime;
     }
 
-    public Integer getCreatorId() {
-        return creatorId;
+    public Double getPassScore() {
+        return passScore;
     }
 
-    public void setCreatorId(Integer creatorId) {
-        this.creatorId = creatorId;
+    public void setPassScore(Double passScore) {
+        this.passScore = passScore;
     }
 
     public Date getCreateTime() {

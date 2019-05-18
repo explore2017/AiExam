@@ -187,4 +187,14 @@
     delete from batch_student
     where  batch_id = #{batchId}
   </delete>
+  <select id="selectExamScore" resultType="com.explore.pojo.BatchStudent">
+    select
+      batch_student.*
+    FROM
+    batch_student
+    INNER JOIN batch ON batch.exam_id =#{examId}
+    WHERE
+    batch_student.batch_id = batch.id AND
+    batch_student.`status` >= 4
+  </select>
 </mapper>

@@ -38,4 +38,6 @@ public interface BatchStudentMapper {
     int checkCanStart(@Param("studentId") Integer studentId,@Param("batchId") Integer batchId);
 
     List<BatchStudent> selectAfterFinishedByStudentId(Integer studentId);
+
+    List<BatchStudent> selectExamScore(Integer examId);
 }

@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 
@@ -67,6 +69,12 @@ public class QuestionController {
     public  ServerResponse batchImport(MultipartHttpServletRequest request){
         MultipartFile file = request.getFile("file");
         return questionService.batchImport(file);
+    }
+
+    @PostMapping("/img")
+    public  ServerResponse uploadImg(MultipartHttpServletRequest request) throws FileNotFoundException {
+        MultipartFile file = request.getFile("file");
+        return questionService.uploadImg(file,request);
     }
 
 

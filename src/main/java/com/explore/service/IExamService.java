@@ -5,6 +5,7 @@ import com.explore.pojo.*;
 import com.explore.vo.ExamBatchVo;
 import com.explore.vo.PaperQuestionVo;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface IExamService {
@@ -13,6 +14,8 @@ public interface IExamService {
     List<ExamBatchVo> getExamBatchVoByStudentId(Integer id);
 
     ServerResponse save(Exam exam);
+
+    ServerResponse change(Exam exam);
 
     ServerResponse autoCheck(ExamStudent examStudent, Paper paper, List<Question> questions);
 
@@ -25,6 +28,10 @@ public interface IExamService {
     ServerResponse readPaper(Integer batchStudentId);
 
     ServerResponse readPaperSubmit(Integer batchStudentId, List<PaperQuestionVo> records);
+
+    ServerResponse examScore(Integer examId);
+
+    void  exportScore(Integer examId, HttpServletResponse response);
 
     void autoJudge(Integer studentId, Integer batchId);
 }

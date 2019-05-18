@@ -8,6 +8,7 @@ import com.explore.pojo.Class;
 import com.explore.service.IBatchStudentService;
 import com.explore.service.IExamService;
 import com.explore.thread.AutoCheck;
+import com.explore.utils.ExcelUtil;
 import com.explore.vo.ExamBatchVo;
 import com.explore.vo.PaperComposeVo;
 import com.explore.vo.PaperQuestionVo;
@@ -17,13 +18,17 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.crypto.Data;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -59,6 +64,8 @@ public class ExamServiceImpl implements IExamService {
     ModelMapper modelMapper;
     @Autowired
     PaperRecordMapper paperRecordMapper;
+    @Autowired
+    StudentMapper studentMapper;
 
     @Override
     public ServerResponse getExams(String role,Integer teacherId) {
@@ -95,6 +102,11 @@ public class ExamServiceImpl implements IExamService {
 
     @Override
     public ServerResponse save(Exam exam) {
+        Paper paper=paperService.getPaperById(exam.getPaperId()).getData();
+        if(paper==null){
+            return  ServerResponse.createByErrorMessage("添加考试失败");
+        }
+        exam.setPassScore(paper.getPassScore()*0.6);
         exam.setCreateTime(new Date());
         exam.setUpdateTime(new Date());
         if(examMapper.insert(exam)>0){
@@ -118,6 +130,12 @@ public class ExamServiceImpl implements IExamService {
             }
         }
         return ServerResponse.createBySuccessMessage("创建考试成功");
+    }
+
+    @Override
+    public ServerResponse change(Exam exam) {
+        examMapper.updateByPrimaryKeySelective(exam);
+        return ServerResponse.createBySuccessMessage("设置成功");
     }
 
     @Override
@@ -294,6 +312,83 @@ public class ExamServiceImpl implements IExamService {
         return ServerResponse.createByErrorMessage("提交失败");
     }
 
+    @Override
+    public ServerResponse examScore(Integer examId) {
+        Exam exam=examMapper.selectByPrimaryKey(examId);
+        if(exam==null){
+            return ServerResponse.createByErrorMessage("找不到该考试");
+        }
+        List<Map<String,Object>> allData=new ArrayList<>();
+        List<BatchStudent>  batchStudentList=batchStudentMapper.selectExamScore(examId);
+        for (BatchStudent batchStudent : batchStudentList) {
+            Map<String,Object> map=new HashMap<>();
+            Student student =studentMapper.selectByPrimaryKey(batchStudent.getStudentId());
+            if(null!=student){
+                map.put("sno",student.getSno());
+                map.put("name",student.getName());
+                map.put("exam",batchStudent);
+                map.put("passScore",exam.getPassScore());
+                allData.add(map);
+            }
+        }
+        return ServerResponse.createBySuccess(allData);
+    }
+
+    @Override
+    public void  exportScore(Integer examId,HttpServletResponse response) {
+        Exam exam=examMapper.selectByPrimaryKey(examId);
+        if(exam==null){
+            return ;
+        }
+        Class class1=classMapper.selectByPrimaryKey(exam.getClassId());
+        if(class1==null){
+            return ;
+        }
+        List<Map<String,Object>> allData=(List<Map<String, Object>>) examScore(examId).getData();
+        //excel标题
+         String[] title = {"序号","学号","姓名","成绩","开始时间","交卷时间","是否及格"};
+         //excel文件名
+        String fileName = exam.getName()+"成绩报表"+".xls";
+        //sheet名
+         String sheetName = class1.getName()+"班级成绩报表";
+         String[][] content=new String[allData.size()][7];
+         Double passScore=exam.getPassScore();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+         for (int i = 0; i < allData.size(); i++) {
+            Map<String,Object> map = allData.get(i);
+            content[i][0] = i+1+"";
+            content[i][1] = map.get("sno").toString();
+            content[i][2] = map.get("name").toString();
+            BatchStudent batchStudent =(BatchStudent)map.get("exam");
+            if(batchStudent.getStatus()==4){
+                content[i][3]="缺考";
+                content[i][4]="缺考";
+                content[i][5]="缺考";
+                content[i][6]="缺考";
+            }else{
+                content[i][3]=batchStudent.getScore().toString();
+                content[i][4]=sdf.format(batchStudent.getStartTime());
+                content[i][5]=sdf.format(batchStudent.getSubmitTime());
+                if(batchStudent.getScore()>=passScore){
+                    content[i][6]="是";
+                }else{
+                    content[i][6]="否";
+                }
+
+            }
+         }
+         HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, content, null);
+        try {
+            this.setResponseHeader(response, fileName);
+            OutputStream os = response.getOutputStream();
+            wb.write(os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+           e.printStackTrace();
+          }
+    }
+
     private List<PaperQuestionVo> packagePaperRecordToPaperQuestionVo(List<PaperRecord> paperRecords,Boolean answer){
         List<PaperQuestionVo> paperQuestionVos = new ArrayList<>();
         for (PaperRecord paperRecord : paperRecords) {
@@ -317,6 +412,22 @@ public class ExamServiceImpl implements IExamService {
         return paperQuestionVos;
     }
 
+    public void setResponseHeader(HttpServletResponse response, String fileName) {
+        try {
+            try {
+                fileName = new String(fileName.getBytes(),"ISO8859-1");
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            response.setContentType("application/octet-stream;charset=ISO8859-1");
+            response.setHeader("Content-Disposition", "attachment;filename="+ fileName);
+            response.addHeader("Pargam", "no-cache");
+            response.addHeader("Cache-Control", "no-cache");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
     /**
      * 判断问题是否需要自动批改
      */

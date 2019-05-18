@@ -16,10 +16,11 @@
     <result column="key_point" jdbcType="VARCHAR" property="keyPoint" />
     <result column="default_score" jdbcType="VARCHAR" property="defaultScore" />
     <result column="selects" jdbcType="VARCHAR" property="selects" />
+    <result column="img" jdbcType="VARCHAR" property="img" />
   </resultMap>
   <sql id="Base_Column_List">
     id, title, content, question_type_id, answer, create_time, update_time, is_subjective,
-    difficulty, subject_id, status, key_point, selects
+    difficulty, subject_id, status, key_point, selects,img
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -72,12 +73,12 @@
     insert into question (id, title, content, 
       question_type_id, answer, create_time, 
       update_time, is_subjective, difficulty, 
-      subject_id, status, key_point,default_score,selects
+      subject_id, status, key_point,default_score,selects,img
       )
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
       #{questionTypeId,jdbcType=INTEGER}, #{answer,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{isSubjective,jdbcType=INTEGER}, #{difficulty,jdbcType=INTEGER}, 
-      #{subjectId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{keyPoint,jdbcType=VARCHAR}, #{defaultScore,jdbcType=VARCHAR}, #{selects,jdbcType=VARCHAR}
+      #{subjectId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{keyPoint,jdbcType=VARCHAR}, #{defaultScore,jdbcType=VARCHAR}, #{selects,jdbcType=VARCHAR}, #{img,jdbcType=VARCHAR}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.explore.pojo.Question">
@@ -92,7 +93,7 @@
       difficulty = #{difficulty,jdbcType=INTEGER},
       subject_id = #{subjectId,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
-      key_point = #{keyPoint,jdbcType=VARCHAR},default_score= #{defaultScore,jdbcType=VARCHAR},selects= #{selects,jdbcType=VARCHAR}
+      key_point = #{keyPoint,jdbcType=VARCHAR},default_score= #{defaultScore,jdbcType=VARCHAR},selects= #{selects,jdbcType=VARCHAR},img= #{img,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

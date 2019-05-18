@@ -31,6 +31,8 @@ public class Question {
 
     private String selects;
 
+    private String img;
+
     public Integer getId() {
         return id;
     }
@@ -141,5 +143,13 @@ public class Question {
 
     public void setKeyPoint(String keyPoint) {
         this.keyPoint = keyPoint == null ? null : keyPoint.trim();
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

@@ -9,7 +9,7 @@
     <result column="subscribe" jdbcType="VARCHAR" property="subscribe" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="pass_score" jdbcType="DOUBLE" property="passScore" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="class_id" jdbcType="INTEGER" property="classId" />
@@ -22,7 +22,7 @@
     <result column="subscribe" jdbcType="VARCHAR" property="subscribe" />
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-    <result column="creator_id" jdbcType="INTEGER" property="creatorId" />
+    <result column="pass_score" jdbcType="DOUBLE" property="passScore" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="batchId" jdbcType="INTEGER" property="batchId" />
@@ -34,7 +34,7 @@
     <!--<result column="class_id" jdbcType="INTEGER" property="classId" />-->
   </resultMap>
   <sql id="Base_Column_List">
-    id, `name`, paper_id, exam_type_id, subscribe, start_time, end_time, creator_id,
+    id, `name`, paper_id, exam_type_id, subscribe, start_time, end_time, pass_score,
     create_time, update_time,class_id
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -83,11 +83,11 @@
   <insert id="insert" parameterType="com.explore.pojo.Exam"  useGeneratedKeys="true" keyProperty="id">
     insert into exam (id, `name`, paper_id,
       exam_type_id, subscribe, start_time, 
-      end_time, creator_id, create_time, 
+      end_time, pass_score, create_time, 
       update_time,class_id)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{paperId,jdbcType=INTEGER}, 
       #{examTypeId,jdbcType=INTEGER}, #{subscribe,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{creatorId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{passScore,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP}, #{classId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.explore.pojo.Exam">
@@ -114,8 +114,8 @@
       <if test="endTime != null">
         end_time,
       </if>
-      <if test="creatorId != null">
-        creator_id,
+      <if test="passScore != null">
+        pass_score,
       </if>
       <if test="createTime != null">
         create_time,
@@ -149,8 +149,8 @@
       <if test="endTime != null">
         #{endTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="creatorId != null">
-        #{creatorId,jdbcType=INTEGER},
+      <if test="passScore != null">
+        #{passScore,jdbcType=DOUBLE},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -185,8 +185,8 @@
       <if test="endTime != null">
         end_time = #{endTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="creatorId != null">
-        creator_id = #{creatorId,jdbcType=INTEGER},
+      <if test="passScore != null">
+        pass_score = #{passScore,jdbcType=DOUBLE},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -208,7 +208,7 @@
       subscribe = #{subscribe,jdbcType=VARCHAR},
       start_time = #{startTime,jdbcType=TIMESTAMP},
       end_time = #{endTime,jdbcType=TIMESTAMP},
-      creator_id = #{creatorId,jdbcType=INTEGER},
+      pass_score = #{passScore,jdbcType=DOUBLE},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
         class_id = #{classId,jdbcType=INTEGER}

@@ -1,5 +1,6 @@
 package com.explore.dao;
 
+import com.explore.pojo.BatchStudent;
 import com.explore.pojo.Exam;
 import com.explore.vo.ExamBatchVo;
 import org.springframework.stereotype.Component;
@@ -26,4 +27,6 @@ public interface ExamMapper {
     List<Exam> selectExamsByStudentId(Integer id);
 
     List<Exam> selectTeacherExams(Integer teacherId);
+
+
 }
