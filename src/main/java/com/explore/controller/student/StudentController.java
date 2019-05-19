@@ -184,4 +184,13 @@ public class StudentController {
         }
         return studentService.exitClass(student.getId(),classId);
     }
+
+    @GetMapping("/exam/paper")
+    public ServerResponse getExamPaper(Integer batchId,HttpSession session){
+        Student student = (Student) session.getAttribute(Const.CURRENT_USER);
+        if (student == null) {
+            return ServerResponse.needLogin();
+        }
+        return studentService.getExamPaper(student.getId(),batchId);
+    }
 }

@@ -141,4 +141,5 @@
     where exam_id = #{examId,jdbcType=INTEGER}
       and student_id = #{studentId,jdbcType=INTEGER}
   </update>
+
 </mapper>

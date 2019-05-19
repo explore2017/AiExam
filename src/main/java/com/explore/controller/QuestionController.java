@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -65,16 +66,21 @@ public class QuestionController {
         return questionService.getQuestionsByCondition(subjectId,difficulty,questionTypeId,keyPoint);
     }
 
-    @PostMapping("/large")
-    public  ServerResponse batchImport(MultipartHttpServletRequest request){
+    @PostMapping("/large_question")
+    public  ServerResponse batchImport(MultipartHttpServletRequest request, Integer subjectId){
         MultipartFile file = request.getFile("file");
-        return questionService.batchImport(file);
+        return questionService.batchImport(file,subjectId);
     }
 
     @PostMapping("/img")
     public  ServerResponse uploadImg(MultipartHttpServletRequest request) throws FileNotFoundException {
         MultipartFile file = request.getFile("file");
         return questionService.uploadImg(file,request);
+    }
+
+    @GetMapping("/importFile")
+    public void getFile(HttpServletResponse response){
+        questionService.getFile(response);
     }
 
 

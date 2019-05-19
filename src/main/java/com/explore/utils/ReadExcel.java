@@ -79,11 +79,14 @@ public class ReadExcel {
         // 正文内容应该从第二行开始,第一行为表头的标题
         for (int i = 1; i <= rowNum; i++) {
             row = sheet.getRow(i);
+            if(row==null){return  list;}
             int j = 0;
             Map<Integer,String> map = new HashMap<Integer, String>();
             while (j < colNum) {
-                row.getCell(j).setCellType(Cell.CELL_TYPE_STRING);
-                map.put(j, row.getCell(j).getStringCellValue());
+                if( row.getCell(j)!=null){
+                    row.getCell(j).setCellType(Cell.CELL_TYPE_STRING);
+                    map.put(j, row.getCell(j).getStringCellValue());
+                }
                 j++;
             }
             list.add(map);

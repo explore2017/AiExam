@@ -197,4 +197,15 @@
     batch_student.batch_id = batch.id AND
     batch_student.`status` >= 4
   </select>
+  <select id="checkExamEnd" resultType="java.lang.Integer">
+    SELECT
+      count(*)
+    FROM
+      batch_student
+        INNER JOIN batch ON batch.exam_id = #{examId}
+    WHERE
+      batch_student.batch_id = batch.id AND
+      batch_student.`status` &lt;4 AND
+      batch.end_time &lt; NOW()
+  </select>
 </mapper>

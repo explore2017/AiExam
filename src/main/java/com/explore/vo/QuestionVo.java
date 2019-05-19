@@ -19,4 +19,6 @@ public class QuestionVo {
     private Integer questionTypeId;
 
     private String answer;
+
+    private  String img;
 }

@@ -25,4 +25,6 @@ public interface IStudentService {
     ServerResponse joinClass(Integer id,String classNo);
 
     ServerResponse exitClass(Integer studentId,Integer classId);
+
+    ServerResponse getExamPaper(Integer studentId,Integer batchId);
 }

@@ -40,4 +40,6 @@ public interface BatchStudentMapper {
     List<BatchStudent> selectAfterFinishedByStudentId(Integer studentId);
 
     List<BatchStudent> selectExamScore(Integer examId);
+
+    int checkExamEnd(Integer examId);
 }

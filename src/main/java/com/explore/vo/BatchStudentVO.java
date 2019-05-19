@@ -17,4 +17,5 @@ public class BatchStudentVO extends BatchStudent {
 
     private Exam exam;
 
+    private  Boolean examPaperStatus;
 }

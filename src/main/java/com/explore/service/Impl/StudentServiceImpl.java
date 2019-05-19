@@ -9,6 +9,7 @@ import com.explore.service.IStudentService;
 import com.explore.vo.BatchStudentVO;
 import com.explore.vo.BatchVO;
 import com.explore.vo.ExamVO;
+import com.explore.vo.PaperQuestionVo;
 import io.swagger.models.auth.In;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,10 @@ public class StudentServiceImpl implements IStudentService {
     StudentClassMapper studentClassMapper;
     @Autowired
     ClassServiceImpl classService;
+    @Autowired
+    PaperRecordMapper paperRecordMapper;
+    @Autowired
+    ExamServiceImpl examService;
 
     @Override
     public ServerResponse<Student> login(String sno, String password) {
@@ -182,8 +187,14 @@ public class StudentServiceImpl implements IStudentService {
             BatchStudentVO batchStudentVO = modelMapper.map(batchStudent,BatchStudentVO.class);
             Batch batch = batchMapper.selectByPrimaryKey(batchStudent.getBatchId());
             batchStudentVO.setBatch(batch);
+            if(batchStudentMapper.checkExamEnd(batch.getExamId())>0){
+                batchStudentVO.setExamPaperStatus(false);
+            }else {
+                batchStudentVO.setExamPaperStatus(true);
+            }
             batchStudentVO.setExam(examMapper.selectByPrimaryKey(batch.getExamId()));
             batchStudentVOList.add(batchStudentVO);
+
         }
         return ServerResponse.createBySuccess(batchStudentVOList);
     }
@@ -230,6 +241,20 @@ public class StudentServiceImpl implements IStudentService {
             return ServerResponse.createBySuccessMessage("退出班级成功");
         }
         return ServerResponse.createByErrorMessage("退出班级失败");
+    }
+
+    @Override
+    public ServerResponse getExamPaper(Integer studentId,Integer batchId) {
+        Batch batch=batchMapper.selectByPrimaryKey(batchId);
+        if(batch==null){
+            return  ServerResponse.createByErrorMessage("发生未知错误");
+        }
+        if(batchStudentMapper.checkExamEnd(batch.getExamId())>0){
+            return  ServerResponse.createByErrorMessage("未可以查看试卷");
+        }
+        List<PaperRecord> paperRecords=paperRecordMapper.selectByStudentIdAndBatchId(studentId,batchId);
+        List<PaperQuestionVo> paperQuestionVos =examService.packagePaperRecordToPaperQuestionVo(paperRecords,true);
+        return ServerResponse.createBySuccess(paperQuestionVos);
     }
 
 }

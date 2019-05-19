@@ -9,6 +9,7 @@ import com.explore.service.IBatchStudentService;
 import com.explore.service.IExamService;
 import com.explore.thread.AutoCheck;
 import com.explore.utils.ExcelUtil;
+import com.explore.utils.UploadImg;
 import com.explore.vo.ExamBatchVo;
 import com.explore.vo.PaperComposeVo;
 import com.explore.vo.PaperQuestionVo;
@@ -379,7 +380,7 @@ public class ExamServiceImpl implements IExamService {
          }
          HSSFWorkbook wb = ExcelUtil.getHSSFWorkbook(sheetName, title, content, null);
         try {
-            this.setResponseHeader(response, fileName);
+            UploadImg.setResponseHeader(response, fileName);
             OutputStream os = response.getOutputStream();
             wb.write(os);
             os.flush();
@@ -389,7 +390,7 @@ public class ExamServiceImpl implements IExamService {
           }
     }
 
-    private List<PaperQuestionVo> packagePaperRecordToPaperQuestionVo(List<PaperRecord> paperRecords,Boolean answer){
+    public   List<PaperQuestionVo> packagePaperRecordToPaperQuestionVo(List<PaperRecord> paperRecords,Boolean answer){
         List<PaperQuestionVo> paperQuestionVos = new ArrayList<>();
         for (PaperRecord paperRecord : paperRecords) {
             PaperQuestionVo paperQuestionVo = new PaperQuestionVo();
@@ -412,22 +413,7 @@ public class ExamServiceImpl implements IExamService {
         return paperQuestionVos;
     }
 
-    public void setResponseHeader(HttpServletResponse response, String fileName) {
-        try {
-            try {
-                fileName = new String(fileName.getBytes(),"ISO8859-1");
-            } catch (UnsupportedEncodingException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            response.setContentType("application/octet-stream;charset=ISO8859-1");
-            response.setHeader("Content-Disposition", "attachment;filename="+ fileName);
-            response.addHeader("Pargam", "no-cache");
-            response.addHeader("Cache-Control", "no-cache");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+
     /**
      * 判断问题是否需要自动批改
      */
